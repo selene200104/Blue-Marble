@@ -41,11 +41,12 @@ public class BlueMarble {
 	JLabel player2moneyText = new JLabel();
 	JLabel player1leftdayOfisland = new JLabel();
 	JLabel player2leftdayOfisland = new JLabel();
+	JLabel whosTurnText = new JLabel();
 	
 	Player player1 = new Player();
 	Player player2 = new Player();
 	
-	int howsTurn = 1;
+	int whosTurn = 1;
 	int Player1forcedRest = 0; //플레이어가 강제로 쉬어야 하는 날짜
 	int Player2forcedRest = 0;
 	
@@ -74,7 +75,11 @@ public class BlueMarble {
 	
 	int diceNum = 0;
 	
-
+	//그 외
+	JLabel playSituation = new JLabel();//플레이 상황을 보여주는 text
+	int socialWelfareCost = 10000; //사회복지기금 비용
+	int collectedSocialWelfare = 0; //사회복지기금에 모인 돈
+	
 	public BlueMarble() {
 
 		frame = new JFrame();
@@ -128,6 +133,15 @@ public class BlueMarble {
 		player2infomationBoard.setBounds(83, 285, 250, 190);
 		blueMarbleScene.add(player2infomationBoard);
 	
+		whosTurnText.setText("Player 1 순서");
+		whosTurnText.setFont(new Font("굴림", Font.BOLD, 13));
+		whosTurnText.setBounds(350, 90, 220, 80);
+		blueMarbleScene.add(whosTurnText);
+		
+		playSituation.setText("");
+		playSituation.setFont(new Font("굴림", Font.BOLD, 13));
+		playSituation.setBounds(350, 110, 350, 80);
+		blueMarbleScene.add(playSituation);
 		
 		//부루마블 판
 		//위쪽 줄
@@ -187,11 +201,14 @@ public class BlueMarble {
 			public void actionPerformed(ActionEvent e) {
 
 				// 랜덤으로 나온 수가 주사위의 수가 된다.
-				diceNum = ramdom.nextInt(6) + 1;
+				//diceNum = ramdom.nextInt(6) + 1;
+				diceNum = 1;
 				diceNumberText.setText("주사위 수 : " + diceNum);
 
+				playSituation.setText("");
+				
 				//player1의 차례일 때
-				if(howsTurn == 1) {
+				if(whosTurn == 1) {
 					
 					if(Player1forcedRest == 0) {
 						player1leftdayOfisland.setVisible(false);
@@ -205,10 +222,11 @@ public class BlueMarble {
 					}
 					
 					//플레이어을 움직인 후 차례를 바꾼다
-					howsTurn = 2;
+					whosTurnText.setText("Player 2 순서");
+					whosTurn = 2;
 					
 				//player2의 차례일 때
-				}else if(howsTurn == 2) {
+				}else if(whosTurn == 2) {
 					
 					if (Player2forcedRest == 0) {
 						player2leftdayOfisland.setVisible(false);
@@ -222,7 +240,8 @@ public class BlueMarble {
 					}
 					
 					//플레이어을 움직인 후 차례를 바꾼다
-					howsTurn = 1;
+					whosTurnText.setText("Player 1 순서");
+					whosTurn = 1;
 				}	
 			}
 		});
@@ -267,23 +286,56 @@ public class BlueMarble {
 
 	public void player(Player player) {
 
+		//플레이어가 공항에 도착했을 때
 		if (player.location == 9) {
 			if (player == player1) {
+				playSituation.setText("Player1이 공항에 도착했습니다");
 				airport(player, player1Image);
 
 			}else if(player == player2) {
+				playSituation.setText("Player2이 공항에 도착했습니다");
 				airport(player, player2Image);
 				
 			}
 
+		//플레이어가 무인도에 도착했을 때
 		} else if (player.location == 15) {
 			if(player == player1) {
+				playSituation.setText("Player1이 무인도에 갇혔습니다");
 				player1leftdayOfisland.setVisible(true);
 				Player1forcedRest = 2;
 				
 			}else if(player == player2) {
+				playSituation.setText("Player2이 무인도에 갇혔습니다");
 				player2leftdayOfisland.setVisible(true);
 				Player2forcedRest = 2;
+			}
+		
+		//플레이어가 사회복지기금(돈 얻음)에 도착했을 때
+		} else if (player.location == 24) {
+			player.money = player.money + collectedSocialWelfare;
+
+			if (player == player1) {
+				playSituation.setText("Player1이  사회복지기금에서 돈을 얻었습니다 +" + collectedSocialWelfare + "원");
+				player1moneyText.setText("money : " + player.money);
+			} else if (player == player2) {
+				playSituation.setText("Player2이  사회복지기금에서 돈을 얻었습니다 +" + collectedSocialWelfare + "원");
+				player2moneyText.setText("money : " + player.money);
+			}
+			collectedSocialWelfare = 0;
+			
+		//플레이어가 사회복지기금(돈 지불)에 도착했을 때
+		} else if (player.location == 27) {
+			
+			player.money = player.money - socialWelfareCost;
+			collectedSocialWelfare = collectedSocialWelfare + socialWelfareCost;
+			
+			if (player == player1) {
+				playSituation.setText("Player1이  사회복지기금에서 돈을 기부했습니다 -" + socialWelfareCost + "원");
+				player1moneyText.setText("money : " + player.money);
+			} else if (player == player2) {
+				playSituation.setText("Player2이  사회복지기금에서 돈을 기부했습니다 -" + socialWelfareCost + "원");
+				player2moneyText.setText("money : " + player.money);
 			}
 		}
 	}
