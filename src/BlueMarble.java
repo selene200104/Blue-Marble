@@ -29,8 +29,13 @@ public class BlueMarble {
 	}
 	
 	//플레이어
-	JLabel playerImage = new JLabel();
+	JLabel player1Image = new JLabel();
+	JLabel player2Image = new JLabel();
+	
 	Player player1 = new Player();
+	Player player2 = new Player();
+	
+	int howsTurn = 1;
 	
 	//부루마블 판 
 	JLabel[] topLine = new JLabel[8];
@@ -74,9 +79,13 @@ public class BlueMarble {
 		blueMarbleScene.setLayout(null);
 
 		//플레이어
-		playerImage.setIcon(new ImageIcon("./images/Player1.png"));
-		playerImage.setBounds(715, 495, 110, 60);
-		blueMarbleScene.add(playerImage);
+		player1Image.setIcon(new ImageIcon("./images/Player1.png"));
+		player1Image.setBounds(715, 495, 110, 60);
+		blueMarbleScene.add(player1Image);
+		
+		player2Image.setIcon(new ImageIcon("./images/Player2.png"));
+		player2Image.setBounds(715, 495, 110, 60);
+		blueMarbleScene.add(player2Image);
 		
 		//부루마블 판
 		//위쪽 줄
@@ -139,22 +148,31 @@ public class BlueMarble {
 				diceNum = ramdom.nextInt(6) + 1;
 				diceNumberText.setText("주사위 수 : " + diceNum);
 
-				player1.location = player1.location + diceNum;
-				playerMove(player1);
-				
+				//player1의 차례일 때
+				if(howsTurn == 1) {
+					player1.location = player1.location + diceNum;
+					playerMove(player1, player1Image);
+					//플레이어을 움직인 후 차례를 바꾼다
+					howsTurn = 2;
+					
+				//player2의 차례일 때
+				}else if(howsTurn == 2) {
+					player2.location = player2.location + diceNum;
+					playerMove(player2, player2Image);
+					//플레이어을 움직인 후 차례를 바꾼다
+					howsTurn = 1;
+				}	
 			}
 		});
 		blueMarbleScene.add(diceThrowButton);
 		
-
 		diceNumberText.setText("주사위를 던지시오");
 		diceNumberText.setFont(new Font("굴림", Font.BOLD, 13));
 		diceNumberText.setBounds(510, 360, 110, 60);
 		blueMarbleScene.add(diceNumberText);
-		
 	}
 	
-	public void playerMove(Player player) {
+	public void playerMove(Player player, JLabel playerImage) {
 
 		if(player.location >= 30) {
 			player.location = player.location - 30;
