@@ -79,6 +79,7 @@ public class BlueMarble {
 	JLabel playSituation = new JLabel();//플레이 상황을 보여주는 text
 	int socialWelfareCost = 10000; //사회복지기금 비용
 	int collectedSocialWelfare = 0; //사회복지기금에 모인 돈
+	int luckeyCardNum = 0; //행운카드 번호
 	
 	public BlueMarble() {
 
@@ -201,8 +202,7 @@ public class BlueMarble {
 			public void actionPerformed(ActionEvent e) {
 
 				// 랜덤으로 나온 수가 주사위의 수가 된다.
-				//diceNum = ramdom.nextInt(6) + 1;
-				diceNum = 1;
+				diceNum = ramdom.nextInt(6) + 1;
 				diceNumberText.setText("주사위 수 : " + diceNum);
 
 				playSituation.setText("");
@@ -286,8 +286,17 @@ public class BlueMarble {
 
 	public void player(Player player) {
 
-		//플레이어가 공항에 도착했을 때
-		if (player.location == 9) {
+		if (player.location == 4 || player.location == 21) {
+			if (player == player1) {
+				
+			}else if(player == player2) {
+				
+			}
+			System.out.println("행운카드!!");
+
+			//플레이어가 공항에 도착했을 때
+		}
+		else if (player.location == 9) {
 			if (player == player1) {
 				playSituation.setText("Player1이 공항에 도착했습니다");
 				airport(player, player1Image);
@@ -395,5 +404,45 @@ public class BlueMarble {
 				}
 			});
 		}
+	}
+	
+	public void luckyCard(Player player) {
+		luckeyCardNum = ramdom.nextInt(6);
+		
+		if(luckeyCardNum == 0) {
+			
+			
+		}else if(luckeyCardNum == 1) {
+			
+			
+		}else if(luckeyCardNum == 2) {
+			
+			
+		}else if(luckeyCardNum == 3) {
+			
+			
+		}else if(luckeyCardNum == 4) {
+			
+			
+		}else if(luckeyCardNum == 5) {
+			
+			
+		}else if(luckeyCardNum == 6) {
+			
+			
+		}else if(luckeyCardNum == 7) {
+			
+			
+		}
+		/*
+		(1) 여행보내주는 카드
+		(2) 사회복지기구로 가는 카드
+		(3) 출발지로 이동하는 카드
+		(4) 무인도로 가는 카드
+		(5) 복권당첨 카드 (+건물값에 따라 금액 정하기)
+		(6) 돈 도난당한 카드 (-건물값에 따라 금액 정하기)
+		(7) 무인도 탈출 카드
+		(8) 통행료 무료로 하는 카드
+		*/
 	}
 }
