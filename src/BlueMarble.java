@@ -43,6 +43,7 @@ public class BlueMarble {
 	JLabel player2leftdayOfisland = new JLabel();
 	JLabel whosTurnText = new JLabel();
 	
+	
 	Player player1 = new Player();
 	Player player2 = new Player();
 	
@@ -51,10 +52,10 @@ public class BlueMarble {
 	int Player2forcedRest = 0;
 	
 	//부루마블 판 
-	JLabel[] topLine = new JLabel[8];
-	JLabel[] bottomLine = new JLabel[8];
-	JLabel[] leftLine = new JLabel[7];
-	JLabel[] rightLine = new JLabel[7];
+	static JLabel[] topLine = new JLabel[8];
+	static JLabel[] bottomLine = new JLabel[8];
+	static JLabel[] leftLine = new JLabel[7];
+	static JLabel[] rightLine = new JLabel[7];
 
 	int topLineHorizontalLength = 82;
 	int topLineVerticalLength = 3;
@@ -80,6 +81,9 @@ public class BlueMarble {
 	int socialWelfareCost = 10000; //사회복지기금 비용
 	int collectedSocialWelfare = 0; //사회복지기금에 모인 돈
 	int luckeyCardNum = 0; //행운카드 번호
+	
+	PlayerMove player1Move = new PlayerMove(player1, player1Image);
+	PlayerMove player2Move = new PlayerMove(player2, player2Image);
 	
 	public BlueMarble() {
 
@@ -202,8 +206,7 @@ public class BlueMarble {
 			public void actionPerformed(ActionEvent e) {
 
 				// 랜덤으로 나온 수가 주사위의 수가 된다.
-				//diceNum = ramdom.nextInt(6) + 1;
-				diceNum = 1;
+				diceNum = ramdom.nextInt(6) + 1;
 				diceNumberText.setText("주사위 수 : " + diceNum);
 
 				playSituation.setText("");
@@ -214,8 +217,12 @@ public class BlueMarble {
 					if(Player1forcedRest == 0) {
 						player1leftdayOfisland.setVisible(false);
 						
+						player1.previousLocation = player1.location;
 						player1.location = player1.location + diceNum;
-						playerMove(player1, player1Image);
+						 synchronized(player1Move){
+							 player1Move.notify(); 
+						    }
+						
 						player(player1);
 					}else {
 						Player1forcedRest--;
@@ -232,8 +239,12 @@ public class BlueMarble {
 					if (Player2forcedRest == 0) {
 						player2leftdayOfisland.setVisible(false);
 						
+						player2.previousLocation = player2.location;
 						player2.location = player2.location + diceNum;
-						playerMove(player2, player2Image);
+						synchronized (player2Move) {
+							player2Move.notify();
+						}
+						
 						player(player2);
 					} else {
 						Player2forcedRest--;
@@ -252,38 +263,12 @@ public class BlueMarble {
 		diceNumberText.setFont(new Font("굴림", Font.BOLD, 13));
 		diceNumberText.setBounds(510, 360, 110, 60);
 		blueMarbleScene.add(diceNumberText);
+		
+		player1Move.start();
+		player2Move.start();
 	}
 	
-	public void playerMove(Player player, JLabel playerImage) {
-
-		if(player.location >= 30) {
-			player.location = player.location - 30;
-		}
-		
-		if(player.location == 0) {
-			playerImage.setLocation(rightLine[6].getX() + 10, rightLine[6].getY() + 10);
-			
-		}else if (player.location >= 1 && player.location <= 8) {
-			for (int i = 0; i <= player.location - 1; i++) {
-				playerImage.setLocation(bottomLine[i].getX() + 10, bottomLine[i].getY() + 10);
-			}
-			
-		}else if (player.location >= 9 && player.location <= 15) {
-			for (int i = 0; i <= player.location -9; i++) {
-				playerImage.setLocation(leftLine[i].getX() + 10, leftLine[i].getY() + 10);
-			}
-			
-		}else if (player.location >= 16 && player.location <= 23) {
-			for (int i = 0; i <= player.location -16; i++) {
-				playerImage.setLocation(topLine[i].getX() + 10, topLine[i].getY() + 10);
-			}
-			
-		}else if (player.location >= 24 && player.location <= 29) {
-			for (int i = 0; i <= player.location - 24; i++) {
-				playerImage.setLocation(rightLine[i].getX() + 10, rightLine[i].getY() + 10);
-			}
-		}
-	}
+	
 
 	public void player(Player player) {
 
@@ -293,7 +278,6 @@ public class BlueMarble {
 			}else if(player == player2) {
 				
 			}
-			System.out.println("행운카드!!");
 
 			//플레이어가 공항에 도착했을 때
 		}
