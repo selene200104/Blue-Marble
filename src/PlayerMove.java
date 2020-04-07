@@ -24,12 +24,16 @@ public class PlayerMove extends Thread{
 	
 	Player player = new Player();
 	JLabel playerImage = new JLabel();
+	JLabel playSituation = new JLabel();
+	JLabel playermoneyText = new JLabel();
 	
 	boolean running = true;
 	
-	public PlayerMove(Player player, JLabel playerImage) {
+	public PlayerMove(Player player, JLabel playerImage, JLabel playSituation, JLabel playermoneyText) {
 		this.player = player;
 		this.playerImage = playerImage;
+		this.playSituation = playSituation;
+		this.playermoneyText = playermoneyText;
 	}
 	
 	@Override
@@ -43,6 +47,10 @@ public class PlayerMove extends Thread{
 						if(player.previousLocation >= 30) {
 							player.previousLocation = player.previousLocation - 30;
 							player.location = player.location - 30;
+							//월급기능 
+							player.money = player.money + 10000;
+							playermoneyText.setText("money : " + player.money);
+							playSituation.setText("출발점을 지나 월급 10000원을 얻었습니다");
 						}
 					}
 					
@@ -76,36 +84,6 @@ public class PlayerMove extends Thread{
 				}else {
 					this.wait();
 				}
-					
-/*
-				if(player.location >= 30) {
-					player.location = player.location - 30;
-				}
-				
-				if(player.location == 0) {
-					playerImage.setLocation(BlueMarble.rightLine[6].getX() + 10, BlueMarble.rightLine[6].getY() + 10);
-					
-				}else if (player.location >= 1 && player.location <= 8) {
-					for (int i = 0; i <= player.location - 1; i++) {
-						playerImage.setLocation(BlueMarble.bottomLine[i].getX() + 10, BlueMarble.bottomLine[i].getY() + 10);
-					}
-					
-				}else if (player.location >= 9 && player.location <= 15) {
-					for (int i = 0; i <= player.location -9; i++) {
-						playerImage.setLocation(BlueMarble.leftLine[i].getX() + 10, BlueMarble.leftLine[i].getY() + 10);
-					}
-					
-				}else if (player.location >= 16 && player.location <= 23) {
-					for (int i = 0; i <= player.location -16; i++) {
-						playerImage.setLocation(BlueMarble.topLine[i].getX() + 10, BlueMarble.topLine[i].getY() + 10);
-					}
-					
-				}else if (player.location >= 24 && player.location <= 29) {
-					for (int i = 0; i <= player.location - 24; i++) {
-						playerImage.setLocation(BlueMarble.rightLine[i].getX() + 10, BlueMarble.rightLine[i].getY() + 10);
-					}
-				}
-				*/
 				
 			} catch (InterruptedException e) {
 				running = false;

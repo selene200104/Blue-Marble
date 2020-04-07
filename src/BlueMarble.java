@@ -50,7 +50,8 @@ public class BlueMarble {
 	int Player1forcedRest = 0; //플레이어가 강제로 쉬어야 하는 날짜
 	int Player2forcedRest = 0;
 	
-	boolean canUseAirPort = false; //공항을 이용할 수 있는지 
+	boolean Player1UseAirPort = false; //공항을 이용할 수 있는지 
+	boolean Player2UseAirPort = false; //공항을 이용할 수 있는지 
 	
 	//부루마블 판 
 	static JLabel[] topLine = new JLabel[8];
@@ -83,8 +84,8 @@ public class BlueMarble {
 	int collectedSocialWelfare = 0; //사회복지기금에 모인 돈
 	int luckeyCardNum = 0; //행운카드 번호
 	
-	PlayerMove player1Move = new PlayerMove(player1, player1Image);
-	PlayerMove player2Move = new PlayerMove(player2, player2Image);
+	PlayerMove player1Move = new PlayerMove(player1, player1Image, playSituation, player1moneyText);
+	PlayerMove player2Move = new PlayerMove(player2, player2Image, playSituation, player2moneyText);
 	
 	public BlueMarble() {
 
@@ -208,6 +209,7 @@ public class BlueMarble {
 
 				// 랜덤으로 나온 수가 주사위의 수가 된다.
 				diceNum = ramdom.nextInt(6) + 1;
+				diceNum = 1;
 				diceNumberText.setText("주사위 수 : " + diceNum);
 
 				playSituation.setText("");
@@ -280,44 +282,37 @@ public class BlueMarble {
 			}
 
 			//플레이어가 공항에 도착했을 때
-		}
-		else if (player.location == 9) {
+		}else if (player.location == 9) {
 			if (player == player1) {
-				playSituation.setText("Player1이 공항에 도착했습니다");
-				canUseAirPort = true;
-				airport(player, playerImage);
-
-			}else if(player == player2) {
-				playSituation.setText("Player2이 공항에 도착했습니다");
-				canUseAirPort = true;
-				airport(player, playerImage);
-				
+				Player1UseAirPort = true;
+			} else if (player == player2) {
+				Player2UseAirPort = true;
 			}
+			airport();
+			playSituation.setText("공항에 도착했습니다");
 
 		//플레이어가 무인도에 도착했을 때
 		} else if (player.location == 15) {
 			if(player == player1) {
-				playSituation.setText("Player1이 무인도에 갇혔습니다");
 				player1leftdayOfisland.setVisible(true);
 				Player1forcedRest = 3;
 				
 			}else if(player == player2) {
-				playSituation.setText("Player2이 무인도에 갇혔습니다");
 				player2leftdayOfisland.setVisible(true);
 				Player2forcedRest = 3;
 			}
+			playSituation.setText("무인도에 갇혔습니다");
 		
 		//플레이어가 사회복지기금(돈 얻음)에 도착했을 때
 		} else if (player.location == 24) {
 			player.money = player.money + collectedSocialWelfare;
 
 			if (player == player1) {
-				playSituation.setText("Player1이  사회복지기금에서 돈을 얻었습니다 +" + collectedSocialWelfare + "원");
 				player1moneyText.setText("money : " + player.money);
 			} else if (player == player2) {
-				playSituation.setText("Player2이  사회복지기금에서 돈을 얻었습니다 +" + collectedSocialWelfare + "원");
 				player2moneyText.setText("money : " + player.money);
 			}
+			playSituation.setText("사회복지기금에서 돈을 얻었습니다 +" + collectedSocialWelfare + "원");
 			collectedSocialWelfare = 0;
 			
 		//플레이어가 사회복지기금(돈 지불)에 도착했을 때
@@ -327,26 +322,33 @@ public class BlueMarble {
 			collectedSocialWelfare = collectedSocialWelfare + socialWelfareCost;
 			
 			if (player == player1) {
-				playSituation.setText("Player1이  사회복지기금에서 돈을 기부했습니다 -" + socialWelfareCost + "원");
 				player1moneyText.setText("money : " + player.money);
 			} else if (player == player2) {
-				playSituation.setText("Player2이  사회복지기금에서 돈을 기부했습니다 -" + socialWelfareCost + "원");
 				player2moneyText.setText("money : " + player.money);
 			}
+			playSituation.setText("사회복지기금에서 돈을 기부했습니다 -" + socialWelfareCost + "원");
 		}
 	}
 	
-	public void airport(Player player, JLabel playerImage) {
+	public void airport() {
 		
 		for (int i = 0; i < bottomLine.length; i++) {
 			bottomLine[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					if (canUseAirPort == true) {
+					if (Player1UseAirPort == true) {
 						for (int i = 0; i < bottomLine.length; i++) {
 							if (e.getSource() == bottomLine[i]) {
-								playerImage.setLocation(bottomLine[i].getX() + 10, bottomLine[i].getY() + 10);
-								player.location = i + 1;
-								canUseAirPort = false;
+								player1Image.setLocation(bottomLine[i].getX() + 10, bottomLine[i].getY() + 10);
+								player1.location = i + 1;
+								Player1UseAirPort = false;
+							}
+						}
+					}else if(Player2UseAirPort = true) {
+						for (int i = 0; i < bottomLine.length; i++) {
+							if (e.getSource() == bottomLine[i]) {
+								player2Image.setLocation(bottomLine[i].getX() + 10, bottomLine[i].getY() + 10);
+								player2.location = i + 1;
+								Player2UseAirPort = false;
 							}
 						}
 					}
@@ -357,12 +359,20 @@ public class BlueMarble {
 		for (int i = 0; i < leftLine.length; i++) {
 			leftLine[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					if (canUseAirPort == true) {
+					if (Player1UseAirPort == true) {
 						for (int i = 0; i < leftLine.length; i++) {
 							if (e.getSource() == leftLine[i]) {
-								playerImage.setLocation(leftLine[i].getX() + 10, leftLine[i].getY() + 10);
-								player.location = i + 9;
-								canUseAirPort = false;
+								player1Image.setLocation(leftLine[i].getX() + 10, leftLine[i].getY() + 10);
+								player1.location = i + 9;
+								Player1UseAirPort = false;
+							}
+						}
+					}else if (Player2UseAirPort == true) {
+						for (int i = 0; i < leftLine.length; i++) {
+							if (e.getSource() == leftLine[i]) {
+								player2Image.setLocation(leftLine[i].getX() + 10, leftLine[i].getY() + 10);
+								player2.location = i + 9;
+								Player2UseAirPort = false;
 							}
 						}
 					}
@@ -373,12 +383,20 @@ public class BlueMarble {
 		for (int i = 0; i < topLine.length; i++) {
 			topLine[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					if (canUseAirPort == true) {
+					if (Player1UseAirPort == true) {
 						for (int i = 0; i < topLine.length; i++) {
 							if (e.getSource() == topLine[i]) {
-								playerImage.setLocation(topLine[i].getX() + 10, topLine[i].getY() + 10);
-								player.location = i + 16;
-								canUseAirPort = false;
+								player1Image.setLocation(topLine[i].getX() + 10, topLine[i].getY() + 10);
+								player1.location = i + 16;
+								Player1UseAirPort = false;
+							}
+						}
+					}else if (Player2UseAirPort == true) {
+						for (int i = 0; i < topLine.length; i++) {
+							if (e.getSource() == topLine[i]) {
+								player2Image.setLocation(topLine[i].getX() + 10, topLine[i].getY() + 10);
+								player2.location = i + 16;
+								Player2UseAirPort = false;
 							}
 						}
 					}
@@ -389,12 +407,20 @@ public class BlueMarble {
 		for (int i = 0; i < rightLine.length; i++) {
 			rightLine[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					if (canUseAirPort == true) {
+					if (Player1UseAirPort == true) {
 						for (int i = 0; i < rightLine.length; i++) {
 							if (e.getSource() == rightLine[i]) {
-								playerImage.setLocation(rightLine[i].getX() + 10, rightLine[i].getY() + 10);
-								player.location = i + 24;
-								canUseAirPort = false;
+								player1Image.setLocation(rightLine[i].getX() + 10, rightLine[i].getY() + 10);
+								player1.location = i + 24;
+								Player1UseAirPort = false;
+							}
+						}
+					}else if (Player2UseAirPort == true) {
+						for (int i = 0; i < rightLine.length; i++) {
+							if (e.getSource() == rightLine[i]) {
+								player2Image.setLocation(rightLine[i].getX() + 10, rightLine[i].getY() + 10);
+								player2.location = i + 24;
+								Player2UseAirPort = false;
 							}
 						}
 					}
