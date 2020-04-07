@@ -58,10 +58,10 @@ public class BlueMarble {
 
 	int topLineHorizontalLength = 82;
 	int topLineVerticalLength = 3;
-	int bottomLineHorizontalLength = 82;
+	int bottomLineHorizontalLength = 628;
 	int bottomLineVerticalLength = 482;
 	int leftLineHorizontalLength = 2;
-	int leftLineVerticalLength = 3;
+	int leftLineVerticalLength = 482;
 	int rightLineHorizontalLength = 708;
 	int rightLineVerticalLength = 3;
 	int HorizontalLineInterval = 78;
@@ -164,7 +164,7 @@ public class BlueMarble {
 
 			bottomLine[i].setBounds(bottomLineHorizontalLength, bottomLineVerticalLength, lineWidth, lineHeight);
 			
-			bottomLineHorizontalLength = bottomLineHorizontalLength + HorizontalLineInterval;
+			bottomLineHorizontalLength = bottomLineHorizontalLength - HorizontalLineInterval;
 			
 			bottomLine[i].setIcon(new ImageIcon("./images/Line.png"));
 		}
@@ -176,7 +176,7 @@ public class BlueMarble {
 
 			leftLine[i].setBounds(leftLineHorizontalLength, leftLineVerticalLength, lineWidth, lineHeight);
 
-			leftLineVerticalLength = leftLineVerticalLength + VerticalLineInterval;
+			leftLineVerticalLength = leftLineVerticalLength - VerticalLineInterval;
 
 			leftLine[i].setIcon(new ImageIcon("./images/Line.png"));
 		}
@@ -202,7 +202,8 @@ public class BlueMarble {
 			public void actionPerformed(ActionEvent e) {
 
 				// 랜덤으로 나온 수가 주사위의 수가 된다.
-				diceNum = ramdom.nextInt(6) + 1;
+				//diceNum = ramdom.nextInt(6) + 1;
+				diceNum = 1;
 				diceNumberText.setText("주사위 수 : " + diceNum);
 
 				playSituation.setText("");
@@ -263,12 +264,12 @@ public class BlueMarble {
 			playerImage.setLocation(rightLine[6].getX() + 10, rightLine[6].getY() + 10);
 			
 		}else if (player.location >= 1 && player.location <= 8) {
-			for (int i = 0; i <= 8 - player.location; i++) {
+			for (int i = 0; i <= player.location - 1; i++) {
 				playerImage.setLocation(bottomLine[i].getX() + 10, bottomLine[i].getY() + 10);
 			}
 			
 		}else if (player.location >= 9 && player.location <= 15) {
-			for (int i = 0; i <= 15 - player.location; i++) {
+			for (int i = 0; i <= player.location -9; i++) {
 				playerImage.setLocation(leftLine[i].getX() + 10, leftLine[i].getY() + 10);
 			}
 			
@@ -286,7 +287,7 @@ public class BlueMarble {
 
 	public void player(Player player) {
 
-		if (player.location == 4 || player.location == 21) {
+		if (player.location == 4 || player.location == 19) {
 			if (player == player1) {
 				
 			}else if(player == player2) {
