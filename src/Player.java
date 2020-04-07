@@ -1,4 +1,5 @@
 
 public class Player {
-	int money = 1000000;
+	int location = 0;
+	int money = 30000;
 }
