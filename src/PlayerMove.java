@@ -39,8 +39,11 @@ public class PlayerMove extends Thread{
 
 				if(player.previousLocation <= player.location) {
 					
-					if(player.previousLocation >= 30) {
-						player.previousLocation = player.previousLocation - 30;
+					if(player.location >= 30) {
+						if(player.previousLocation >= 30) {
+							player.previousLocation = player.previousLocation - 30;
+							player.location = player.location - 30;
+						}
 					}
 					
 					if(player.previousLocation == 0) {
@@ -68,7 +71,7 @@ public class PlayerMove extends Thread{
 					}
 					
 					player.previousLocation++;
-					Thread.sleep(500);
+					Thread.sleep(300);
 					
 				}else {
 					this.wait();
