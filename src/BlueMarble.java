@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 public class BlueMarble {
 
@@ -30,10 +31,10 @@ public class BlueMarble {
 	
 	/*코드 추가된 곳*/
 	int constructionCost = 0;
-	int landCost = 0;
-	int villaCost = 0;
-	int buildingCost = 0;
-	int hotelCost = 0;
+	int landCost = 130000;
+	int villaCost = 50000;
+	int buildingCost = 150000;
+	int hotelCost = 250000;
 	int landCount = 0;
 	int villaCount = 0;
 	int buildingCount = 0;
@@ -144,8 +145,8 @@ public class BlueMarble {
 		seogwipo.add(constructionCostText);
 		constructionCostText.setVisible(true);
 		
-		JButton close = new JButton();
-		close.setText("X");
+		JButton close = new JButton((new ImageIcon("./images/closeButton.png")));
+		//close.setText("X");
 		close.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				seogwipo.setVisible(false);
@@ -154,19 +155,24 @@ public class BlueMarble {
 		close.setBounds(400,0,50,50);
 		seogwipo.add(close);
 		close.setVisible(true);
+		close.setBorderPainted(false); 
+		close.setFocusPainted(false); 
+		close.setContentAreaFilled(false);
 		
-		JButton land = new JButton();
-		land.setText("땅 값");
+		JButton land = new JButton((new ImageIcon("./images/land.png")));
+		//land.setText("땅 값");
 		land.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				landCount++;
 				//BlueMarble cost = new BlueMarble();
 				if(landCount % 2 == 0) {
-					landCost = 130000;
+					land.setIcon(new ImageIcon("./images/land.png"));
+					//landCost = 130000;
 					constructionCost -= landCost;
 					constructionCostText.setText("건설비용 : " + constructionCost);
 				}else {
-					landCost = 130000;
+					land.setIcon(new ImageIcon("./images/landCheck.png"));
+					//landCost = 130000;
 					constructionCost += landCost;
 					constructionCostText.setText("건설비용 : " + constructionCost);
 				}
@@ -176,39 +182,43 @@ public class BlueMarble {
 		seogwipo.add(land);
 		land.setVisible(true);
 		
-		JButton villa = new JButton();
-		villa.setText("빌라");
-		villa.addActionListener(new ActionListener() {
+		JButton villaButton = new JButton((new ImageIcon("./images/villa.png")));
+		//villaButton.setText("빌라");
+		villaButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				villaCount++;
 				//BlueMarble cost = new BlueMarble();
 				if(villaCount % 2 == 0) {
-					villaCost = 50000;
+					//villaCost = 50000;
+					villaButton.setIcon(new ImageIcon("./images/villa.png"));
 					constructionCost -= villaCost;
 					constructionCostText.setText("건설비용 : " + constructionCost);
 				}else {
-					villaCost = 50000;
+					//villaCost = 50000;
+					villaButton.setIcon(new ImageIcon("./images/villaCheck.png"));
 					constructionCost += villaCost;
 					constructionCostText.setText("건설비용 : " + constructionCost);
 				}
 			}			
 		});
-		villa.setBounds(120,60,100,130);
-		seogwipo.add(villa);
-		villa.setVisible(true);
+		villaButton.setBounds(120,60,100,130);
+		seogwipo.add(villaButton);
+		villaButton.setVisible(true);
 		
-		JButton building = new JButton();
-		building.setText("빌딩");
+		JButton building = new JButton((new ImageIcon("./images/building.png")));
+		//building.setText("빌딩");
 		building.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				buildingCount++;
 				//BlueMarble cost = new BlueMarble();
 				if(buildingCount % 2 == 0) {
-					buildingCost = 150000;
+					//buildingCost = 150000;
+					building.setIcon(new ImageIcon("./images/building.png"));
 					constructionCost -= buildingCost;
 					constructionCostText.setText("건설비용 : " + constructionCost);
 				}else {
-					buildingCost = 150000;
+					//buildingCost = 150000;
+					building.setIcon(new ImageIcon("./images/buildingCheck.png"));
 					constructionCost += buildingCost;
 					constructionCostText.setText("건설비용 : " + constructionCost);
 				}
@@ -218,18 +228,20 @@ public class BlueMarble {
 		seogwipo.add(building);
 		building.setVisible(true);
 		
-		JButton hotel = new JButton();
-		hotel.setText("호텔");
+		JButton hotel = new JButton((new ImageIcon("./images/hotel.png")));
+		//hotel.setText("호텔");
 		hotel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				hotelCount++;
 				//BlueMarble cost = new BlueMarble();
 				if(hotelCount % 2 == 0) {
-					hotelCost = 250000;
+					//hotelCost = 250000;
+					hotel.setIcon(new ImageIcon("./images/hotel.png"));
 					constructionCost -= hotelCost;
 					constructionCostText.setText("건설비용 : " + constructionCost);
 				}else {
-					hotelCost = 250000;
+					//hotelCost = 250000;
+					hotel.setIcon(new ImageIcon("./images/hotelCheck.png"));
 					constructionCost += hotelCost;
 					constructionCostText.setText("건설비용 : " + constructionCost);
 				}
