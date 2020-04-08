@@ -324,9 +324,11 @@ public class BlueMarble {
 				/* 여기까지 섬패널 관련된거 시작*/
 				//플레이어 위치가 섬과 관련된 땅(서귀포/제주/독도)에 있을 경우
 				for(int j = 0; j < islandName.length; j++) {
+					int islandButtonHorizontalLength = 7;
+					
 					for(int k = 0; k <islandBulidingButton.length; k++) {
 						
-						if(player.location == j) {
+						if(player.location == j+1) {
 							
 							if(player == player1) {
 								diceThrowButton.setVisible(false);
@@ -339,9 +341,11 @@ public class BlueMarble {
 								islandPanel.add(constructionCostText);
 								constructionCostText.setVisible(true);
 								
-								//섬 이름
+								//islandName[0]의 위치에 있지 않으면 j-1값을 한 이름레이블은 숨기게 함 
+								if(j != 0) {
+									islandName[j-1].setVisible(false);
+								}
 								islandPanel.add(islandName[j]);
-								//islandPanel.setText(""+islandName[j]);
 								islandName[j].setBounds(nameHorizontalLength, nameVerticalLength, nameLineWidth, nameLineHeight);
 								islandName[j].setFont((new Font("굴림체", Font.BOLD, 15)));
 							
