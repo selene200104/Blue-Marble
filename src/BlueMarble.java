@@ -98,6 +98,8 @@ public class BlueMarble {
 	JLabel[] islandName = new JLabel[3];
 	JButton[] islandBulidingButton = new JButton[3];
 	
+	JLabel constructionCostText = new JLabel();
+	
 	int nameHorizontalLength = 150;
 	int nameVerticalLength = 20;
 	int nameLineWidth = 100;
@@ -137,6 +139,12 @@ public class BlueMarble {
 		islandPanel.setBounds(200,100,340,300);
 		blueMarbleScene.add(islandPanel);
 		islandPanel.setVisible(false);
+		
+		constructionCostText.setText("건설비용 : " + constructionCost);
+		constructionCostText.setFont(new Font("굴림", Font.BOLD, 15));
+		constructionCostText.setBounds(10, 180, 450, 100);
+		islandPanel.add(constructionCostText);
+		constructionCostText.setVisible(true);
 		
 		// 플레이어
 		player1Image.setIcon(new ImageIcon("./images/Player1.png"));
@@ -334,18 +342,12 @@ public class BlueMarble {
 								diceThrowButton.setVisible(false);
 								islandPanel.setVisible(true);
 								
-								JLabel constructionCostText = new JLabel();
-								constructionCostText.setText("건설비용 : " + constructionCost);
-								constructionCostText.setFont(new Font("굴림", Font.BOLD, 15));
-								constructionCostText.setBounds(10, 180, 450, 100);
-								islandPanel.add(constructionCostText);
-								constructionCostText.setVisible(true);
-								
 								//islandName[0]의 위치에 있지 않으면 j-1값을 한 이름레이블은 숨기게 함 
-								if(j != 0) {
-									islandName[j-1].setVisible(false);
-								}
+								//if(j != 0) {
+								//	islandName[j-1].setVisible(false);
+								//}
 								islandPanel.add(islandName[j]);
+								islandName[j].setText(""+islandName[j]);
 								islandName[j].setBounds(nameHorizontalLength, nameVerticalLength, nameLineWidth, nameLineHeight);
 								islandName[j].setFont((new Font("굴림체", Font.BOLD, 15)));
 							
@@ -409,7 +411,7 @@ public class BlueMarble {
 					public void actionPerformed(ActionEvent e) {
 						islandPanel.setVisible(false);
 						diceThrowButton.setVisible(true);
-						/*if(player.money > constructionCost) {
+						if(player.money > constructionCost) {
 							if(landCount % 2 != 0) {
 								player.money -= constructionCost;
 								System.out.println("구입 후 남은 돈 : "+player.money);
@@ -418,8 +420,7 @@ public class BlueMarble {
 							}
 						}else {
 							System.out.println("돈이 부족합니다.");
-						}*/
-						
+						}
 					}			
 				});
 				BuyButton.setBounds(120,250,100,20);
@@ -439,7 +440,7 @@ public class BlueMarble {
 				islandPanelClose.setBorderPainted(false);
 				islandPanelClose.setFocusPainted(false);
 				islandPanelClose.setContentAreaFilled(false);
-				/* 여기까지 섬패널 관련된거 끝*/
+			 	/*여기까지 섬패널 관련된거 끝*/
 			}
 
 		} else if (player.location >= 9 && player.location <= 15) {
