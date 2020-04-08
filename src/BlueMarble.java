@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -31,6 +32,7 @@ public class BlueMarble {
 	}
 	
 	JPanel blueMarbleScene = new JPanel();
+	JPanel rideAirplaneScene = new JPanel();
 	
 	//플레이어
 	JLabel player1Image = new JLabel();
@@ -50,8 +52,6 @@ public class BlueMarble {
 	int Player1forcedRest = 0; //플레이어가 강제로 쉬어야 하는 날짜
 	int Player2forcedRest = 0;
 	
-	boolean Player1UseAirPort = false; //공항을 이용할 수 있는지 
-	boolean Player2UseAirPort = false; //공항을 이용할 수 있는지 
 	
 	//부루마블 판 
 	static JLabel[] topLine = new JLabel[8];
@@ -78,6 +78,17 @@ public class BlueMarble {
 	
 	int diceNum = 0;
 	
+	//공항 
+	JLabel chooseRideAirplane = new JLabel();
+	JLabel cautionPointText = new JLabel();
+	JButton okButton = new JButton();
+	JButton noButton = new JButton();
+	
+	int airplaneFee = 20000;
+	String player1Flying = ""; 
+	String player2Flying = "";
+	String whoRideAirplane = "";
+	
 	//그 외
 	JLabel playSituation = new JLabel();//플레이 상황을 보여주는 text
 	int socialWelfareCost = 10000; //사회복지기금 비용
@@ -97,10 +108,16 @@ public class BlueMarble {
 		frame.setResizable(false);
 		frame.getContentPane().setLayout(null);
 
+		rideAirplaneScene.setBounds(180, 100, 400, 300);
+		rideAirplaneScene.setBackground(Color.DARK_GRAY);
+		frame.getContentPane().add(rideAirplaneScene);
+		rideAirplaneScene.setLayout(null);
+		rideAirplaneScene.setVisible(false);
+		
 		blueMarbleScene.setBounds(0, 0, 800, 600);
 		frame.getContentPane().add(blueMarbleScene);
 		blueMarbleScene.setLayout(null);
-
+		
 		//플레이어
 		player1Image.setIcon(new ImageIcon("./images/Player1.png"));
 		player1Image.setBounds(715, 495, 60, 60);
@@ -146,8 +163,8 @@ public class BlueMarble {
 		blueMarbleScene.add(whosTurnText);
 		
 		playSituation.setText("");
-		playSituation.setFont(new Font("굴림", Font.BOLD, 13));
-		playSituation.setBounds(350, 110, 350, 80);
+		playSituation.setFont(new Font("굴림", Font.BOLD, 16));
+		playSituation.setBounds(350, 110, 500, 80);
 		blueMarbleScene.add(playSituation);
 		
 		//부루마블 판
@@ -209,7 +226,6 @@ public class BlueMarble {
 
 				// 랜덤으로 나온 수가 주사위의 수가 된다.
 				diceNum = ramdom.nextInt(6) + 1;
-				diceNum = 1;
 				diceNumberText.setText("주사위 수 : " + diceNum);
 
 				playSituation.setText("");
@@ -217,18 +233,30 @@ public class BlueMarble {
 				//player1의 차례일 때
 				if(whosTurn == 1) {
 					
-					if(Player1forcedRest == 0) {
+					//비행기를 타게 되면 주사위 버튼을 눌러도 말이 움직이면 안되기 때문
+					if (player1Flying == "비행기 타기") {
+						player1Flying = "";
+
+					} else if (Player1forcedRest == 0) {
 						player1leftdayOfisland.setVisible(false);
-						
+
 						player1.previousLocation = player1.location;
 						player1.location = player1.location + diceNum;
 						synchronized (player1Move) {
 							player1Move.notify();
 						}
 						player(player1, player1Image);
-					}else {
+
+					} else if (Player1forcedRest > 0) {
 						Player1forcedRest--;
-						player1leftdayOfisland.setText("무인도 탈출하기까지 남은 일수 : " + (Player1forcedRest+1) +" 일");
+						player1leftdayOfisland.setText("무인도 탈출하기까지 남은 일수 : " + (Player1forcedRest + 1) + " 일");
+
+					}
+					
+					//player1이 움직인 후 player2가 주사위 버튼을 누르지 않고 바로 비행기를 탈 수 있도록 하기 위함
+					if (player2Flying == "비행기 타기") {
+						airport();
+						playSituation.setText("원하는 도시를 클릭 후 주사위 버튼을 눌러주세요");
 					}
 					
 					//플레이어을 움직인 후 차례를 바꾼다
@@ -238,9 +266,12 @@ public class BlueMarble {
 				//player2의 차례일 때
 				}else if(whosTurn == 2) {
 					
-					if (Player2forcedRest == 0) {
-						player2leftdayOfisland.setVisible(false);
+					if (player2Flying == "비행기 타기") {
+						player2Flying = "";
 						
+					} else if (Player2forcedRest == 0) {
+						player2leftdayOfisland.setVisible(false);
+
 						player2.previousLocation = player2.location;
 						player2.location = player2.location + diceNum;
 						synchronized (player2Move) {
@@ -248,9 +279,15 @@ public class BlueMarble {
 						}
 
 						player(player2, player2Image);
+						
 					} else {
 						Player2forcedRest--;
 						player2leftdayOfisland.setText("무인도 탈출하기까지 남은 일수 : " + (Player2forcedRest+1) +" 일");
+					}
+					
+					if (player1Flying == "비행기 타기") {
+						airport();
+						playSituation.setText("원하는 도시를 클릭 후 주사위 버튼을 눌러주세요");
 					}
 					
 					//플레이어을 움직인 후 차례를 바꾼다
@@ -266,12 +303,65 @@ public class BlueMarble {
 		diceNumberText.setBounds(510, 360, 110, 60);
 		blueMarbleScene.add(diceNumberText);
 		
+		//공항(비행기)
+		chooseRideAirplane.setText("비행기를 타시겠습니까?");
+		chooseRideAirplane.setFont(new Font("굴림", Font.BOLD, 25));
+		chooseRideAirplane.setForeground(Color.white);
+		chooseRideAirplane.setBounds(55, 0, 400, 100);
+		rideAirplaneScene.add(chooseRideAirplane);
+		
+		cautionPointText.setText("주의! 다음 턴에 이용할 수 있습니다");
+		cautionPointText.setFont(new Font("굴림", Font.BOLD, 15));
+		cautionPointText.setForeground(Color.white);
+		cautionPointText.setBounds(65, 50, 300, 100);
+		rideAirplaneScene.add(cautionPointText);
+
+		okButton.setText("네");
+		okButton.setBounds(65, 200, 100, 50);
+		okButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (whoRideAirplane.equals("player1")) {
+					if (player1.money > airplaneFee) {
+						player1.money = player1.money - airplaneFee;
+						rideAirplaneScene.setVisible(false);
+						diceThrowButton.setVisible(true);
+						player1moneyText.setText("money : " + player1.money);
+						player1Flying = "비행기 타기";
+					} else {
+						cautionPointText.setText("돈이 모자랍니다!!");
+					}
+				} else if (whoRideAirplane.equals("player2")) {
+					if (player2.money > airplaneFee) {
+						player2.money = player2.money - airplaneFee;
+						rideAirplaneScene.setVisible(false);
+						diceThrowButton.setVisible(true);
+						player2moneyText.setText("money : " + player2.money);
+						player2Flying = "비행기 타기";
+						
+					} else {
+						cautionPointText.setText("돈이 모자랍니다!!");
+					}
+				}
+
+			}
+		});
+		rideAirplaneScene.add(okButton);
+
+		noButton.setText("아니요");
+		noButton.setBounds(205, 200, 100, 50);
+		noButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				diceThrowButton.setVisible(true);
+				rideAirplaneScene.setVisible(false);
+			}
+		});
+		rideAirplaneScene.add(noButton);
+		
 		player1Move.start();
 		player2Move.start();
 	}
 	
 	
-
 	public void player(Player player, JLabel playerImage) {
 
 		if (player.location == 4 || player.location == 19) {
@@ -284,11 +374,13 @@ public class BlueMarble {
 			//플레이어가 공항에 도착했을 때
 		}else if (player.location == 9) {
 			if (player == player1) {
-				Player1UseAirPort = true;
+				whoRideAirplane = "player1";
 			} else if (player == player2) {
-				Player2UseAirPort = true;
+				whoRideAirplane = "player2";
 			}
-			airport();
+			diceThrowButton.setVisible(false);
+			rideAirplaneScene.setVisible(true);
+			chooseRideAirplane.setText("비행기를 타시겠습니까?");
 			playSituation.setText("공항에 도착했습니다");
 
 		//플레이어가 무인도에 도착했을 때
@@ -331,24 +423,26 @@ public class BlueMarble {
 	}
 	
 	public void airport() {
+	
+		playSituation.setText("가고 싶은 지역을 선택해주세요");
 		
 		for (int i = 0; i < bottomLine.length; i++) {
 			bottomLine[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					if (Player1UseAirPort == true) {
+					if (player1Flying.equals("비행기 타기")) {
 						for (int i = 0; i < bottomLine.length; i++) {
 							if (e.getSource() == bottomLine[i]) {
 								player1Image.setLocation(bottomLine[i].getX() + 10, bottomLine[i].getY() + 10);
 								player1.location = i + 1;
-								Player1UseAirPort = false;
+								//player1Flying = "";
 							}
 						}
-					}else if(Player2UseAirPort = true) {
+					}else if(player2Flying.equals("비행기 타기")) {
 						for (int i = 0; i < bottomLine.length; i++) {
 							if (e.getSource() == bottomLine[i]) {
 								player2Image.setLocation(bottomLine[i].getX() + 10, bottomLine[i].getY() + 10);
 								player2.location = i + 1;
-								Player2UseAirPort = false;
+								//player2Flying = "";
 							}
 						}
 					}
@@ -359,20 +453,20 @@ public class BlueMarble {
 		for (int i = 0; i < leftLine.length; i++) {
 			leftLine[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					if (Player1UseAirPort == true) {
+					if (player1Flying.equals("비행기 타기")) {
 						for (int i = 0; i < leftLine.length; i++) {
 							if (e.getSource() == leftLine[i]) {
 								player1Image.setLocation(leftLine[i].getX() + 10, leftLine[i].getY() + 10);
 								player1.location = i + 9;
-								Player1UseAirPort = false;
+								//player1Flying = "";
 							}
 						}
-					}else if (Player2UseAirPort == true) {
+					}else if (player2Flying.equals("비행기 타기")) {
 						for (int i = 0; i < leftLine.length; i++) {
 							if (e.getSource() == leftLine[i]) {
 								player2Image.setLocation(leftLine[i].getX() + 10, leftLine[i].getY() + 10);
 								player2.location = i + 9;
-								Player2UseAirPort = false;
+								//player2Flying = "";
 							}
 						}
 					}
@@ -383,20 +477,20 @@ public class BlueMarble {
 		for (int i = 0; i < topLine.length; i++) {
 			topLine[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					if (Player1UseAirPort == true) {
+					if (player1Flying.equals("비행기 타기")) {
 						for (int i = 0; i < topLine.length; i++) {
 							if (e.getSource() == topLine[i]) {
 								player1Image.setLocation(topLine[i].getX() + 10, topLine[i].getY() + 10);
 								player1.location = i + 16;
-								Player1UseAirPort = false;
+								//player1Flying = "";
 							}
 						}
-					}else if (Player2UseAirPort == true) {
+					}else if (player2Flying.equals("비행기 타기")) {
 						for (int i = 0; i < topLine.length; i++) {
 							if (e.getSource() == topLine[i]) {
 								player2Image.setLocation(topLine[i].getX() + 10, topLine[i].getY() + 10);
 								player2.location = i + 16;
-								Player2UseAirPort = false;
+								//player2Flying = "";
 							}
 						}
 					}
@@ -407,20 +501,20 @@ public class BlueMarble {
 		for (int i = 0; i < rightLine.length; i++) {
 			rightLine[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					if (Player1UseAirPort == true) {
+					if (player1Flying.equals("비행기 타기")) {
 						for (int i = 0; i < rightLine.length; i++) {
 							if (e.getSource() == rightLine[i]) {
 								player1Image.setLocation(rightLine[i].getX() + 10, rightLine[i].getY() + 10);
 								player1.location = i + 24;
-								Player1UseAirPort = false;
+								//player1Flying = "";
 							}
 						}
-					}else if (Player2UseAirPort == true) {
+					}else if (player2Flying.equals("비행기 타기")) {
 						for (int i = 0; i < rightLine.length; i++) {
 							if (e.getSource() == rightLine[i]) {
 								player2Image.setLocation(rightLine[i].getX() + 10, rightLine[i].getY() + 10);
 								player2.location = i + 24;
-								Player2UseAirPort = false;
+								//player2Flying = "";
 							}
 						}
 					}
