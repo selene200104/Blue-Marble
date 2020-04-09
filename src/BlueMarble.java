@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -98,6 +99,8 @@ public class BlueMarble {
 
 	// 그 외
 	JLabel playSituation = new JLabel();// 플레이 상황을 보여주는 text
+	JLabel[] uninhabitedEmoticon = new JLabel[2]; //무인도 탈출 카드 이미지
+	JLabel[] uninhabitedEmoticonExplanation = new JLabel[2]; //무인도 카드 이미지
 	int socialWelfareCost = 10000; // 사회복지기금 비용
 	int collectedSocialWelfare = 0; // 사회복지기금에 모인 돈
 	int luckeyCardNum = 0; // 행운카드 번호
@@ -162,6 +165,39 @@ public class BlueMarble {
 		blueMarbleScene.add(player2leftdayOfisland);
 		player2leftdayOfisland.setVisible(false);
 
+		for (int i = 0; i < uninhabitedEmoticon.length; i++) {
+			blueMarbleScene.add(uninhabitedEmoticon[i] = new JLabel());
+			blueMarbleScene.add(uninhabitedEmoticonExplanation[i] = new JLabel());
+			
+			uninhabitedEmoticon[i].setIcon(new ImageIcon("./images/uninhabitedCardEmoticon.png"));
+			uninhabitedEmoticonExplanation[i].setText("무인도 탈출 카드 소유중");
+			
+			uninhabitedEmoticon[i].setVisible(false);
+			uninhabitedEmoticonExplanation[i].setVisible(false);
+			
+			uninhabitedEmoticon[i].addMouseListener(new MouseAdapter() {
+				public void mouseEntered(MouseEvent e) {
+					for (int i = 0; i < uninhabitedEmoticon.length; i++) {
+						if (e.getSource() == uninhabitedEmoticon[i]) {
+							uninhabitedEmoticonExplanation[i].setVisible(true);
+						}
+					}
+				}
+				
+				public void mouseExited(MouseEvent e) {
+					for (int i = 0; i < uninhabitedEmoticon.length; i++) {
+						if (e.getSource() == uninhabitedEmoticon[i]) {
+							uninhabitedEmoticonExplanation[i].setVisible(false);
+						}
+					}
+			    }
+			});
+		}
+		uninhabitedEmoticon[0].setBounds(260, 200, 50, 50);
+		uninhabitedEmoticon[1].setBounds(260, 400, 50, 50);
+		uninhabitedEmoticonExplanation[0].setBounds(310, 200, 250, 50);
+		uninhabitedEmoticonExplanation[1].setBounds(310, 400, 250, 50);
+		
 		player1infomationBoard.setIcon(new ImageIcon("./images/Player1Board.png"));
 		player1infomationBoard.setBounds(83, 87, 250, 190);
 		blueMarbleScene.add(player1infomationBoard);
@@ -179,7 +215,7 @@ public class BlueMarble {
 		playSituation.setFont(new Font("굴림", Font.BOLD, 16));
 		playSituation.setBounds(350, 110, 500, 80);
 		blueMarbleScene.add(playSituation);
-
+		
 		// 부루마블 판
 		// 위쪽 줄
 		for (int i = 0; i < topLine.length; i++) {
@@ -237,7 +273,6 @@ public class BlueMarble {
 
 				// 랜덤으로 나온 수가 주사위의 수가 된다.
 				diceNum = ramdom.nextInt(6) + 1;
-				diceNum = 1;
 				diceNumberText.setText("주사위 수 : " + diceNum);
 
 				playSituation.setText("");
@@ -291,6 +326,9 @@ public class BlueMarble {
 						synchronized (player2Move) {
 							player2Move.notify();
 						}
+						
+						System.out.println(player2.previousLocation);
+						System.out.println(player2.previousLocation);
 
 						player(player2, player2Image);
 
@@ -463,6 +501,7 @@ public class BlueMarble {
 						player1leftdayOfisland.setVisible(true);
 						Player1forcedRest = 3;
 						isPlayer1hasCard = false;
+						
 					} else if (isPlayer2hasCard == true) {
 						//무인도로 이동한다.
 						player2.location = 15;
@@ -505,10 +544,10 @@ public class BlueMarble {
 				} else if (luckeyCardNum == 6) {
 
 					if (isPlayer1hasCard == true) {
-
+						uninhabitedEmoticon[0].setVisible(true);
 
 					} else if (isPlayer2hasCard == true) {
-
+						uninhabitedEmoticon[1].setVisible(true);
 					}
 
 				//우대권
@@ -608,7 +647,6 @@ public class BlueMarble {
 							if (e.getSource() == bottomLine[i]) {
 								player1Image.setLocation(bottomLine[i].getX() + 10, bottomLine[i].getY() + 10);
 								player1.location = i + 1;
-								// player1Flying = "";
 							}
 						}
 					} else if (player2Flying.contains("비행기 타기")) {
@@ -616,7 +654,6 @@ public class BlueMarble {
 							if (e.getSource() == bottomLine[i]) {
 								player2Image.setLocation(bottomLine[i].getX() + 10, bottomLine[i].getY() + 10);
 								player2.location = i + 1;
-								// player2Flying = "";
 							}
 						}
 					}
@@ -632,7 +669,6 @@ public class BlueMarble {
 							if (e.getSource() == leftLine[i]) {
 								player1Image.setLocation(leftLine[i].getX() + 10, leftLine[i].getY() + 10);
 								player1.location = i + 9;
-								// player1Flying = "";
 							}
 						}
 					} else if (player2Flying.contains("비행기 타기")) {
@@ -640,7 +676,6 @@ public class BlueMarble {
 							if (e.getSource() == leftLine[i]) {
 								player2Image.setLocation(leftLine[i].getX() + 10, leftLine[i].getY() + 10);
 								player2.location = i + 9;
-								// player2Flying = "";
 							}
 						}
 					}
@@ -656,7 +691,6 @@ public class BlueMarble {
 							if (e.getSource() == topLine[i]) {
 								player1Image.setLocation(topLine[i].getX() + 10, topLine[i].getY() + 10);
 								player1.location = i + 16;
-								// player1Flying = "";
 							}
 						}
 					} else if (player2Flying.contains("비행기 타기")) {
@@ -664,7 +698,6 @@ public class BlueMarble {
 							if (e.getSource() == topLine[i]) {
 								player2Image.setLocation(topLine[i].getX() + 10, topLine[i].getY() + 10);
 								player2.location = i + 16;
-								// player2Flying = "";
 							}
 						}
 					}
@@ -680,7 +713,6 @@ public class BlueMarble {
 							if (e.getSource() == rightLine[i]) {
 								player1Image.setLocation(rightLine[i].getX() + 10, rightLine[i].getY() + 10);
 								player1.location = i + 24;
-								// player1Flying = "";
 							}
 						}
 					} else if (player2Flying.contains("비행기 타기")) {
@@ -688,7 +720,6 @@ public class BlueMarble {
 							if (e.getSource() == rightLine[i]) {
 								player2Image.setLocation(rightLine[i].getX() + 10, rightLine[i].getY() + 10);
 								player2.location = i + 24;
-								// player2Flying = "";
 							}
 						}
 					}
@@ -702,8 +733,9 @@ public class BlueMarble {
 		luckeyCardScene.setVisible(true);
 		diceThrowButton.setVisible(false);
 
-		luckeyCardNum = ramdom.nextInt(6);
-
+		luckeyCardNum = ramdom.nextInt(7);
+		luckeyCardNum = 6;
+		
 		if (luckeyCardNum == 0) {
 			cardNameText.setText("세계여행");
 			cardContentText.setText("선택한 지역으로 이동할 수 있다");
