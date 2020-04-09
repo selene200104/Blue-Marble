@@ -393,13 +393,13 @@ public class BlueMarble {
 				//세계여행
 				if (luckeyCardNum == 0) {
 					if (isPlayer1hasCard == true) {
-						player1Flying = "비행기 타기";
+						player1Flying = "비행기 타기(카드)";
 						airport();
 						playSituation.setText("원하는 도시를 클릭 후 주사위 버튼을 눌러주세요");
 						isPlayer1hasCard = false;
 						
 					} else if (isPlayer2hasCard == true) {
-						player2Flying = "비행기 타기";
+						player2Flying = "비행기 타기(카드)";
 						airport();
 						playSituation.setText("원하는 도시를 클릭 후 주사위 버튼을 눌러주세요");
 						isPlayer2hasCard = false;
@@ -603,7 +603,7 @@ public class BlueMarble {
 		for (int i = 0; i < bottomLine.length; i++) {
 			bottomLine[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					if (player1Flying.equals("비행기 타기")) {
+					if (player1Flying.contains("비행기 타기")) {
 						for (int i = 0; i < bottomLine.length; i++) {
 							if (e.getSource() == bottomLine[i]) {
 								player1Image.setLocation(bottomLine[i].getX() + 10, bottomLine[i].getY() + 10);
@@ -611,7 +611,7 @@ public class BlueMarble {
 								// player1Flying = "";
 							}
 						}
-					} else if (player2Flying.equals("비행기 타기")) {
+					} else if (player2Flying.contains("비행기 타기")) {
 						for (int i = 0; i < bottomLine.length; i++) {
 							if (e.getSource() == bottomLine[i]) {
 								player2Image.setLocation(bottomLine[i].getX() + 10, bottomLine[i].getY() + 10);
@@ -627,7 +627,7 @@ public class BlueMarble {
 		for (int i = 0; i < leftLine.length; i++) {
 			leftLine[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					if (player1Flying.equals("비행기 타기")) {
+					if (player1Flying.contains("비행기 타기")) {
 						for (int i = 0; i < leftLine.length; i++) {
 							if (e.getSource() == leftLine[i]) {
 								player1Image.setLocation(leftLine[i].getX() + 10, leftLine[i].getY() + 10);
@@ -635,7 +635,7 @@ public class BlueMarble {
 								// player1Flying = "";
 							}
 						}
-					} else if (player2Flying.equals("비행기 타기")) {
+					} else if (player2Flying.contains("비행기 타기")) {
 						for (int i = 0; i < leftLine.length; i++) {
 							if (e.getSource() == leftLine[i]) {
 								player2Image.setLocation(leftLine[i].getX() + 10, leftLine[i].getY() + 10);
@@ -651,7 +651,7 @@ public class BlueMarble {
 		for (int i = 0; i < topLine.length; i++) {
 			topLine[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					if (player1Flying.equals("비행기 타기")) {
+					if (player1Flying.contains("비행기 타기")) {
 						for (int i = 0; i < topLine.length; i++) {
 							if (e.getSource() == topLine[i]) {
 								player1Image.setLocation(topLine[i].getX() + 10, topLine[i].getY() + 10);
@@ -659,7 +659,7 @@ public class BlueMarble {
 								// player1Flying = "";
 							}
 						}
-					} else if (player2Flying.equals("비행기 타기")) {
+					} else if (player2Flying.contains("비행기 타기")) {
 						for (int i = 0; i < topLine.length; i++) {
 							if (e.getSource() == topLine[i]) {
 								player2Image.setLocation(topLine[i].getX() + 10, topLine[i].getY() + 10);
@@ -675,7 +675,7 @@ public class BlueMarble {
 		for (int i = 0; i < rightLine.length; i++) {
 			rightLine[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					if (player1Flying.equals("비행기 타기")) {
+					if (player1Flying.contains("비행기 타기")) {
 						for (int i = 0; i < rightLine.length; i++) {
 							if (e.getSource() == rightLine[i]) {
 								player1Image.setLocation(rightLine[i].getX() + 10, rightLine[i].getY() + 10);
@@ -683,7 +683,7 @@ public class BlueMarble {
 								// player1Flying = "";
 							}
 						}
-					} else if (player2Flying.equals("비행기 타기")) {
+					} else if (player2Flying.contains("비행기 타기")) {
 						for (int i = 0; i < rightLine.length; i++) {
 							if (e.getSource() == rightLine[i]) {
 								player2Image.setLocation(rightLine[i].getX() + 10, rightLine[i].getY() + 10);
