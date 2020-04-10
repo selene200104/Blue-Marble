@@ -380,7 +380,7 @@ public class BlueMarble {
 			for (int i = 0; i <= player.location - 1; i++) {
 				playerImage.setLocation(bottomLine[i].getX() + 10, bottomLine[i].getY() + 10);
 			}
-			if (player == player1) {
+			//if (player == player1) {
 				if (player.location != 4) {
 					landLabel[player.location].setVisible(true);
 					diceThrowButton.setVisible(false);
@@ -415,15 +415,15 @@ public class BlueMarble {
 								+ 10;
 					}
 				}
-			} else {
-				System.out.println("플레이어 2가 움직였습니다.");
-			}
+			//} else {
+			//	System.out.println("플레이어 2가 움직였습니다.");
+			//}
 
 		} else if (player.location >= 9 && player.location <= 15) {
 			for (int i = 0; i <= player.location - 9; i++) {
 				playerImage.setLocation(leftLine[i].getX() + 10, leftLine[i].getY() + 10);
 			}
-			if (player == player1) {
+			//if (player == player1) {
 				if (player.location != 9  && player.location != 15) {
 					landLabel[player.location].setVisible(true);
 					diceThrowButton.setVisible(false);
@@ -458,15 +458,15 @@ public class BlueMarble {
 								+ 10;
 					}
 				}
-			} else {
-				System.out.println("플레이어 2가 움직였습니다.");
-			}
+			//} else {
+			//	System.out.println("플레이어 2가 움직였습니다.");
+			//}
 
 		} else if (player.location >= 16 && player.location <= 23) {
 			for (int i = 0; i <= player.location - 16; i++) {
 				playerImage.setLocation(topLine[i].getX() + 10, topLine[i].getY() + 10);
 			}
-			if (player == player1) {
+			//if (player == player1) {
 				if (player.location != 20) {
 					landLabel[player.location].setVisible(true);
 					diceThrowButton.setVisible(false);
@@ -501,15 +501,15 @@ public class BlueMarble {
 								+ 10;
 					}
 				}
-			} else {
-				System.out.println("플레이어 2가 움직였습니다.");
-			}
+			//} else {
+			//	System.out.println("플레이어 2가 움직였습니다.");
+			//}
 
 		} else if (player.location >= 24 && player.location <= 29) {
 			for (int i = 0; i <= player.location - 24; i++) {
 				playerImage.setLocation(rightLine[i].getX() + 10, rightLine[i].getY() + 10);
 			}
-			if (player == player1) {
+			//if (player == player1) {
 				if (player.location != 24 && player.location != 27) {
 					landLabel[player.location].setVisible(true);
 					diceThrowButton.setVisible(false);
@@ -544,9 +544,9 @@ public class BlueMarble {
 								+ 10;
 					}
 				}
-			} else {
-				System.out.println("플레이어 2가 움직였습니다.");
-			}
+			//} else {
+			//	System.out.println("플레이어 2가 움직였습니다.");
+			//}
 		}
 		
 		// 빌라 버튼 클릭했을 때
