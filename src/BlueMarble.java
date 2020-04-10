@@ -43,7 +43,7 @@ public class BlueMarble {
 	JLabel landName = new JLabel();
 	JLabel[] constructionPrice = new JLabel[3];
 	JLabel constructionCostText = new JLabel();
-	JButton[] islandBulidingButton = new JButton[3];
+	//JButton[] islandBulidingButton = new JButton[3];
 	
 	//JButton[] greenLandBulidingButton = new JButton[3];
 	// JPanel[] islandPanel = new JPanel[8];
@@ -63,7 +63,6 @@ public class BlueMarble {
 	int constructionPriceWidth = 100;
 	int constructionPriceHeight = 20;
 
-	// int playerlocation = 0;
 	int constructionCost = 0;
 
 	int villaCheckCount = 0;
@@ -203,7 +202,6 @@ public class BlueMarble {
 		landName.setLayout(null);
 		landName.setText("");
 		landName.setBounds(nameHorizontalLength, nameVerticalLength, nameLineWidth, nameLineHeight);
-		//islandPanel.add(islandName);	
 
 		// 땅 객체 배열 생성(위치 지역명 , 빌라 값, 빌딩 값, 호텔 값, 빌라 선택 횟수, 빌딩 선택 횟수, 호텔 선택 횟수, 땅 총 가격)
 		land[0] = new Land("출발지", 0, 0, 0, 0, 0, 0, 0);
@@ -349,13 +347,17 @@ public class BlueMarble {
 		blueMarbleScene.add(diceNumberText);
 
 	}
-
+	
 	public void playerMove(Player player, JLabel playerImage) {
 		
+		System.out.println("플레이어 움직임");
+		
 		//건물 선택 버튼 배열 초기화
+		JButton[] islandBulidingButton = new JButton[3];
 		islandBulidingButton[0] = new JButton((new ImageIcon("./images/villa.png")));
 		islandBulidingButton[1] = new JButton((new ImageIcon("./images/building.png")));
 		islandBulidingButton[2] = new JButton((new ImageIcon("./images/hotel.png")));
+		
 		
 		//각각의 건물 가격 배열 초기화
 		constructionPrice[0] = new JLabel(""+land[player.location].villaPrice);
@@ -364,7 +366,7 @@ public class BlueMarble {
 		
 		//총 건설 비용 
 		constructionCostText.setLayout(null);
-		constructionCostText.setText("건설비용: 0");
+		constructionCostText.setText("건설비용: " + land[player.location].constructionCost);
 		constructionCostText.setBounds(10, 200, nameLineWidth, nameLineHeight);
 		landLabel[player.location].add(constructionCostText);
 		
@@ -389,9 +391,9 @@ public class BlueMarble {
 					System.out.println("플레이어 1이 움직였습니다.");
 					landName.setText("" + land[player.location].landName);
 					
-		
 					System.out.println("지역이름 : "+land[player.location].landName+" | 도착 당시 | 빌라 선택횟수: "+land[player.location].villaCheckCount+
-							" | 빌딩 선택 횟수: "+land[player.location].buildingCheckCount+" | 호텔 선택 횟수: "+land[player.location].hotelCheckCount);
+							" | 빌딩 선택 횟수: "+land[player.location].buildingCheckCount+" | 호텔 선택 횟수: "+land[player.location].hotelCheckCount+
+							" | 가격 : "+land[player.location].constructionCost);
 
 					int islandButtonHorizontalLength = 7;
 					
@@ -419,16 +421,15 @@ public class BlueMarble {
 						System.out.println("빌라 선택함");
 						if(land[player.location].villaCheckCount == 0 ) {
 							land[player.location].villaCheckCount++;
-							System.out.println("지역이름 : "+land[player.location].landName+" 빌라 선택횟수: "+land[player.location].villaCheckCount);
+							System.out.println("villaCheck지역이름 : "+land[player.location].landName+" 빌라 선택횟수: "+land[player.location].villaCheckCount);
 							islandBulidingButton[0].setIcon(new ImageIcon("./images/villaCheck.png"));
 							
 							land[player.location].constructionCost += land[player.location].villaPrice;
 							constructionCostText.setText("건설비용: " + land[player.location].constructionCost);
 						}else {
 							land[player.location].villaCheckCount--;
-							System.out.println("지역이름 : "+land[player.location].landName+" 빌라 선택횟수: "+land[player.location].villaCheckCount);
+							System.out.println("villa지역이름 : "+land[player.location].landName+" 빌라 선택횟수: "+land[player.location].villaCheckCount);
 							islandBulidingButton[0].setIcon(new ImageIcon("./images/villa.png"));
-							//int constructionCost = land[player.location].constructionCost-land[player.location].villaPrice;
 							
 							land[player.location].constructionCost -= land[player.location].villaPrice;
 							constructionCostText.setText("건설비용: " + land[player.location].constructionCost);
@@ -446,7 +447,6 @@ public class BlueMarble {
 							islandBulidingButton[1].setIcon(new ImageIcon("./images/buildingCheck.png"));
 							
 							land[player.location].constructionCost += land[player.location].buildingPrice;
-							//int constructionCost = land[player.location].constructionCost+land[player.location].buildingPrice;
 							constructionCostText.setText("건설비용: " + land[player.location].constructionCost);
 						}else {
 							land[player.location].buildingCheckCount--;
@@ -454,7 +454,6 @@ public class BlueMarble {
 							islandBulidingButton[1].setIcon(new ImageIcon("./images/building.png"));
 							
 							land[player.location].constructionCost -= land[player.location].buildingPrice;
-							//int constructionCost = land[player.location].constructionCost-land[player.location].buildingPrice;
 							constructionCostText.setText("건설비용: " + land[player.location].constructionCost);
 						}
 					}
@@ -470,7 +469,6 @@ public class BlueMarble {
 							islandBulidingButton[2].setIcon(new ImageIcon("./images/hotelCheck.png"));
 							
 							land[player.location].constructionCost += land[player.location].hotelPrice;
-							//int constructionCost = land[player.location].constructionCost-land[player.location].buildingPrice;
 							constructionCostText.setText("건설비용: " + land[player.location].constructionCost);
 						}else {
 							land[player.location].hotelCheckCount--;
@@ -517,104 +515,6 @@ public class BlueMarble {
 				playerImage.setLocation(rightLine[i].getX() + 10, rightLine[i].getY() + 10);
 			}
 		}
-		
-		/*islandBulidingButton[0].addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				land[player.location].villaCheckCount++;
-				System.out.println("지역이름 : "+land[player.location].landName+"빌라 선택횟수: "+land[player.location].villaCheckCount);
-				if (land[player.location].villaCheckCount % 2 == 0) {
-					islandBulidingButton[0].setIcon(new ImageIcon("./images/islandVilla.png"));
-					constructionCost -= land[player.location].villaPrice;
-					// constructionCostText.setText("건설비용 : " + constructionCost);
-				} else {
-					islandBulidingButton[0].setIcon(new ImageIcon("./images/islandVillaCheck.png"));
-					constructionCost += land[player.location].villaPrice;
-					// constructionCostText.setText("건설비용 : " + constructionCost);
-				}
-			}
-		});
-		islandPanel.add(islandBulidingButton[0]);
-		islandBulidingButton[0].setBounds(islandButtonHorizontalLength, islandButtonVerticalLength,
-				islandButtonWidth, islandButtonHeight);
-		//islandButtonHorizontalLength = islandButtonHorizontalLength + islandButtonWidth + 10;
-
-		islandBulidingButton[1].addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				land[player.location].buildingCheckCount++;
-				if (land[player.location].buildingCheckCount % 2 == 0) {
-					islandBulidingButton[1].setIcon(new ImageIcon("./images/islandBuilding.png"));
-					//constructionCost -= land[player.location].buildingPrice;
-					// constructionCostText.setText("건설비용 : " + constructionCost);
-				} else {
-					islandBulidingButton[1].setIcon(new ImageIcon("./images/islandBuildingCheck.png"));
-					//constructionCost += land[player.location].buildingPrice;
-					// constructionCostText.setText("건설비용 : " + constructionCost);
-				}
-			}
-		});
-		islandPanel.add(islandBulidingButton[1]);
-		islandBulidingButton[1].setBounds(islandButtonHorizontalLength+islandButtonWidth+10, islandButtonVerticalLength,
-				islandButtonWidth, islandButtonHeight);
-		//islandButtonHorizontalLength = islandButtonHorizontalLength + islandButtonWidth + 10;
-
-		islandBulidingButton[2].addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				land[player.location].hotelCheckCount++;
-				if (land[player.location].hotelCheckCount % 2 == 0) {
-					islandBulidingButton[2].setIcon(new ImageIcon("./images/islandHotel.png"));
-					//constructionCost -= land[player.location].hotelPrice;
-					// constructionCostText.setText("건설비용 : " + constructionCost);
-				} else {
-					islandBulidingButton[2].setIcon(new ImageIcon("./images/islandHotelCheck.png"));
-					//constructionCost += land[player.location].hotelPrice;
-					// constructionCostText.setText("건설비용 : " + constructionCost);
-				}
-			}
-		});
-		islandPanel.add(islandBulidingButton[2]);
-		islandBulidingButton[2].setBounds(islandButtonHorizontalLength+(islandButtonWidth+10)*2, islandButtonVerticalLength,
-				islandButtonWidth, islandButtonHeight);
-		//islandButtonHorizontalLength = islandButtonHorizontalLength + islandButtonWidth + 10;
-
-		JButton CloseButton = new JButton((new ImageIcon("./images/closeButton.png")));
-		CloseButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				islandPanel.setVisible(false);
-				diceThrowButton.setVisible(true);
-				// land[player.location].villaCheckCount = 0;
-				// land[player.location].buildingCheckCount = 0;
-				// land[player.location].hotelCheckCount = 0;
-
-				if (land[player.location].villaCheckCount % 2 == 0) {
-					islandBulidingButton[0].setIcon(new ImageIcon("./images/islandVilla.png"));
-					//constructionCost -= land[player.location].villaPrice;
-				} else {
-					islandBulidingButton[0].setIcon(new ImageIcon("./images/islandVillaCheck.png"));
-					//constructionCost += land[player.location].villaPrice;
-				}
-
-				if (land[player.location].buildingCheckCount % 2 == 0) {
-					islandBulidingButton[1].setIcon(new ImageIcon("./images/islandBuilding.png"));
-					//constructionCost -= land[player.location].buildingPrice;
-				} else {
-					islandBulidingButton[1].setIcon(new ImageIcon("./images/islandBuildingCheck.png"));
-					//constructionCost += land[player.location].buildingPrice;
-				}
-				if (land[player.location].hotelCheckCount % 2 == 0) {
-					islandBulidingButton[2].setIcon(new ImageIcon("./images/islandHotel.png"));
-					//constructionCost -= land[player.location].hotelPrice;
-				} else {
-					islandBulidingButton[2].setIcon(new ImageIcon("./images/islandHotelCheck.png"));
-					//constructionCost += land[player.location].hotelPrice;
-				}
-			}
-		});
-		CloseButton.setBounds(280, 0, 50, 50);
-		islandPanel.add(CloseButton);
-		CloseButton.setVisible(true);
-		CloseButton.setBorderPainted(false);
-		CloseButton.setFocusPainted(false);
-		CloseButton.setContentAreaFilled(false);*/
 	}
 
 	public void player(Player player) {
