@@ -292,7 +292,7 @@ public class BlueMarble {
 			public void actionPerformed(ActionEvent e) {
 
 				// 랜덤으로 나온 수가 주사위의 수가 된다.
-				// diceNum = ramdom.nextInt(6) + 1;
+				//diceNum = ramdom.nextInt(6) + 1;
 				diceNum = 1;
 				diceNumberText.setText("주사위 수 : " + diceNum);
 
@@ -351,6 +351,7 @@ public class BlueMarble {
 
 		// 건물 선택 버튼 배열 초기화
 		JButton[] islandBulidingButton = new JButton[3];
+		
 		islandBulidingButton[0] = new JButton((new ImageIcon("./images/villa.png")));
 		islandBulidingButton[1] = new JButton((new ImageIcon("./images/building.png")));
 		islandBulidingButton[2] = new JButton((new ImageIcon("./images/hotel.png")));
@@ -554,7 +555,7 @@ public class BlueMarble {
 				System.out.println("빌라 선택함");
 				if (land[player.location].villaCheckCount == 0) {
 					land[player.location].villaCheckCount++;
-					System.out.println("villaCheck지역이름 : " + land[player.location].landName + " 빌라 선택횟수: "
+					System.out.println("지역이름 : " + land[player.location].landName + " 빌라 선택횟수: "
 							+ land[player.location].villaCheckCount);
 					islandBulidingButton[0].setIcon(new ImageIcon("./images/villaCheck.png"));
 
@@ -562,7 +563,7 @@ public class BlueMarble {
 					constructionCostText.setText("건설비용: " + land[player.location].constructionCost);
 				} else {
 					land[player.location].villaCheckCount--;
-					System.out.println("villa지역이름 : " + land[player.location].landName + " 빌라 선택횟수: "
+					System.out.println("지역이름 : " + land[player.location].landName + " 빌라 선택횟수: "
 							+ land[player.location].villaCheckCount);
 					islandBulidingButton[0].setIcon(new ImageIcon("./images/villa.png"));
 
@@ -625,6 +626,38 @@ public class BlueMarble {
 			public void actionPerformed(ActionEvent e) {
 				landLabel[player.location].setVisible(false);
 				diceThrowButton.setVisible(true);
+				
+				/*나중에 구입과 관련된 기능 구현시 수정해야함*/
+				land[player.location].villaCheckCount -= land[player.location].villaCheckCount;
+				land[player.location].buildingCheckCount -= land[player.location].buildingCheckCount;
+				land[player.location].hotelCheckCount -= land[player.location].hotelCheckCount;
+				land[player.location].constructionCost -= land[player.location].constructionCost;
+				constructionCostText.setText("건설비용: " + land[player.location].constructionCost);
+				
+				//취소할때, 버튼 이미지를 다시 원래대로 수정한다.
+				if(land[player.location].villaCheckCount == 0) {
+					islandBulidingButton[0].setIcon(new ImageIcon("./images/villa.png"));
+				}else{
+					islandBulidingButton[0].setIcon(new ImageIcon("./images/villaCheck.png"));
+				}
+				
+				if(land[player.location].buildingCheckCount == 0) {
+					islandBulidingButton[1].setIcon(new ImageIcon("./images/building.png"));
+				}else {
+					islandBulidingButton[1].setIcon(new ImageIcon("./images/buildingCheck.png"));
+				}
+				
+				if(land[player.location].hotelCheckCount == 0) {
+					islandBulidingButton[2].setIcon(new ImageIcon("./images/hotel.png"));
+				}else {
+					islandBulidingButton[2].setIcon(new ImageIcon("./images/hotelCheck.png"));
+				}
+				
+				
+				System.out.println("빌라 체크: "+land[player.location].villaCheckCount+
+						"빌딩 체크: "+land[player.location].buildingCheckCount+
+						"호텔 체크: "+land[player.location].hotelCheckCount);
+				/*나중에 구입과 관련된 기능 구현시 수정해야함*/
 			}
 		});
 		CloseButton.setBounds(280, 0, 50, 50);
@@ -633,6 +666,17 @@ public class BlueMarble {
 		CloseButton.setBorderPainted(false);
 		CloseButton.setFocusPainted(false);
 		CloseButton.setContentAreaFilled(false);
+		
+		JButton buyButton = new JButton("구매하기");
+		buyButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//landLabel[player.location].setVisible(false);
+				//diceThrowButton.setVisible(true);
+			}
+		});
+		buyButton.setBounds(100, 250, 150, 20);
+		landLabel[player.location].add(buyButton);
+		buyButton.setVisible(true);
 	}
 
 	public void player(Player player) {
