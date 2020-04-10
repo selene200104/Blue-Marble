@@ -1,26 +1,6 @@
 import javax.swing.JLabel;
 
 public class PlayerMove extends Thread{
-
-	/*
-	JLabel[] topLine = new JLabel[8];
-	JLabel[] bottomLine = new JLabel[8];
-	JLabel[] leftLine = new JLabel[7];
-	JLabel[] rightLine = new JLabel[7];
-	
-	
-	public PlayerMove(JLabel[] rightLine,  JLabel[] leftLine, JLabel[] bottomLine, JLabel[] topLine) {
-		for(int i = 0; i < 8; i++) {
-			this.topLine[i] = topLine[i];
-			this.bottomLine[i] = bottomLine[i];
-		}
-		
-		for(int i = 0; i < 7; i++) {
-			this.leftLine[i] = leftLine[i];
-			this.rightLine[i] = rightLine[i];
-		}
-	}
-	*/
 	
 	Player player = new Player();
 	JLabel playerImage = new JLabel();

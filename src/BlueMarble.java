@@ -1,6 +1,8 @@
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -12,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 public class BlueMarble {
 
@@ -34,7 +37,14 @@ public class BlueMarble {
 	JPanel blueMarbleScene = new JPanel();
 	JPanel rideAirplaneScene = new JPanel();
 	JPanel luckeyCardScene = new JPanel();
-
+	JPanel gameEndingScene = new JPanel() {
+		public void paintComponent(Graphics g) {
+			Dimension d = getSize();
+			ImageIcon image = new ImageIcon("./images/finalBackground.jpg");
+			g.drawImage(image.getImage(), 0, 0, d.width, d.height, this);
+		}
+	};
+	
 	// 플레이어
 	JLabel player1Image = new JLabel();
 	JLabel player2Image = new JLabel();
@@ -97,6 +107,10 @@ public class BlueMarble {
 	boolean isPlayer1hasCard = false;
 	boolean isPlayer2hasCard = false;
 
+	//엔딩 
+	JLabel gameEndingText = new JLabel();
+	JLabel winnerText = new JLabel();
+	
 	// 그 외
 	JLabel playSituation = new JLabel();// 플레이 상황을 보여주는 text
 	JLabel[] uninhabitedEmoticon = new JLabel[2]; //무인도 탈출 카드 이미지
@@ -107,7 +121,8 @@ public class BlueMarble {
 
 	PlayerMove player1Move = new PlayerMove(player1, player1Image, playSituation, player1moneyText);
 	PlayerMove player2Move = new PlayerMove(player2, player2Image, playSituation, player2moneyText);
-
+	GameEnding gameEnding = new GameEnding(player1, player2, gameEndingScene, blueMarbleScene, gameEndingText, winnerText);
+	
 	public BlueMarble() {
 
 		frame = new JFrame();
@@ -118,6 +133,11 @@ public class BlueMarble {
 		frame.setResizable(false);
 		frame.getContentPane().setLayout(null);
 
+		gameEndingScene.setBounds(0, 0, 800, 600);
+		frame.getContentPane().add(gameEndingScene);
+		gameEndingScene.setLayout(null);
+		gameEndingScene.setVisible(false);
+		
 		rideAirplaneScene.setBounds(180, 100, 400, 300);
 		rideAirplaneScene.setBackground(Color.DARK_GRAY);
 		frame.getContentPane().add(rideAirplaneScene);
@@ -133,7 +153,7 @@ public class BlueMarble {
 		blueMarbleScene.setBounds(0, 0, 800, 600);
 		frame.getContentPane().add(blueMarbleScene);
 		blueMarbleScene.setLayout(null);
-
+		
 		// 플레이어
 		player1Image.setIcon(new ImageIcon("./images/Player1.png"));
 		player1Image.setBounds(715, 495, 60, 60);
@@ -282,7 +302,7 @@ public class BlueMarble {
 
 					// 비행기를 탔을 땐 주사위 버튼을 눌러도 말이 움직이면 안된다
 					if (player1Flying == "비행기 타기") {
-						System.out.println("비행기를 탐");
+						//System.out.println("비행기를 탐");
 
 					} else if (Player1forcedRest == 0) {
 						player1leftdayOfisland.setVisible(false);
@@ -316,7 +336,7 @@ public class BlueMarble {
 				} else if (whosTurn == 2) {
 
 					if (player2Flying == "비행기 타기") {
-						System.out.println("비행기를 탐");
+						//System.out.println("비행기를 탐");
 
 					} else if (Player2forcedRest == 0) {
 						player2leftdayOfisland.setVisible(false);
@@ -555,7 +575,6 @@ public class BlueMarble {
 
 					if (isPlayer1hasCard == true) {
 
-
 					} else if (isPlayer2hasCard == true) {
 
 					}
@@ -567,8 +586,22 @@ public class BlueMarble {
 		});
 		luckeyCardScene.add(useButton);
 
+		//게임 엔딩
+		gameEndingText.setText("");
+		gameEndingText.setHorizontalAlignment(SwingConstants.CENTER);
+		gameEndingText.setFont(new Font("굴림", Font.BOLD, 40));
+		gameEndingText.setBounds(0, 80, 800, 60);
+		gameEndingScene.add(gameEndingText);
+		
+		winnerText.setText("");
+		winnerText.setFont(new Font("굴림", Font.BOLD, 20));
+		winnerText.setBounds(300, 300, 200, 60);
+		gameEndingScene.add(winnerText);
+		
+		
 		player1Move.start();
 		player2Move.start();
+		gameEnding.start();
 	}
 
 	public void player(Player player, JLabel playerImage) {
@@ -734,7 +767,6 @@ public class BlueMarble {
 		diceThrowButton.setVisible(false);
 
 		luckeyCardNum = ramdom.nextInt(7);
-		luckeyCardNum = 6;
 		
 		if (luckeyCardNum == 0) {
 			cardNameText.setText("세계여행");
