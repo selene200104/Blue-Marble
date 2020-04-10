@@ -106,7 +106,8 @@ public class BlueMarble {
 
 	boolean isPlayer1hasCard = false;
 	boolean isPlayer2hasCard = false;
-
+	boolean isPlayer1hasuninhabitedCard = true;
+	boolean isPlayer2hasuninhabitedCard = true;
 	//엔딩 
 	JLabel gameEndingText = new JLabel();
 	JLabel winnerText = new JLabel();
@@ -115,6 +116,7 @@ public class BlueMarble {
 	JLabel playSituation = new JLabel();// 플레이 상황을 보여주는 text
 	JLabel[] uninhabitedEmoticon = new JLabel[2]; //무인도 탈출 카드 이미지
 	JLabel[] uninhabitedEmoticonExplanation = new JLabel[2]; //무인도 카드 이미지
+	
 	int socialWelfareCost = 10000; // 사회복지기금 비용
 	int collectedSocialWelfare = 0; // 사회복지기금에 모인 돈
 	int luckeyCardNum = 0; // 행운카드 번호
@@ -293,6 +295,7 @@ public class BlueMarble {
 
 				// 랜덤으로 나온 수가 주사위의 수가 된다.
 				diceNum = ramdom.nextInt(6) + 1;
+				diceNum = 1;
 				diceNumberText.setText("주사위 수 : " + diceNum);
 
 				playSituation.setText("");
@@ -331,7 +334,9 @@ public class BlueMarble {
 					// 플레이어을 움직인 후 차례를 바꾼다
 					whosTurnText.setText("Player 2 순서");
 					whosTurn = 2;
-
+					System.out.println("isPlayer1hasuninhabitedCard"+isPlayer1hasuninhabitedCard);
+					System.out.println("isPlayer2hasuninhabitedCard" + isPlayer2hasuninhabitedCard);
+				
 					// player2의 차례일 때
 				} else if (whosTurn == 2) {
 
@@ -346,10 +351,6 @@ public class BlueMarble {
 						synchronized (player2Move) {
 							player2Move.notify();
 						}
-						
-						System.out.println(player2.previousLocation);
-						System.out.println(player2.previousLocation);
-
 						player(player2, player2Image);
 
 					} else {
@@ -520,6 +521,13 @@ public class BlueMarble {
 						player1leftdayOfisland.setText("무인도 탈출하기까지 남은 일수 : 3 일");
 						player1leftdayOfisland.setVisible(true);
 						Player1forcedRest = 3;
+						
+						if(isPlayer1hasuninhabitedCard == true) {
+							luckeyCardScene.setVisible(true);
+							diceThrowButton.setVisible(false);
+							cardNameText.setText("무인도 탈출 카드");
+							cardContentText.setText("사용하시겠습니까?");
+						}
 						isPlayer1hasCard = false;
 						
 					} else if (isPlayer2hasCard == true) {
@@ -529,6 +537,14 @@ public class BlueMarble {
 						player2leftdayOfisland.setText("무인도 탈출하기까지 남은 일수 : 3 일");
 						player2leftdayOfisland.setVisible(true);
 						Player2forcedRest = 3;
+						
+						
+						if(isPlayer2hasuninhabitedCard == true) {
+							luckeyCardScene.setVisible(true);
+							diceThrowButton.setVisible(false);
+							cardNameText.setText("무인도 탈출 카드");
+							cardContentText.setText("사용하시겠습니까?");
+						}
 						isPlayer2hasCard = false;
 					}
 					
@@ -559,17 +575,19 @@ public class BlueMarble {
 						player2moneyText.setText("money : " + player2.money);
 						isPlayer2hasCard = false;
 					}
-
+					
 				//무인도 탈출
 				} else if (luckeyCardNum == 6) {
 
 					if (isPlayer1hasCard == true) {
 						uninhabitedEmoticon[0].setVisible(true);
-
+						isPlayer1hasuninhabitedCard = true;
+						
 					} else if (isPlayer2hasCard == true) {
 						uninhabitedEmoticon[1].setVisible(true);
+						isPlayer2hasuninhabitedCard = true;
 					}
-
+					
 				//우대권
 				} else if (luckeyCardNum == 7) {
 
@@ -578,10 +596,30 @@ public class BlueMarble {
 					} else if (isPlayer2hasCard == true) {
 
 					}
-				}
+					
+				}else {
+					// 무인도 탈출 카드를 가지고 있을 때 (무인도에 도착했을 때 luckeyCardScene이 보이도록했다) 탈출할 수 있다
+					if (player1.location == 15) {
+						if (isPlayer1hasuninhabitedCard == true) {
+							uninhabitedEmoticon[0].setVisible(false);
+							player1leftdayOfisland.setVisible(false);
+							Player1forcedRest = 0;
+							isPlayer1hasuninhabitedCard = false;
+						}
+					}else if (player2.location == 15) {
+						if (isPlayer2hasuninhabitedCard == true) {
+							uninhabitedEmoticon[1].setVisible(false);
+							player2leftdayOfisland.setVisible(false);
+							Player2forcedRest = 0;
+							isPlayer2hasuninhabitedCard = false;
 
+						}
+					}
+				}
 				diceThrowButton.setVisible(true);
 				luckeyCardScene.setVisible(false);
+				//luckeyCardNum 초기화
+				luckeyCardNum = 10;
 			}
 		});
 		luckeyCardScene.add(useButton);
@@ -635,9 +673,21 @@ public class BlueMarble {
 				player1leftdayOfisland.setVisible(true);
 				Player1forcedRest = 3;
 
+				if(isPlayer1hasuninhabitedCard == true) {
+					luckeyCardScene.setVisible(true);
+					cardNameText.setText("무인도 탈출 카드");
+					cardContentText.setText("사용하시겠습니까?");
+				}
+				
 			} else if (player == player2) {
 				player2leftdayOfisland.setVisible(true);
 				Player2forcedRest = 3;
+				
+				if(isPlayer2hasuninhabitedCard == true) {
+					luckeyCardScene.setVisible(true);
+					cardNameText.setText("무인도 탈출 카드");
+					cardContentText.setText("사용하시겠습니까?");
+				}
 			}
 			playSituation.setText("무인도에 갇혔습니다");
 
@@ -767,7 +817,7 @@ public class BlueMarble {
 		diceThrowButton.setVisible(false);
 
 		luckeyCardNum = ramdom.nextInt(7);
-		
+		//luckeyCardNum = 7;
 		if (luckeyCardNum == 0) {
 			cardNameText.setText("세계여행");
 			cardContentText.setText("선택한 지역으로 이동할 수 있다");

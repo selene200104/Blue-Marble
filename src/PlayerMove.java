@@ -59,7 +59,7 @@ public class PlayerMove extends Thread{
 					}
 					
 					player.previousLocation++;
-					Thread.sleep(300);
+					Thread.sleep(150);
 					
 				}else {
 					this.wait();

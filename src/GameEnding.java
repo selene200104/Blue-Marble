@@ -25,13 +25,13 @@ public class GameEnding extends Thread{
 		while (running) {
 			try {
 
-				if(player1.money <= 0) {
+				if(player1.money <= -50000) {
 					gameEndingText.setText("player1이 파산하여 게임이 끝났습니다");
 					winnerText.setText("우승자 : player2");
 					gameEndingScene.setVisible(true);
 					blueMarbleScene.setVisible(false);
 					
-				}else if(player2.money <= 0) {
+				}else if(player2.money <= -50000) {
 					gameEndingText.setText("player2가 파산하여 게임이 끝났습니다");
 					winnerText.setText("우승자 : player1");
 					gameEndingScene.setVisible(true);
