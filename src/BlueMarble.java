@@ -101,8 +101,8 @@ public class BlueMarble {
 	static JLabel[] leftLine = new JLabel[7];
 	static JLabel[] rightLine = new JLabel[7];
 
-	Land[] land = new Land[31];
-	JLabel[] landLabel = new JLabel[31];
+	Land[] land = new Land[30];
+	JLabel[] landLabel = new JLabel[30];
 
 	int topLineHorizontalLength = 82;
 	int topLineVerticalLength = 3;
@@ -156,8 +156,12 @@ public class BlueMarble {
 	int collectedSocialWelfare = 0; // 사회복지기금에 모인 돈
 	int luckeyCardNum = 0; // 행운카드 번호
 
-	PlayerMove player1Move = new PlayerMove(player1, player1Image, playSituation, player1moneyText);
-	PlayerMove player2Move = new PlayerMove(player2, player2Image, playSituation, player2moneyText);
+	// PlayerMove player1Move = new PlayerMove(player1, player1Image, playSituation,
+	// player1moneyText);
+	// PlayerMove player2Move = new PlayerMove(player2, player2Image, playSituation,
+	// player2moneyText);
+	PlayerMoves player1Move = new PlayerMoves(player1, player1Image, playSituation, player1moneyText);
+	PlayerMoves player2Move = new PlayerMoves(player2, player2Image, playSituation, player2moneyText);
 	GameEnding gameEnding = new GameEnding(player1, player2, gameEndingScene, blueMarbleScene, gameEndingText,
 			winnerText);
 
@@ -176,17 +180,17 @@ public class BlueMarble {
 		gameEndingScene.setLayout(null);
 		gameEndingScene.setVisible(false);
 
-		rideAirplaneScene.setBounds(180, 100, 400, 300);
-		rideAirplaneScene.setBackground(Color.DARK_GRAY);
-		frame.getContentPane().add(rideAirplaneScene);
-		rideAirplaneScene.setLayout(null);
-		rideAirplaneScene.setVisible(false);
-
 		luckeyCardScene.setBounds(280, 120, 250, 300);
 		luckeyCardScene.setBackground(Color.DARK_GRAY);
 		frame.getContentPane().add(luckeyCardScene);
 		luckeyCardScene.setLayout(null);
 		luckeyCardScene.setVisible(false);
+
+		rideAirplaneScene.setBounds(180, 100, 400, 300);
+		rideAirplaneScene.setBackground(Color.DARK_GRAY);
+		frame.getContentPane().add(rideAirplaneScene);
+		rideAirplaneScene.setLayout(null);
+		rideAirplaneScene.setVisible(false);
 
 		blueMarbleScene.setBounds(0, 0, 800, 600);
 		frame.getContentPane().add(blueMarbleScene);
@@ -325,7 +329,7 @@ public class BlueMarble {
 		land[27] = new Land("세금내는곳?", 0, 0, 0, 0, 0, 0, 0);
 		land[28] = new Land("부산", 80000, 240000, 400000, 0, 0, 0, 0);
 		land[29] = new Land("서울", 80000, 240000, 400000, 0, 0, 0, 0);
-		land[30] = new Land("출발지", 0, 0, 0, 0, 0, 0, 0);
+		// land[30] = new Land("출발지", 0, 0, 0, 0, 0, 0, 0);
 
 		// 부루마블 판
 		// 위쪽 줄
@@ -400,11 +404,11 @@ public class BlueMarble {
 
 						player1.previousLocation = player1.location;
 						player1.location = player1.location + diceNum;
-						playerMove(player1, player1Image);
 						synchronized (player1Move) {
 							player1Move.notify();
 						}
-						player(player1, player1Image);
+						// playerMove(player1, player1Image);
+						// player(player1, player1Image);
 
 					} else if (Player1forcedRest > 0) {
 						Player1forcedRest--;
@@ -436,12 +440,12 @@ public class BlueMarble {
 
 						player2.previousLocation = player2.location;
 						player2.location = player2.location + diceNum;
-						playerMove(player2, player2Image);
 						synchronized (player2Move) {
 							player2Move.notify();
-							
+
 						}
-						player(player2, player2Image);
+						// player(player2, player2Image);
+						// playerMove(player2, player2Image);
 
 					} else {
 						Player2forcedRest--;
@@ -742,15 +746,12 @@ public class BlueMarble {
 		islandBulidingButton[1] = new JButton((new ImageIcon("./images/building.png")));
 		islandBulidingButton[2] = new JButton((new ImageIcon("./images/hotel.png")));
 
-		if(player.location >= 30) {
-			player.location = player.location - 30;
-		}
-		System.out.println("player.location" + player.location);
-		
+		// try {
+
 		// 각각의 건물 가격 배열 초기화
-			constructionPrice[0] = new JLabel("" + land[player.location].villaPrice);
-			constructionPrice[1] = new JLabel("" + land[player.location].buildingPrice);
-			constructionPrice[2] = new JLabel("" + land[player.location].hotelPrice);
+		constructionPrice[0] = new JLabel("" + land[player.location].villaPrice);
+		constructionPrice[1] = new JLabel("" + land[player.location].buildingPrice);
+		constructionPrice[2] = new JLabel("" + land[player.location].hotelPrice);
 		// 총 건설 비용
 		constructionCostText.setLayout(null);
 		constructionCostText.setText("건설비용: " + land[player.location].constructionCost);
@@ -758,15 +759,15 @@ public class BlueMarble {
 		landLabel[player.location].add(constructionCostText);
 
 		landLabel[player.location].add(landName);
-		
-	      if (player.location >= 30) {
-	          player.location = player.location - 30;
-	       }
 
-	       if (player.location == 0) {
-	          playerImage.setLocation(rightLine[6].getX() + 10, rightLine[6].getY() + 10);
+		if (player.location >= 30) {
+			player.location = player.location - 30;
+		}
 
-	       } else if (player.location >= 1 && player.location <= 8) {
+		if (player.location == 0) {
+			playerImage.setLocation(rightLine[6].getX() + 10, rightLine[6].getY() + 10);
+
+		} else if (player.location >= 1 && player.location <= 8) {
 
 			if (player == player1) {
 				if (player.location != 4) {
@@ -799,7 +800,8 @@ public class BlueMarble {
 						landLabel[player.location].add(constructionPrice[j]);
 						constructionPrice[j].setBounds(constructionPriceHorizontalLength,
 								constructionPriceVerticalLength, constructionPriceWidth, constructionPriceHeight);
-						constructionPriceHorizontalLength = constructionPriceHorizontalLength + constructionPriceWidth + 10;
+						constructionPriceHorizontalLength = constructionPriceHorizontalLength + constructionPriceWidth
+								+ 10;
 					}
 				}
 			} else {
@@ -1005,7 +1007,6 @@ public class BlueMarble {
 				for (int i = 0; i < landLabel.length; i++) {
 					landLabel[i].setVisible(false);
 				}
-				landLabel[player.location].setVisible(false);
 				diceThrowButton.setVisible(true);
 
 				/* 나중에 구입과 관련된 기능 구현시 수정해야함 */
@@ -1056,6 +1057,10 @@ public class BlueMarble {
 		buyButton.setBounds(100, 250, 150, 20);
 		landLabel[player.location].add(buyButton);
 		buyButton.setVisible(true);
+
+		// }catch(ArrayIndexOutOfBoundsException e) {
+		// System.out.println(e);
+		// }
 	}
 
 	public void player(Player player, JLabel playerImage) {
@@ -1236,6 +1241,7 @@ public class BlueMarble {
 
 		luckeyCardScene.setVisible(true);
 		diceThrowButton.setVisible(false);
+		// playSituation.setVisible(false);
 
 		luckeyCardNum = ramdom.nextInt(7);
 		// luckeyCardNum = 7;
@@ -1270,6 +1276,86 @@ public class BlueMarble {
 		} else if (luckeyCardNum == 7) {
 			cardNameText.setText("우대권");
 			cardContentText.setText("통행료가 무료가 되는 카드");
+		}
+	}
+
+	class PlayerMoves extends Thread {
+
+		Player player = new Player();
+		JLabel playerImage = new JLabel();
+		JLabel playSituation = new JLabel();
+		JLabel playermoneyText = new JLabel();
+
+		boolean running = true;
+
+		public PlayerMoves(Player player, JLabel playerImage, JLabel playSituation, JLabel playermoneyText) {
+			this.player = player;
+			this.playerImage = playerImage;
+			this.playSituation = playSituation;
+			this.playermoneyText = playermoneyText;
+		}
+
+		@Override
+		public synchronized void run() {
+			while (running) {
+				try {
+
+					if (player.previousLocation <= player.location) {
+
+						if (player.location >= 30) {
+							if (player.previousLocation >= 30) {
+								player.previousLocation = player.previousLocation - 30;
+								player.location = player.location - 30;
+								// 월급기능
+								player.money = player.money + 10000;
+								playermoneyText.setText("money : " + player.money);
+								playSituation.setText("출발점을 지나 월급 10000원을 얻었습니다");
+							}
+						}
+
+						if (player.previousLocation == 0) {
+							playerImage.setLocation(BlueMarble.rightLine[6].getX() + 10,
+									BlueMarble.rightLine[6].getY() + 10);
+
+						} else if (player.previousLocation >= 1 && player.previousLocation <= 8) {
+							for (int i = 0; i <= player.previousLocation - 1; i++) {
+								playerImage.setLocation(BlueMarble.bottomLine[i].getX() + 10,
+										BlueMarble.bottomLine[i].getY() + 10);
+							}
+
+						} else if (player.previousLocation >= 9 && player.previousLocation <= 15) {
+							for (int i = 0; i <= player.previousLocation - 9; i++) {
+								playerImage.setLocation(BlueMarble.leftLine[i].getX() + 10,
+										BlueMarble.leftLine[i].getY() + 10);
+							}
+
+						} else if (player.previousLocation >= 16 && player.previousLocation <= 23) {
+							for (int i = 0; i <= player.previousLocation - 16; i++) {
+								playerImage.setLocation(BlueMarble.topLine[i].getX() + 10,
+										BlueMarble.topLine[i].getY() + 10);
+							}
+
+						} else if (player.previousLocation >= 24 && player.previousLocation <= 29) {
+							for (int i = 0; i <= player.previousLocation - 24; i++) {
+								playerImage.setLocation(BlueMarble.rightLine[i].getX() + 10,
+										BlueMarble.rightLine[i].getY() + 10);
+							}
+						}
+
+						player.previousLocation++;
+						Thread.sleep(150);
+
+					} else {
+						playerMove(player, playerImage);
+						player(player, playerImage);
+						this.wait();
+
+					}
+
+				} catch (InterruptedException e) {
+					running = false;
+				}
+			}
 		}
 	}
 }
