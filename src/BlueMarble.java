@@ -770,10 +770,8 @@ public class BlueMarble {
 
 		if (player.location == 0) {
 			playerImage.setLocation(rightLine[6].getX() + 10, rightLine[6].getY() + 10);
-
 		} else if (player.location >= 1 && player.location <= 8) {
-
-			if (player == player1) {
+			//if (player == player1) {
 				if (player.location != 4) {
 					landLabel[player.location].setVisible(true);
 					diceThrowButton.setVisible(false);
@@ -809,13 +807,13 @@ public class BlueMarble {
 								+ 10;
 					}
 				}
-			} else {
-				System.out.println("플레이어 2가 움직였습니다.");
-			}
+			//} else {
+			//	System.out.println("플레이어 2가 움직였습니다.");
+			//}
 
 		} else if (player.location >= 9 && player.location <= 15) {
 
-			if (player == player1) {
+			//if (player == player1) {
 				if (player.location != 9 && player.location != 15) {
 					landLabel[player.location].setVisible(true);
 					diceThrowButton.setVisible(false);
@@ -851,12 +849,12 @@ public class BlueMarble {
 								+ 10;
 					}
 				}
-			} else {
-				System.out.println("플레이어 2가 움직였습니다.");
-			}
+			//} else {
+			//	System.out.println("플레이어 2가 움직였습니다.");
+			//}
 
 		} else if (player.location >= 16 && player.location <= 23) {
-			if (player == player1) {
+			//if (player == player1) {
 				if (player.location != 20) {
 					landLabel[player.location].setVisible(true);
 					diceThrowButton.setVisible(false);
@@ -892,12 +890,12 @@ public class BlueMarble {
 								+ 10;
 					}
 				}
-			} else {
-				System.out.println("플레이어 2가 움직였습니다.");
-			}
+			//} else {
+			//	System.out.println("플레이어 2가 움직였습니다.");
+			//}
 
 		} else if (player.location >= 24 && player.location <= 29) {
-			if (player == player1) {
+			//if (player == player1) {
 				if (player.location != 24 && player.location != 27) {
 					landLabel[player.location].setVisible(true);
 					diceThrowButton.setVisible(false);
@@ -932,9 +930,9 @@ public class BlueMarble {
 								+ 10;
 					}
 				}
-			} else {
-				System.out.println("플레이어 2가 움직였습니다.");
-			}
+			//} else {
+			//	System.out.println("플레이어 2가 움직였습니다.");
+			//}
 		}
 		// 빌라 버튼 클릭했을 때
 		islandBulidingButton[0].addActionListener(new ActionListener() {
@@ -1341,7 +1339,7 @@ public class BlueMarble {
 
 					if (player.previousLocation <= player.location) {
 
-						if (player.location >= 30) {
+						if (player.location >= 30) {							
 							if (player.previousLocation >= 30) {
 								player.previousLocation = player.previousLocation - 30;
 								player.location = player.location - 30;
@@ -1349,6 +1347,15 @@ public class BlueMarble {
 								player.money = player.money + 10000;
 								playermoneyText.setText("money : " + player.money);
 								playSituation.setText("출발점을 지나 월급 10000원을 얻었습니다");
+								
+								//한바퀴를 돌면 round가 1씩 늘어남
+								if(player == player1) {
+									player1.round++;
+									System.out.println("player1은 지금 "+player.round+"바퀴째 입니다.");
+								}else {
+									player2.round++;
+									System.out.println("player2는 지금 "+player.round+"바퀴째 입니다.");
+								}
 							}
 						}
 
