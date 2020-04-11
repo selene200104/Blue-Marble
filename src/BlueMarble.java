@@ -101,8 +101,8 @@ public class BlueMarble {
 	static JLabel[] leftLine = new JLabel[7];
 	static JLabel[] rightLine = new JLabel[7];
 
-	Land[] land = new Land[31];
-	JLabel[] landLabel = new JLabel[31];
+	Land[] land = new Land[30];
+	JLabel[] landLabel = new JLabel[30];
 
 	int topLineHorizontalLength = 82;
 	int topLineVerticalLength = 3;
@@ -325,7 +325,7 @@ public class BlueMarble {
 		land[27] = new Land("세금내는곳?", 0, 0, 0, 0, 0, 0, 0);
 		land[28] = new Land("부산", 80000, 240000, 400000, 0, 0, 0, 0);
 		land[29] = new Land("서울", 80000, 240000, 400000, 0, 0, 0, 0);
-		land[30] = new Land("출발지", 0, 0, 0, 0, 0, 0, 0);
+		//land[30] = new Land("출발지", 0, 0, 0, 0, 0, 0, 0);
 
 		// 부루마블 판
 		// 위쪽 줄
@@ -394,7 +394,7 @@ public class BlueMarble {
 					// 비행기를 탔을 땐 주사위 버튼을 눌러도 말이 움직이면 안된다
 					if (player1Flying == "비행기 타기") {
 						// System.out.println("비행기를 탐");
-
+						System.out.println("비행기 탄 후 플레이어 위치: "+ player1.location);
 					} else if (Player1forcedRest == 0) {
 						player1leftdayOfisland.setVisible(false);
 
