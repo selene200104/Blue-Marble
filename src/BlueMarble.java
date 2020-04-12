@@ -444,6 +444,8 @@ public class BlueMarble {
 
 						player1.previousLocation = player1.location;
 						player1.location = player1.location + diceNum;
+						
+						System.out.println("player1" + diceNum);
 						synchronized (player1Move) {
 							player1Move.notify();
 						}
@@ -453,10 +455,13 @@ public class BlueMarble {
 						player1leftdayOfisland.setText("무인도 탈출하기까지 남은 일수 : " + (Player1forcedRest + 1) + " 일");
 
 					}
+					
+					if (player2Flying == "비행기 타기") {
+						airport();
+					}
 					player1Flying = "";
 
 					// 플레이어을 움직인 후 차례를 바꾼다
-					whosTurnText.setText("Player 2 순서");
 					whosTurn = 2;
 					System.out.println("isPlayer1hasuninhabitedCard" + isPlayer1hasuninhabitedCard);
 					System.out.println("isPlayer2hasuninhabitedCard" + isPlayer2hasuninhabitedCard);
@@ -472,6 +477,7 @@ public class BlueMarble {
 
 						player2.previousLocation = player2.location;
 						player2.location = player2.location + diceNum;
+						System.out.println("player1" + diceNum);
 						synchronized (player2Move) {
 							player2Move.notify();
 
@@ -484,12 +490,10 @@ public class BlueMarble {
 
 					if (player1Flying == "비행기 타기") {
 						airport();
-						playSituation.setText("원하는 도시를 클릭 후 주사위 버튼을 눌러주세요");
 					}
 					player2Flying = "";
 
 					// 플레이어을 움직인 후 차례를 바꾼다
-					whosTurnText.setText("Player 1 순서");
 					whosTurn = 1;
 				}
 			}
@@ -1579,8 +1583,26 @@ public class BlueMarble {
 						Thread.sleep(150);
 
 					} else {
+						
 						playerMove(player, playerImage);
 						player(player, playerImage);
+						
+						if(player == player1)
+						{
+							if (player2Flying == "비행기 타기") {
+								playSituation.setText("원하는 도시를 클릭 후 주사위 버튼을 눌러주세요");
+							}
+							whosTurnText.setText("Player 2순서");
+							player1Flying = "";
+
+						}else if(player == player2) {
+							if (player1Flying == "비행기 타기") {
+								playSituation.setText("원하는 도시를 클릭 후 주사위 버튼을 눌러주세요");
+							}
+							whosTurnText.setText("Player 1 순서");
+							player2Flying = "";
+						}
+
 						this.wait();
 
 					}
