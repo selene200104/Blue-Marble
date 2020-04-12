@@ -1141,7 +1141,7 @@ public class BlueMarble {
 			public void actionPerformed(ActionEvent e) {
 				landLabel[player.location].setVisible(false);
 				diceThrowButton.setVisible(true);
-
+				
 				if (player == player1) {
 					land[player.location].landowner = "플레이어1";
 					if (land[player.location].villaCheckCount == 1) {
@@ -1167,6 +1167,10 @@ public class BlueMarble {
 						rightLine[player.location-24].setIcon(new ImageIcon("./images/BlueLine.png"));
 					}				
 					
+					player1.money = player1.money-land[player.location].constructionCost;
+					player1moneyText.setText("money : " + player1.money);
+					land[player.location].constructionCost = 0;
+					
 				} else {
 					land[player.location].landowner = "플레이어2";
 					if (land[player.location].villaCheckCount == 1) {
@@ -1190,7 +1194,12 @@ public class BlueMarble {
 						topLine[player.location-16].setIcon(new ImageIcon("./images/RedLine.png"));
 					}else if (player.location >= 24 && player.location <= 29) {
 						rightLine[player.location-24].setIcon(new ImageIcon("./images/RedLine.png"));
-					}	
+					}
+					
+					player2.money = player2.money-land[player.location].constructionCost;
+					player2moneyText.setText("money : " + player2.money);
+					System.out.println("플레이어2의 돈"+player.money);
+					land[player.location].constructionCost = 0;
 				}
 			}
 		});
