@@ -75,9 +75,9 @@ public class BlueMarble {
 
 	int constructionCost = 0;
 
-	int amountVilla = 0;
-	int amountBuilding = 0;
-	int amountHotel = 0;
+	int villaCheckCount = 0;
+	int buildingCheckCount = 0;
+	int hotelCheckCount = 0;
 
 	// 플레이어
 	JLabel player1Image = new JLabel();
@@ -315,40 +315,40 @@ public class BlueMarble {
 		landName.setBounds(nameHorizontalLength, nameVerticalLength, nameLineWidth, nameLineHeight);
 
 		// 땅 객체 배열 생성(위치 지역명 , 빌라 값, 빌딩 값, 호텔 값, 빌라 선택 횟수, 빌딩 선택 횟수, 호텔 선택 횟수, 땅 총 가격)
-		land[0] = new Land("출발지", 0, 0, 0, 0, 0, 0, 0, "");
+		land[0] = new Land("출발지", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "");
 
-		land[1] = new Land("서귀포", 10000, 30000, 50000, 0, 0, 0, 0, "");
-		land[2] = new Land("제주", 10000, 30000, 50000, 0, 0, 0, 0, "");
-		land[3] = new Land("독도", 10000, 30000, 50000, 0, 0, 0, 0, "");
-		land[4] = new Land("행운카드", 0, 0, 0, 0, 0, 0, 0, "");
-		land[5] = new Land("경주", 20000, 60000, 10000, 0, 0, 0, 0, "");
-		land[6] = new Land("안동", 20000, 60000, 10000, 0, 0, 0, 0, "");
-		land[7] = new Land("통영", 20000, 60000, 10000, 0, 0, 0, 0, "");
-		land[8] = new Land("창원", 20000, 60000, 10000, 1, 1, 0, 0, "");
+		land[1] = new Land("서귀포", 10000, 30000, 50000, 0, 0, 0, 0, 0, 0, 0, "");
+		land[2] = new Land("제주", 10000, 30000, 50000, 0, 0, 0, 0, 0, 0, 0, "");
+		land[3] = new Land("독도", 10000, 30000, 50000, 0, 0, 0, 0, 0, 0, 0, "");
+		land[4] = new Land("행운카드", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "");
+		land[5] = new Land("경주", 20000, 60000, 10000, 0, 0, 0, 0, 0, 0, 0, "");
+		land[6] = new Land("안동", 20000, 60000, 10000, 0, 0, 0, 0, 0, 0, 0, "");
+		land[7] = new Land("통영", 20000, 60000, 10000, 0, 0, 0, 0, 0, 0, 0, "");
+		land[8] = new Land("창원", 20000, 60000, 10000, 0, 0, 0, 0, 0, 0, 0, "");
 
-		land[9] = new Land("공항", 0, 0, 0, 0, 0, 0, 0, "");
-		land[10] = new Land("강릉", 30000, 90000, 150000, 0, 0, 0, 0, "");
-		land[11] = new Land("원주", 30000, 90000, 150000, 0, 0, 0, 0, "");
-		land[12] = new Land("춘천", 30000, 90000, 150000, 0, 0, 0, 0, "");
-		land[13] = new Land("청주", 40000, 12000, 200000, 0, 0, 0, 0, "");
-		land[14] = new Land("세종", 40000, 12000, 200000, 0, 0, 0, 0, "");
+		land[9] = new Land("공항", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "");
+		land[10] = new Land("강릉", 30000, 90000, 150000, 0, 0, 0, 0, 0, 0, 0, "");
+		land[11] = new Land("원주", 30000, 90000, 150000, 0, 0, 0, 0, 0, 0, 0, "");
+		land[12] = new Land("춘천", 30000, 90000, 150000, 0, 0, 0, 0, 0, 0, 0, "");
+		land[13] = new Land("청주", 40000, 12000, 200000, 0, 0, 0, 0, 0, 0, 0, "");
+		land[14] = new Land("세종", 40000, 12000, 200000, 0, 0, 0, 0, 0, 0, 0, "");
 
-		land[15] = new Land("무인도", 0, 0, 0, 0, 0, 0, 0, "");
-		land[16] = new Land("목포", 50000, 150000, 250000, 0, 0, 0, 0, "");
-		land[17] = new Land("여수", 50000, 150000, 250000, 0, 0, 0, 0, "");
-		land[18] = new Land("군산", 50000, 150000, 250000, 0, 0, 0, 0, "");
-		land[19] = new Land("전주", 50000, 150000, 250000, 0, 0, 0, 0, "");
-		land[20] = new Land("행운카드", 0, 0, 0, 0, 0, 0, 0, "");
-		land[21] = new Land("포항", 60000, 180000, 300000, 0, 0, 0, 0, "");
-		land[22] = new Land("울산", 60000, 180000, 300000, 0, 0, 0, 0, "");
-		land[23] = new Land("대구", 60000, 180000, 300000, 0, 0, 0, 0, "");
+		land[15] = new Land("무인도", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "");
+		land[16] = new Land("목포", 50000, 150000, 250000, 0, 0, 0, 0, 0, 0, 0, "");
+		land[17] = new Land("여수", 50000, 150000, 250000, 0, 0, 0, 0, 0, 0, 0, "");
+		land[18] = new Land("군산", 50000, 150000, 250000, 0, 0, 0, 0, 0, 0, 0, "");
+		land[19] = new Land("전주", 50000, 150000, 250000, 0, 0, 0, 0, 0, 0, 0, "");
+		land[20] = new Land("행운카드", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "");
+		land[21] = new Land("포항", 60000, 180000, 300000, 0, 0, 0, 0, 0, 0, 0, "");
+		land[22] = new Land("울산", 60000, 180000, 300000, 0, 0, 0, 0, 0, 0, 0, "");
+		land[23] = new Land("대구", 60000, 180000, 300000, 0, 0, 0, 0, 0, 0, 0, "");
 
-		land[24] = new Land("국제기구(수령)", 0, 0, 0, 0, 0, 0, 0, "");
-		land[25] = new Land("인천", 70000, 210000, 350000, 0, 0, 0, 0, "");
-		land[26] = new Land("광주", 70000, 210000, 350000, 0, 0, 0, 0, "");
-		land[27] = new Land("국제기구(수납)", 0, 0, 0, 0, 0, 0, 0, "");
-		land[28] = new Land("부산", 80000, 240000, 400000, 0, 0, 0, 0, "");
-		land[29] = new Land("서울", 80000, 240000, 400000, 0, 0, 0, 0, "");
+		land[24] = new Land("국제기구(수령)", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "");
+		land[25] = new Land("인천", 70000, 210000, 350000, 0, 0, 0, 0, 0, 0, 0, "");
+		land[26] = new Land("광주", 70000, 210000, 350000, 0, 0, 0, 0, 0, 0, 0, "");
+		land[27] = new Land("국제기구(수납)", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "");
+		land[28] = new Land("부산", 80000, 240000, 400000, 0, 0, 0, 0, 0, 0, 0, "");
+		land[29] = new Land("서울", 80000, 240000, 400000, 0, 0, 0, 0, 0, 0, 0, "");
 		// land[30] = new Land("출발지", 0, 0, 0, 0, 0, 0, 0);
 
 		// 부루마블 판
@@ -891,9 +891,9 @@ public class BlueMarble {
 						landName.setText("" + land[player.location].landName);
 
 						System.out.println("지역이름 : " + land[player.location].landName + " | 도착 당시 | 빌라 선택횟수: "
-								+ land[player.location].amountVilla + " | 빌딩 선택 횟수: "
-								+ land[player.location].amountBuilding + " | 호텔 선택 횟수: "
-								+ land[player.location].amountHotel + " | 가격 : "
+								+ land[player.location].villaCheckCount + " | 빌딩 선택 횟수: "
+								+ land[player.location].buildingCheckCount + " | 호텔 선택 횟수: "
+								+ land[player.location].hotelCheckCount + " | 가격 : "
 								+ land[player.location].constructionCost);
 
 						int islandButtonHorizontalLength = 7;
@@ -962,9 +962,9 @@ public class BlueMarble {
 						landName.setText("" + land[player.location].landName);
 
 						System.out.println("지역이름 : " + land[player.location].landName + " | 도착 당시 | 빌라 선택횟수: "
-								+ land[player.location].amountVilla + " | 빌딩 선택 횟수: "
-								+ land[player.location].amountBuilding + " | 호텔 선택 횟수: "
-								+ land[player.location].amountHotel + " | 가격 : "
+								+ land[player.location].villaCheckCount + " | 빌딩 선택 횟수: "
+								+ land[player.location].buildingCheckCount + " | 호텔 선택 횟수: "
+								+ land[player.location].hotelCheckCount + " | 가격 : "
 								+ land[player.location].constructionCost);
 
 						int islandButtonHorizontalLength = 7;
@@ -1030,9 +1030,9 @@ public class BlueMarble {
 						landName.setText("" + land[player.location].landName);
 
 						System.out.println("지역이름 : " + land[player.location].landName + " | 도착 당시 | 빌라 선택횟수: "
-								+ land[player.location].amountVilla + " | 빌딩 선택 횟수: "
-								+ land[player.location].amountBuilding + " | 호텔 선택 횟수: "
-								+ land[player.location].amountHotel + " | 가격 : "
+								+ land[player.location].villaCheckCount + " | 빌딩 선택 횟수: "
+								+ land[player.location].buildingCheckCount + " | 호텔 선택 횟수: "
+								+ land[player.location].hotelCheckCount + " | 가격 : "
 								+ land[player.location].constructionCost);
 
 						int islandButtonHorizontalLength = 7;
@@ -1097,9 +1097,9 @@ public class BlueMarble {
 						landName.setText("" + land[player.location].landName);
 
 						System.out.println("지역이름 : " + land[player.location].landName + " | 도착 당시 | 빌라 선택횟수: "
-								+ land[player.location].amountVilla + " | 빌딩 선택 횟수: "
-								+ land[player.location].amountBuilding + " | 호텔 선택 횟수: "
-								+ land[player.location].amountHotel + " | 가격 : "
+								+ land[player.location].villaCheckCount + " | 빌딩 선택 횟수: "
+								+ land[player.location].buildingCheckCount + " | 호텔 선택 횟수: "
+								+ land[player.location].hotelCheckCount + " | 가격 : "
 								+ land[player.location].constructionCost);
 
 						int islandButtonHorizontalLength = 7;
@@ -1154,18 +1154,18 @@ public class BlueMarble {
 		islandBulidingButton[0].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("빌라 선택함");
-				if (land[player.location].amountVilla == 0) {
-					land[player.location].amountVilla++;
+				if (land[player.location].villaCheckCount == 0) {
+					land[player.location].villaCheckCount++;
 					System.out.println("지역이름 : " + land[player.location].landName + " 빌라 선택횟수: "
-							+ land[player.location].amountVilla);
+							+ land[player.location].villaCheckCount);
 					islandBulidingButton[0].setIcon(new ImageIcon("./images/villaCheck.png"));
 
 					land[player.location].constructionCost += land[player.location].villaPrice;
 					constructionCostText.setText("건설비용: " + land[player.location].constructionCost);
 				} else {
-					land[player.location].amountVilla--;
+					land[player.location].villaCheckCount--;
 					System.out.println("지역이름 : " + land[player.location].landName + " 빌라 선택횟수: "
-							+ land[player.location].amountVilla);
+							+ land[player.location].villaCheckCount);
 					islandBulidingButton[0].setIcon(new ImageIcon("./images/villa.png"));
 
 					land[player.location].constructionCost -= land[player.location].villaPrice;
@@ -1178,18 +1178,18 @@ public class BlueMarble {
 		islandBulidingButton[1].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("빌딩 선택함");
-				if (land[player.location].amountBuilding == 0) {
-					land[player.location].amountBuilding++;
+				if (land[player.location].buildingCheckCount == 0) {
+					land[player.location].buildingCheckCount++;
 					System.out.println("지역이름 : " + land[player.location].landName + " 빌딩 선택횟수: "
-							+ land[player.location].amountBuilding);
+							+ land[player.location].buildingCheckCount);
 					islandBulidingButton[1].setIcon(new ImageIcon("./images/buildingCheck.png"));
 
 					land[player.location].constructionCost += land[player.location].buildingPrice;
 					constructionCostText.setText("건설비용: " + land[player.location].constructionCost);
 				} else {
-					land[player.location].amountBuilding--;
+					land[player.location].buildingCheckCount--;
 					System.out.println("지역이름 : " + land[player.location].landName + " 빌딩 선택횟수: "
-							+ land[player.location].amountBuilding);
+							+ land[player.location].buildingCheckCount);
 					islandBulidingButton[1].setIcon(new ImageIcon("./images/building.png"));
 
 					land[player.location].constructionCost -= land[player.location].buildingPrice;
@@ -1202,18 +1202,18 @@ public class BlueMarble {
 		islandBulidingButton[2].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("호텔 선택함");
-				if (land[player.location].amountHotel == 0) {
-					land[player.location].amountHotel++;
+				if (land[player.location].hotelCheckCount == 0) {
+					land[player.location].hotelCheckCount++;
 					System.out.println("지역이름 : " + land[player.location].landName + " 호텔 선택횟수: "
-							+ land[player.location].amountHotel);
+							+ land[player.location].hotelCheckCount);
 					islandBulidingButton[2].setIcon(new ImageIcon("./images/hotelCheck.png"));
 
 					land[player.location].constructionCost += land[player.location].hotelPrice;
 					constructionCostText.setText("건설비용: " + land[player.location].constructionCost);
 				} else {
-					land[player.location].amountHotel--;
+					land[player.location].hotelCheckCount--;
 					System.out.println("지역이름 : " + land[player.location].landName + " 호텔 선택횟수: "
-							+ land[player.location].amountHotel);
+							+ land[player.location].hotelCheckCount);
 					islandBulidingButton[2].setIcon(new ImageIcon("./images/hotel.png"));
 
 					land[player.location].constructionCost -= land[player.location].hotelPrice;
@@ -1231,33 +1231,33 @@ public class BlueMarble {
 				diceThrowButton.setVisible(true);
 
 				/* 나중에 구입과 관련된 기능 구현시 수정해야함 */
-				land[player.location].amountVilla -= land[player.location].amountVilla;
-				land[player.location].amountBuilding -= land[player.location].amountBuilding;
-				land[player.location].amountHotel -= land[player.location].amountHotel;
+				land[player.location].villaCheckCount -= land[player.location].villaCheckCount;
+				land[player.location].buildingCheckCount -= land[player.location].buildingCheckCount;
+				land[player.location].hotelCheckCount -= land[player.location].hotelCheckCount;
 				land[player.location].constructionCost -= land[player.location].constructionCost;
 				constructionCostText.setText("건설비용: " + land[player.location].constructionCost);
 
 				// 취소할때, 버튼 이미지를 다시 원래대로 수정한다.
-				if (land[player.location].amountVilla == 0) {
+				if (land[player.location].villaCheckCount == 0) {
 					islandBulidingButton[0].setIcon(new ImageIcon("./images/villa.png"));
 				} else {
 					islandBulidingButton[0].setIcon(new ImageIcon("./images/villaCheck.png"));
 				}
 
-				if (land[player.location].amountBuilding == 0) {
+				if (land[player.location].buildingCheckCount == 0) {
 					islandBulidingButton[1].setIcon(new ImageIcon("./images/building.png"));
 				} else {
 					islandBulidingButton[1].setIcon(new ImageIcon("./images/buildingCheck.png"));
 				}
 
-				if (land[player.location].amountHotel == 0) {
+				if (land[player.location].hotelCheckCount == 0) {
 					islandBulidingButton[2].setIcon(new ImageIcon("./images/hotel.png"));
 				} else {
 					islandBulidingButton[2].setIcon(new ImageIcon("./images/hotelCheck.png"));
 				}
 
-				System.out.println("빌라 체크: " + land[player.location].amountVilla + "빌딩 체크: "
-						+ land[player.location].amountBuilding + "호텔 체크: " + land[player.location].amountHotel);
+				System.out.println("빌라 체크: " + land[player.location].villaCheckCount + "빌딩 체크: "
+						+ land[player.location].buildingCheckCount + "호텔 체크: " + land[player.location].hotelCheckCount);
 				/* 나중에 구입과 관련된 기능 구현시 수정해야함 */
 			}
 		});
