@@ -36,8 +36,8 @@ public class BlueMarble {
 	}
 
 	JPanel blueMarbleScene = new JPanel();
-	JPanel rideAirplaneScene = new JPanel();
 	JPanel luckeyCardScene = new JPanel();
+	JPanel rideAirplaneScene = new JPanel();
 	JPanel acquisitionPanel = new JPanel();
 	JPanel gameEndingScene = new JPanel() {
 		public void paintComponent(Graphics g) {
@@ -537,7 +537,7 @@ public class BlueMarble {
 						player2Flying = "비행기 타기";
 
 					} else {
-						cautionPointText.setText("돈이 모자랍니다!!");
+						JOptionPane.showMessageDialog(frame, "돈이 부족하여 살 수 없어요", "SYSTEM", JOptionPane.INFORMATION_MESSAGE);
 					}
 				}
 
@@ -595,7 +595,7 @@ public class BlueMarble {
 							rightLine[acquisitionFieldNum - 24].setIcon(new ImageIcon("./images/BlueLine.png"));
 						}
 					}else {
-						JOptionPane.showMessageDialog(frame, "돈이 모자랍니다", "!!!!", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(frame, "돈이 부족하여 살 수 없어요", "SYSTEM", JOptionPane.INFORMATION_MESSAGE);
 					}
 
 				} else if (whoAcquisition == "player2") {
@@ -617,7 +617,7 @@ public class BlueMarble {
 							rightLine[acquisitionFieldNum - 24].setIcon(new ImageIcon("./images/RedLine.png"));
 						}
 					}else {
-						JOptionPane.showMessageDialog(frame, "돈이 모자랍니다", "!!!!", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(frame, "돈이 부족하여 살 수 없어요", "SYSTEM", JOptionPane.INFORMATION_MESSAGE);
 					}
 				}
 				acquisitionPrice = 0;
@@ -729,6 +729,7 @@ public class BlueMarble {
 						if (isPlayer1hasuninhabitedCard == true) {
 							luckeyCardScene.setVisible(true);
 							diceThrowButton.setVisible(false);
+							
 							cardNameText.setText("무인도 탈출 카드");
 							cardContentText.setText("사용하시겠습니까?");
 						}
