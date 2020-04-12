@@ -157,8 +157,8 @@ public class BlueMarble {
 
 	boolean isPlayer1hasCard = false;
 	boolean isPlayer2hasCard = false;
-	boolean isPlayer1hasuninhabitedCard = true;
-	boolean isPlayer2hasuninhabitedCard = true;
+	boolean isPlayer1hasuninhabitedCard = false;
+	boolean isPlayer2hasuninhabitedCard = false;
 
 	// 엔딩
 	JLabel gameEndingText = new JLabel();
@@ -427,6 +427,7 @@ public class BlueMarble {
 
 				// 랜덤으로 나온 수가 주사위의 수가 된다.
 				diceNum = ramdom.nextInt(6) + 1;
+				
 				diceNumberText.setText("주사위 수 : " + diceNum);
 
 				playSituation.setText("");
@@ -453,12 +454,6 @@ public class BlueMarble {
 
 					}
 					player1Flying = "";
-
-					// player1이 움직인 후 player2가 주사위 버튼을 누르지 않고 바로 비행기를 탈 수 있도록 하기 위함
-					if (player2Flying == "비행기 타기") {
-						airport();
-						playSituation.setText("원하는 도시를 클릭 후 주사위 버튼을 눌러주세요");
-					}
 
 					// 플레이어을 움직인 후 차례를 바꾼다
 					whosTurnText.setText("Player 2 순서");
@@ -861,6 +856,9 @@ public class BlueMarble {
 		islandBulidingButton[1] = new JButton((new ImageIcon("./images/building.png")));
 		islandBulidingButton[2] = new JButton((new ImageIcon("./images/hotel.png")));
 
+		if(player.location >= 30) {
+			player.location = player.location - 30;
+		}
 		// 각각의 건물 가격 배열 초기화
 		constructionPrice[0] = new JLabel("" + land[player.location].villaPrice);
 		constructionPrice[1] = new JLabel("" + land[player.location].buildingPrice);
@@ -1372,6 +1370,9 @@ public class BlueMarble {
 								player1.location = i + 1;
 							}
 						}
+						playerMove(player1, player1Image);
+						player(player1, player1Image);
+						
 					} else if (player2Flying.contains("비행기 타기")) {
 						for (int i = 0; i < bottomLine.length; i++) {
 							if (e.getSource() == bottomLine[i]) {
@@ -1379,6 +1380,8 @@ public class BlueMarble {
 								player2.location = i + 1;
 							}
 						}
+						playerMove(player2, player1Image);
+						player(player2, player2Image);
 					}
 				}
 			});
@@ -1394,6 +1397,9 @@ public class BlueMarble {
 								player1.location = i + 9;
 							}
 						}
+						playerMove(player1, player1Image);
+						player(player1, player1Image);
+						
 					} else if (player2Flying.contains("비행기 타기")) {
 						for (int i = 0; i < leftLine.length; i++) {
 							if (e.getSource() == leftLine[i]) {
@@ -1401,6 +1407,8 @@ public class BlueMarble {
 								player2.location = i + 9;
 							}
 						}
+						playerMove(player2, player1Image);
+						player(player2, player2Image);
 					}
 				}
 			});
@@ -1416,6 +1424,9 @@ public class BlueMarble {
 								player1.location = i + 16;
 							}
 						}
+						playerMove(player1, player1Image);
+						player(player1, player1Image);
+						
 					} else if (player2Flying.contains("비행기 타기")) {
 						for (int i = 0; i < topLine.length; i++) {
 							if (e.getSource() == topLine[i]) {
@@ -1423,6 +1434,8 @@ public class BlueMarble {
 								player2.location = i + 16;
 							}
 						}
+						playerMove(player2, player1Image);
+						player(player2, player2Image);
 					}
 				}
 			});
@@ -1438,6 +1451,9 @@ public class BlueMarble {
 								player1.location = i + 24;
 							}
 						}
+						playerMove(player1, player1Image);
+						player(player1, player1Image);
+						
 					} else if (player2Flying.contains("비행기 타기")) {
 						for (int i = 0; i < rightLine.length; i++) {
 							if (e.getSource() == rightLine[i]) {
@@ -1445,6 +1461,8 @@ public class BlueMarble {
 								player2.location = i + 24;
 							}
 						}
+						playerMove(player2, player1Image);
+						player(player2, player2Image);
 					}
 				}
 			});
