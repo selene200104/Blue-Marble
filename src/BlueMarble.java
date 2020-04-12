@@ -317,14 +317,14 @@ public class BlueMarble {
 		// 땅 객체 배열 생성(위치 지역명 , 빌라 값, 빌딩 값, 호텔 값, 빌라 선택 횟수, 빌딩 선택 횟수, 호텔 선택 횟수, 땅 총 가격)
 		land[0] = new Land("출발지", 0, 0, 0, 0, 0, 0, 0, "");
 
-		land[1] = new Land("서귀포", 10000, 30000, 50000, 1, 0, 0, 0, "player2");
-		land[2] = new Land("제주", 10000, 30000, 50000, 1, 0, 0, 0, "player2");
-		land[3] = new Land("독도", 10000, 30000, 50000, 1, 0, 0, 0, "player2");
+		land[1] = new Land("서귀포", 10000, 30000, 50000, 0, 0, 0, 0, "");
+		land[2] = new Land("제주", 10000, 30000, 50000, 0, 0, 0, 0, "");
+		land[3] = new Land("독도", 10000, 30000, 50000, 0, 0, 0, 0, "");
 		land[4] = new Land("행운카드", 0, 0, 0, 0, 0, 0, 0, "");
-		land[5] = new Land("경주", 20000, 60000, 10000, 1, 0, 0, 0, "player2");
-		land[6] = new Land("안동", 20000, 60000, 10000, 1, 0, 0, 0, "player2");
-		land[7] = new Land("통영", 20000, 60000, 10000, 1, 0, 0, 0, "player2");
-		land[8] = new Land("창원", 20000, 60000, 10000, 1, 0, 0, 0, "player2");
+		land[5] = new Land("경주", 20000, 60000, 10000, 0, 0, 0, 0, "");
+		land[6] = new Land("안동", 20000, 60000, 10000, 0, 0, 0, 0, "");
+		land[7] = new Land("통영", 20000, 60000, 10000, 0, 0, 0, 0, "");
+		land[8] = new Land("창원", 20000, 60000, 10000, 1, 1, 0, 0, "");
 
 		land[9] = new Land("공항", 0, 0, 0, 0, 0, 0, 0, "");
 		land[10] = new Land("강릉", 30000, 90000, 150000, 0, 0, 0, 0, "");
@@ -587,8 +587,18 @@ public class BlueMarble {
 						player1moneyText.setText("money : " + player1.money);
 						land[acquisitionFieldNum].landowner = "player1";
 						
-						System.out.println(land[acquisitionFieldNum].landowner);
-						
+						if (acquisitionFieldNum > 0 && acquisitionFieldNum <= 8) {
+							bottomLine[acquisitionFieldNum - 1].setIcon(new ImageIcon("./images/BlueLine.png"));
+							
+						} else if (acquisitionFieldNum >= 9 && acquisitionFieldNum <= 15) {
+							leftLine[acquisitionFieldNum - 9].setIcon(new ImageIcon("./images/BlueLine.png"));
+							
+						} else if (acquisitionFieldNum > 16 && acquisitionFieldNum <= 23) {
+							topLine[acquisitionFieldNum - 16].setIcon(new ImageIcon("./images/BlueLine.png"));
+							
+						} else if (acquisitionFieldNum > 24 && acquisitionFieldNum <= 29) {
+							rightLine[acquisitionFieldNum - 24].setIcon(new ImageIcon("./images/BlueLine.png"));
+						}
 					}else {
 						JOptionPane.showMessageDialog(frame, "돈이 모자랍니다", "!!!!", JOptionPane.INFORMATION_MESSAGE);
 					}
@@ -599,6 +609,18 @@ public class BlueMarble {
 						player2moneyText.setText("money : " + player2.money);
 						land[acquisitionFieldNum].landowner = "player2";
 						
+						if (acquisitionFieldNum > 0 && acquisitionFieldNum <= 8) {
+							bottomLine[acquisitionFieldNum - 1].setIcon(new ImageIcon("./images/RedLine.png"));
+							
+						} else if (acquisitionFieldNum >= 9 && acquisitionFieldNum <= 15) {
+							leftLine[acquisitionFieldNum - 9].setIcon(new ImageIcon("./images/RedLine.png"));
+							
+						} else if (acquisitionFieldNum > 16 && acquisitionFieldNum <= 23) {
+							topLine[acquisitionFieldNum - 16].setIcon(new ImageIcon("./images/RedLine.png"));
+							
+						} else if (acquisitionFieldNum > 24 && acquisitionFieldNum <= 29) {
+							rightLine[acquisitionFieldNum - 24].setIcon(new ImageIcon("./images/RedLine.png"));
+						}
 					}else {
 						JOptionPane.showMessageDialog(frame, "돈이 모자랍니다", "!!!!", JOptionPane.INFORMATION_MESSAGE);
 					}
@@ -988,6 +1010,7 @@ public class BlueMarble {
 					}
 				}
 			} else {
+				
 				System.out.println("플레이어 2가 움직였습니다.");
 			}
 
