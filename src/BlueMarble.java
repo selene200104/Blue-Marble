@@ -225,12 +225,12 @@ public class BlueMarble {
 		player2Image.setBounds(715, 495, 60, 60);
 		blueMarbleScene.add(player2Image);
 
-		player1moneyText.setText("money : 30000원");
+		player1moneyText.setText("money : 500000원");
 		player1moneyText.setFont(new Font("굴림", Font.BOLD, 13));
 		player1moneyText.setBounds(130, 190, 110, 60);
 		blueMarbleScene.add(player1moneyText);
 
-		player2moneyText.setText("money : 30000원");
+		player2moneyText.setText("money : 500000원");
 		player2moneyText.setFont(new Font("굴림", Font.BOLD, 13));
 		player2moneyText.setBounds(130, 390, 110, 60);
 		blueMarbleScene.add(player2moneyText);
