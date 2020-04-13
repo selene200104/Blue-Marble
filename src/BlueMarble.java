@@ -36,22 +36,11 @@ public class BlueMarble {
 	}
 
 	JPanel blueMarbleScene = new JPanel();
-	JPanel rideAirplaneScene = new JPanel();
 	JPanel luckeyCardScene = new JPanel();
-	JPanel gameEndingScene = new JPanel() {
-		public void paintComponent(Graphics g) {
-			Dimension d = getSize();
-			ImageIcon image = new ImageIcon("./images/finalBackground.jpg");
-			g.drawImage(image.getImage(), 0, 0, d.width, d.height, this);
-		}
-	};
-	JPanel landPanel = new JPanel() {
-		public void paintComponent(Graphics g) {
-			Dimension d = getSize();
-			ImageIcon image = new ImageIcon("./images/land.png");
-			g.drawImage(image.getImage(), 0, 0, d.width, d.height, this);
-		}
-	};
+	JPanel rideAirplaneScene = new JPanel();
+	JPanel acquisitionPanel = new JPanel();
+	JPanel gameEndingScene=new JPanel(){public void paintComponent(Graphics g){Dimension d=getSize();ImageIcon image=new ImageIcon("./images/finalBackground.jpg");g.drawImage(image.getImage(),0,0,d.width,d.height,this);}};
+	JPanel landPanel=new JPanel(){public void paintComponent(Graphics g){Dimension d=getSize();ImageIcon image=new ImageIcon("./images/land.png");g.drawImage(image.getImage(),0,0,d.width,d.height,this);}};
 
 	JLabel landName = new JLabel();
 	JLabel[] constructionPrice = new JLabel[4];
@@ -101,6 +90,10 @@ public class BlueMarble {
 	static JLabel[] bottomLine = new JLabel[8];
 	static JLabel[] leftLine = new JLabel[7];
 	static JLabel[] rightLine = new JLabel[7];
+	JLabel[] cityNameText = new JLabel[30];
+	JLabel[] villaImage = new JLabel[30];
+	JLabel[] buildingImage = new JLabel[30];
+	JLabel[] hotelImage = new JLabel[30];
 
 	Land[] land = new Land[30];
 	JLabel[] landLabel = new JLabel[30];
@@ -117,6 +110,15 @@ public class BlueMarble {
 	int VerticalLineInterval = 80;
 	int lineWidth = 77;
 	int lineHeight = 79;
+
+	// 인수하기
+	JLabel acquisitionText = new JLabel();
+	JLabel acquisitionPriceText = new JLabel();
+	JButton acquisitionYesButton = new JButton();
+	JButton acquisitionNoButton = new JButton();
+	int acquisitionPrice = 0; // 인수가격
+	int acquisitionFieldNum = 0;// 인수할 땅의 번호
+	String whoAcquisition = ""; // 누가 인수하는 지
 
 	// 주사위
 	JButton diceThrowButton = new JButton();
@@ -142,8 +144,9 @@ public class BlueMarble {
 
 	boolean isPlayer1hasCard = false;
 	boolean isPlayer2hasCard = false;
-	boolean isPlayer1hasuninhabitedCard = true;
-	boolean isPlayer2hasuninhabitedCard = true;
+	boolean isPlayer1hasuninhabitedCard = false;
+	boolean isPlayer2hasuninhabitedCard = false;
+
 	// 엔딩
 	JLabel gameEndingText = new JLabel();
 	JLabel winnerText = new JLabel();
@@ -157,12 +160,8 @@ public class BlueMarble {
 	int collectedSocialWelfare = 0; // 사회복지기금에 모인 돈
 	int luckeyCardNum = 0; // 행운카드 번호
 
-	// PlayerMove player1Move = new PlayerMove(player1, player1Image, playSituation,
-	// player1moneyText);
-	// PlayerMove player2Move = new PlayerMove(player2, player2Image, playSituation,
-	// player2moneyText);
-	PlayerMoves player1Move = new PlayerMoves(player1, player1Image, playSituation, player1moneyText);
-	PlayerMoves player2Move = new PlayerMoves(player2, player2Image, playSituation, player2moneyText);
+	PlayerMoving Player1Moving = new PlayerMoving(player1, player1Image, playSituation, player1moneyText);
+	PlayerMoving Player2Moving = new PlayerMoving(player2, player2Image, playSituation, player2moneyText);
 	GameEnding gameEnding = new GameEnding(player1, player2, gameEndingScene, blueMarbleScene, gameEndingText,
 			winnerText);
 
@@ -183,14 +182,12 @@ public class BlueMarble {
 
 		luckeyCardScene.setBounds(280, 120, 250, 300);
 		luckeyCardScene.setBackground(Color.DARK_GRAY);
-		// frame.getContentPane().add(luckeyCardScene);
 		blueMarbleScene.add(luckeyCardScene);
 		luckeyCardScene.setLayout(null);
 		luckeyCardScene.setVisible(false);
 
 		rideAirplaneScene.setBounds(180, 100, 400, 300);
 		rideAirplaneScene.setBackground(Color.DARK_GRAY);
-		// frame.getContentPane().add(rideAirplaneScene);
 		blueMarbleScene.add(rideAirplaneScene);
 		rideAirplaneScene.setLayout(null);
 		rideAirplaneScene.setVisible(false);
@@ -199,6 +196,14 @@ public class BlueMarble {
 		frame.getContentPane().add(blueMarbleScene);
 		blueMarbleScene.setLayout(null);
 
+		//인수하기
+		acquisitionPanel.setLayout(null);
+		acquisitionPanel.setBackground(Color.DARK_GRAY);
+		acquisitionPanel.setBounds(200, 100, 340, 300);
+		blueMarbleScene.add(acquisitionPanel);
+		acquisitionPanel.setVisible(false);
+
+		
 		landPanel.setLayout(null);
 		landPanel.setBounds(200, 100, 500, 300);
 		blueMarbleScene.add(landPanel);
@@ -328,72 +333,92 @@ public class BlueMarble {
 		land[22] = new Land("울산", 60000, 180000, 300000, 300000, 0, 0, 0, 0, 0, "", 0, 0, 0, 0);
 		land[23] = new Land("대구", 60000, 180000, 300000, 300000, 0, 0, 0, 0, 0, "", 0, 0, 0, 0);
 
-		land[24] = new Land("국제기구?", 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 0);
+		land[24] = new Land("복지기금", 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 0);
 		land[25] = new Land("인천", 70000, 210000, 350000, 350000, 0, 0, 0, 0, 0, "", 0, 0, 0, 0);
 		land[26] = new Land("광주", 70000, 210000, 350000, 350000, 0, 0, 0, 0, 0, "", 0, 0, 0, 0);
-		land[27] = new Land("세금내는곳?", 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 0);
+		land[27] = new Land("기부센터", 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 0);
 		land[28] = new Land("부산", 80000, 240000, 400000, 400000, 0, 0, 0, 0, 0, "", 0, 0, 0, 0);
 		land[29] = new Land("서울", 80000, 240000, 400000, 400000, 0, 0, 0, 0, 0, "", 0, 0, 0, 0);
 		// land[30] = new Land("출발지", 0, 0, 0, 0, 0, 0, 0);
 
 		// 부루마블 판
-		// 위쪽 줄
-		for (int i = 0; i < topLine.length; i++) {
-
-			blueMarbleScene.add(topLine[i] = new JLabel());
-
-			topLine[i].setBounds(topLineHorizontalLength, topLineVerticalLength, lineWidth, lineHeight);
-
-			topLineHorizontalLength = topLineHorizontalLength + HorizontalLineInterval;
-
-			topLine[i].setIcon(new ImageIcon("./images/Line.png"));
-		}
-
+		
 		// 아래쪽 줄
 		for (int i = 0; i < topLine.length; i++) {
 
+			blueMarbleScene.add(cityNameText[i] = new JLabel());
 			blueMarbleScene.add(bottomLine[i] = new JLabel());
 
+			cityNameText[i].setBounds(bottomLineHorizontalLength, bottomLineVerticalLength, lineWidth, lineHeight);
 			bottomLine[i].setBounds(bottomLineHorizontalLength, bottomLineVerticalLength, lineWidth, lineHeight);
 
 			bottomLineHorizontalLength = bottomLineHorizontalLength - HorizontalLineInterval;
 
 			bottomLine[i].setIcon(new ImageIcon("./images/Line.png"));
+			cityNameText[i].setHorizontalAlignment(SwingConstants.CENTER);
 		}
-
+		
 		// 왼쪽 줄
 		for (int i = 0; i < leftLine.length; i++) {
 
+			blueMarbleScene.add(cityNameText[i + 8] = new JLabel());
 			blueMarbleScene.add(leftLine[i] = new JLabel());
 
+			cityNameText[i + 8].setBounds(leftLineHorizontalLength, leftLineVerticalLength, lineWidth, lineHeight);
 			leftLine[i].setBounds(leftLineHorizontalLength, leftLineVerticalLength, lineWidth, lineHeight);
 
 			leftLineVerticalLength = leftLineVerticalLength - VerticalLineInterval;
 
 			leftLine[i].setIcon(new ImageIcon("./images/Line.png"));
+			cityNameText[i + 8].setHorizontalAlignment(SwingConstants.CENTER);
+		}
+		
+		// 위쪽 줄
+		for (int i = 0; i < topLine.length; i++) {
+
+			blueMarbleScene.add(cityNameText[i + 15] = new JLabel());
+			blueMarbleScene.add(topLine[i] = new JLabel());
+			
+			cityNameText[i + 15].setBounds(topLineHorizontalLength, topLineVerticalLength, lineWidth, lineHeight);
+			topLine[i].setBounds(topLineHorizontalLength, topLineVerticalLength, lineWidth, lineHeight);
+			
+			topLineHorizontalLength = topLineHorizontalLength + HorizontalLineInterval;
+
+			topLine[i].setIcon(new ImageIcon("./images/Line.png"));
+			cityNameText[i + 15].setHorizontalAlignment(SwingConstants.CENTER);
 		}
 
 		// 오른쪽 줄
 		for (int i = 0; i < rightLine.length; i++) {
 
+			blueMarbleScene.add(cityNameText[i + 23] = new JLabel());
 			blueMarbleScene.add(rightLine[i] = new JLabel());
 
+			cityNameText[i + 23].setBounds(rightLineHorizontalLength, rightLineVerticalLength, lineWidth, lineHeight);
 			rightLine[i].setBounds(rightLineHorizontalLength, rightLineVerticalLength, lineWidth, lineHeight);
 
 			rightLineVerticalLength = rightLineVerticalLength + VerticalLineInterval;
 
 			rightLine[i].setIcon(new ImageIcon("./images/Line.png"));
+			cityNameText[i + 23].setHorizontalAlignment(SwingConstants.CENTER);
 		}
 
+		//칸에 도시 이름을 넣어줌
+		for(int i = 0; i < cityNameText.length - 1; i++) {
+			cityNameText[i].setText(land[i + 1].landName.toString());
+		}
+		cityNameText[29].setText(land[0].landName.toString());
+		
 		// 주사위 던지기
 		diceThrowButton.setText("주사위 돌리기");
 		diceThrowButton.setBounds(500, 300, 110, 60);
 		diceThrowButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+
+	public void actionPerformed(ActionEvent e) {
 
 				// 랜덤으로 나온 수가 주사위의 수가 된다.
 				diceNum = ramdom.nextInt(6) + 1;
-				// diceNum = 31;
+				
 				diceNumberText.setText("주사위 수 : " + diceNum);
 
 				playSituation.setText("");
@@ -404,33 +429,29 @@ public class BlueMarble {
 					// 비행기를 탔을 땐 주사위 버튼을 눌러도 말이 움직이면 안된다
 					if (player1Flying == "비행기 타기") {
 						// System.out.println("비행기를 탐");
-						System.out.println("비행기 탄 후 플레이어 위치: " + player1.location);
+
 					} else if (Player1forcedRest == 0) {
 						player1leftdayOfisland.setVisible(false);
 
 						player1.previousLocation = player1.location;
 						player1.location = player1.location + diceNum;
-						synchronized (player1Move) {
-							player1Move.notify();
+						
+						System.out.println("player1" + diceNum);
+						synchronized (Player1Moving) {
+							Player1Moving.notify();
 						}
-						// playerMove(player1, player1Image);
-						// player(player1, player1Image);
 
 					} else if (Player1forcedRest > 0) {
 						Player1forcedRest--;
 						player1leftdayOfisland.setText("무인도 탈출하기까지 남은 일수 : " + (Player1forcedRest + 1) + " 일");
-
+					}
+					
+					if (player2Flying == "비행기 타기") {
+						airport();
 					}
 					player1Flying = "";
 
-					// player1이 움직인 후 player2가 주사위 버튼을 누르지 않고 바로 비행기를 탈 수 있도록 하기 위함
-					if (player2Flying == "비행기 타기") {
-						airport();
-						playSituation.setText("원하는 도시를 클릭 후 주사위 버튼을 눌러주세요");
-					}
-
 					// 플레이어을 움직인 후 차례를 바꾼다
-					whosTurnText.setText("Player 2 순서");
 					whosTurn = 2;
 					System.out.println("isPlayer1hasuninhabitedCard" + isPlayer1hasuninhabitedCard);
 					System.out.println("isPlayer2hasuninhabitedCard" + isPlayer2hasuninhabitedCard);
@@ -446,12 +467,11 @@ public class BlueMarble {
 
 						player2.previousLocation = player2.location;
 						player2.location = player2.location + diceNum;
-						synchronized (player2Move) {
-							player2Move.notify();
+						System.out.println("player1" + diceNum);
+						synchronized (Player2Moving) {
+							Player2Moving.notify();
 
 						}
-						// player(player2, player2Image);
-						// playerMove(player2, player2Image);
 
 					} else {
 						Player2forcedRest--;
@@ -460,14 +480,11 @@ public class BlueMarble {
 
 					if (player1Flying == "비행기 타기") {
 						airport();
-						playSituation.setText("원하는 도시를 클릭 후 주사위 버튼을 눌러주세요");
 					}
 					player2Flying = "";
 
 					// 플레이어을 움직인 후 차례를 바꾼다
-					whosTurnText.setText("Player 1 순서");
 					whosTurn = 1;
-
 				}
 			}
 		});
@@ -514,7 +531,7 @@ public class BlueMarble {
 						player2Flying = "비행기 타기";
 
 					} else {
-						cautionPointText.setText("돈이 모자랍니다!!");
+						JOptionPane.showMessageDialog(frame, "돈이 부족하여 살 수 없어요", "SYSTEM", JOptionPane.INFORMATION_MESSAGE);
 					}
 				}
 
@@ -532,6 +549,86 @@ public class BlueMarble {
 		});
 		rideAirplaneScene.add(noButton);
 
+		//인수하기 
+		acquisitionText.setText("인수하시겠습니까??");
+		acquisitionText.setForeground(Color.white);
+		acquisitionText.setFont(new Font("굴림", Font.BOLD, 17));
+		acquisitionText.setBounds(100, 10, 200, 60);
+		acquisitionPanel.add(acquisitionText);
+		
+		acquisitionPriceText.setText("인수가격 : " + acquisitionPrice);
+		acquisitionPriceText.setForeground(Color.white);
+		acquisitionPriceText.setFont(new Font("굴림", Font.BOLD, 15));
+		acquisitionPriceText.setBounds(0, 100, 340, 60);
+		acquisitionPriceText.setHorizontalAlignment(SwingConstants.CENTER);
+		acquisitionPanel.add(acquisitionPriceText);
+		
+		acquisitionYesButton.setText("네");
+		acquisitionYesButton.setBounds(30, 220, 100, 50);
+		acquisitionYesButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				diceThrowButton.setVisible(true);
+				acquisitionPanel.setVisible(false);
+				
+				if (whoAcquisition == "player1") {
+					if(player1.money > acquisitionPrice) {
+						player1.money = player1.money - acquisitionPrice;
+						player1moneyText.setText("money : " + player1.money);
+						land[acquisitionFieldNum].landowner = "player1";
+						
+						if (acquisitionFieldNum > 0 && acquisitionFieldNum <= 8) {
+							bottomLine[acquisitionFieldNum - 1].setIcon(new ImageIcon("./images/BlueLine.png"));
+							
+						} else if (acquisitionFieldNum >= 9 && acquisitionFieldNum <= 15) {
+							leftLine[acquisitionFieldNum - 9].setIcon(new ImageIcon("./images/BlueLine.png"));
+							
+						} else if (acquisitionFieldNum > 16 && acquisitionFieldNum <= 23) {
+							topLine[acquisitionFieldNum - 16].setIcon(new ImageIcon("./images/BlueLine.png"));
+							
+						} else if (acquisitionFieldNum > 24 && acquisitionFieldNum <= 29) {
+							rightLine[acquisitionFieldNum - 24].setIcon(new ImageIcon("./images/BlueLine.png"));
+						}
+					}else {
+						JOptionPane.showMessageDialog(frame, "돈이 부족하여 살 수 없어요", "SYSTEM", JOptionPane.INFORMATION_MESSAGE);
+					}
+
+				} else if (whoAcquisition == "player2") {
+					if(player2.money > acquisitionPrice) {
+						player2.money = player2.money - acquisitionPrice;
+						player2moneyText.setText("money : " + player2.money);
+						land[acquisitionFieldNum].landowner = "player2";
+						
+						if (acquisitionFieldNum > 0 && acquisitionFieldNum <= 8) {
+							bottomLine[acquisitionFieldNum - 1].setIcon(new ImageIcon("./images/RedLine.png"));
+							
+						} else if (acquisitionFieldNum >= 9 && acquisitionFieldNum <= 15) {
+							leftLine[acquisitionFieldNum - 9].setIcon(new ImageIcon("./images/RedLine.png"));
+							
+						} else if (acquisitionFieldNum > 16 && acquisitionFieldNum <= 23) {
+							topLine[acquisitionFieldNum - 16].setIcon(new ImageIcon("./images/RedLine.png"));
+							
+						} else if (acquisitionFieldNum > 24 && acquisitionFieldNum <= 29) {
+							rightLine[acquisitionFieldNum - 24].setIcon(new ImageIcon("./images/RedLine.png"));
+						}
+					}else {
+						JOptionPane.showMessageDialog(frame, "돈이 부족하여 살 수 없어요", "SYSTEM", JOptionPane.INFORMATION_MESSAGE);
+					}
+				}
+				acquisitionPrice = 0;
+			}
+		});
+		acquisitionPanel.add(acquisitionYesButton);
+		
+		acquisitionNoButton.setText("아니요");
+		acquisitionNoButton.setBounds(205, 220, 100, 50);
+		acquisitionNoButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				diceThrowButton.setVisible(true);
+				acquisitionPanel.setVisible(false);
+			}
+		});
+		acquisitionPanel.add(acquisitionNoButton);
+		
 		// 행운카드
 		cardNameText.setText("");
 		cardNameText.setFont(new Font("굴림", Font.BOLD, 17));
@@ -626,6 +723,7 @@ public class BlueMarble {
 						if (isPlayer1hasuninhabitedCard == true) {
 							luckeyCardScene.setVisible(true);
 							diceThrowButton.setVisible(false);
+							
 							cardNameText.setText("무인도 탈출 카드");
 							cardContentText.setText("사용하시겠습니까?");
 						}
@@ -682,10 +780,12 @@ public class BlueMarble {
 					if (isPlayer1hasCard == true) {
 						uninhabitedEmoticon[0].setVisible(true);
 						isPlayer1hasuninhabitedCard = true;
+						isPlayer1hasCard = false;
 
 					} else if (isPlayer2hasCard == true) {
 						uninhabitedEmoticon[1].setVisible(true);
 						isPlayer2hasuninhabitedCard = true;
+						isPlayer2hasCard = false;
 					}
 
 					// 우대권
@@ -705,6 +805,7 @@ public class BlueMarble {
 							player1leftdayOfisland.setVisible(false);
 							Player1forcedRest = 0;
 							isPlayer1hasuninhabitedCard = false;
+
 						}
 					} else if (player2.location == 15) {
 						if (isPlayer2hasuninhabitedCard == true) {
@@ -736,15 +837,13 @@ public class BlueMarble {
 		winnerText.setBounds(300, 300, 200, 60);
 		gameEndingScene.add(winnerText);
 
-		player1Move.start();
-		player2Move.start();
+		Player1Moving.start();
+		Player2Moving.start();
 		gameEnding.start();
 
 	}
 
 	public void playerMove(Player player, JLabel playerImage) {
-
-		System.out.println("플레이어 움직임");
 
 		// 건물 선택 버튼 배열 초기화
 		JButton[] islandBulidingButton = new JButton[4];
@@ -753,48 +852,12 @@ public class BlueMarble {
 		islandBulidingButton[1] = new JButton((new ImageIcon("./images/building.png")));
 		islandBulidingButton[2] = new JButton((new ImageIcon("./images/hotel.png")));
 		islandBulidingButton[3] = new JButton((new ImageIcon("./images/landmark.png")));
+		
 
 		islandBulidingButton[0].setEnabled(true);
 		islandBulidingButton[1].setEnabled(true);
 		islandBulidingButton[2].setEnabled(true);
 		islandBulidingButton[3].setEnabled(false);
-
-		//islandBulidingButton[3].setEnabled(false);
-		/*
-		 * if (player == player1) { if (player.round == 0) {
-		 * islandBulidingButton[0].setEnabled(true);
-		 * islandBulidingButton[1].setEnabled(false);
-		 * islandBulidingButton[2].setEnabled(false);
-		 * islandBulidingButton[3].setEnabled(false); } else if (player.round == 1) {
-		 * islandBulidingButton[0].setEnabled(true);
-		 * islandBulidingButton[1].setEnabled(true);
-		 * islandBulidingButton[2].setEnabled(false);
-		 * islandBulidingButton[3].setEnabled(false); } else if (player.round == 2) {
-		 * islandBulidingButton[0].setEnabled(true);
-		 * islandBulidingButton[1].setEnabled(true);
-		 * islandBulidingButton[2].setEnabled(true);
-		 * islandBulidingButton[3].setEnabled(false); } else {
-		 * islandBulidingButton[0].setEnabled(true);
-		 * islandBulidingButton[1].setEnabled(true);
-		 * islandBulidingButton[2].setEnabled(true);
-		 * islandBulidingButton[3].setEnabled(true); } } else { if (player.round == 0) {
-		 * islandBulidingButton[0].setEnabled(true);
-		 * islandBulidingButton[1].setEnabled(false);
-		 * islandBulidingButton[2].setEnabled(false);
-		 * islandBulidingButton[3].setEnabled(false); } else if (player.round == 1) {
-		 * islandBulidingButton[0].setEnabled(true);
-		 * islandBulidingButton[1].setEnabled(true);
-		 * islandBulidingButton[2].setEnabled(false);
-		 * islandBulidingButton[3].setEnabled(false); } else if (player.round == 2) {
-		 * islandBulidingButton[0].setEnabled(true);
-		 * islandBulidingButton[1].setEnabled(true);
-		 * islandBulidingButton[2].setEnabled(true);
-		 * islandBulidingButton[3].setEnabled(false); } else {
-		 * islandBulidingButton[0].setEnabled(true);
-		 * islandBulidingButton[1].setEnabled(true);
-		 * islandBulidingButton[2].setEnabled(true);
-		 * islandBulidingButton[3].setEnabled(true); } }
-		 */
 
 		// 각각의 건물 가격 배열 초기화
 		constructionPrice[0] = new JLabel("" + land[player.location].villaPrice);
@@ -810,6 +873,7 @@ public class BlueMarble {
 
 		landLabel[player.location].add(landName);
 
+					
 		if (player.location >= 30) {
 			player.location = player.location - 30;
 		}
@@ -833,6 +897,7 @@ public class BlueMarble {
 												+ land[player.location].landmarkCheckCount + " | 가격 : "
 												+ land[player.location].constructionCost);
 
+										//땅의 주인이 없다면
 										if (land[player.location].landowner == ""
 												|| land[player.location].landowner == "player1") {
 											landLabel[player.location].setVisible(true);
@@ -860,33 +925,6 @@ public class BlueMarble {
 												islandButtonHorizontalLength = islandButtonHorizontalLength
 														+ islandButtonWidth + 10;
 												
-												/*if (player.round == 0) {
-													System.out.println("플레이어1의 라운드 0 일때 라운드 확인 : " + player.round);
-													islandBulidingButton[0].setEnabled(true);
-													islandBulidingButton[1].setEnabled(false);
-													islandBulidingButton[2].setEnabled(false);
-													//islandBulidingButton[3].setEnabled(false);
-												} 
-												if (player.round == 1) {
-													System.out.println("플레이어1의 라운드 1 일때 라운드 확인 : " + player.round);
-													islandBulidingButton[0].setEnabled(true);
-													islandBulidingButton[1].setEnabled(true);
-													islandBulidingButton[2].setEnabled(false);
-													//islandBulidingButton[3].setEnabled(false);
-												}
-												if (player.round == 2) {
-													System.out.println("플레이어1의 라운드 2 일때 라운드 확인 : : " + player.round);
-													islandBulidingButton[0].setEnabled(true);
-													islandBulidingButton[1].setEnabled(true);
-													islandBulidingButton[2].setEnabled(true);
-													//islandBulidingButton[3].setEnabled(false);
-												} if (player.round >= 3) {
-													System.out.println("플레이어1의 라운드 3 이상 일때 라운드 확인 : : " + player.round);
-													islandBulidingButton[0].setEnabled(true);
-													islandBulidingButton[1].setEnabled(true);
-													islandBulidingButton[2].setEnabled(true);
-													islandBulidingButton[3].setEnabled(true);
-												}*/
 											}
 
 											int constructionPriceHorizontalLength = 40;
@@ -900,15 +938,29 @@ public class BlueMarble {
 												constructionPriceHorizontalLength = constructionPriceHorizontalLength
 														+ constructionPriceWidth + 10;
 											}
-											// whosTurnText.setText("Player 2 순서");
-											// whosTurn = 2;
-											// System.out.println("isPlayer1hasuninhabitedCard" +
-											// isPlayer1hasuninhabitedCard);
-											// System.out.println("isPlayer2hasuninhabitedCard" +
-											// isPlayer2hasuninhabitedCard);
+
+										}else if (land[player.location].landowner == "player2") {
+											acquisitionPanel.setVisible(true);
+											diceThrowButton.setVisible(false);
+
+											if(land[player.location].amountVilla == 1) {
+												acquisitionPrice = acquisitionPrice + land[player.location].villaPrice;
+												
+												if(land[player.location].amountBuilding == 1) {
+													acquisitionPrice = acquisitionPrice + land[player.location].buildingPrice;
+													
+													if(land[player.location].amountHotel == 1) {
+														acquisitionPrice = acquisitionPrice + land[player.location].hotelPrice;
+													}
+												}
+											}
+											acquisitionPrice = acquisitionPrice * 2;
+											acquisitionPriceText.setText("인수가격 : " + acquisitionPrice);
+											acquisitionFieldNum = player.location;
+											whoAcquisition = "player1";
 										}
 
-									} else {
+									} else if(player == player2){
 										System.out.println("플레이어 2이 움직였습니다. 현재 플레이어는 " + player.round + "바퀴째 입니다.");
 										System.out.println("지역이름 : " + land[player.location].landName + " | 땅 주인: "
 												+ land[player.location].landowner + " | 도착 당시 | 빌라 선택횟수: "
@@ -923,8 +975,6 @@ public class BlueMarble {
 											landLabel[player.location].setVisible(true);
 											diceThrowButton.setVisible(false);
 
-											// System.out.println("플레이어 2이 움직였습니다. 현재 플레이어는 " + player.round + "바퀴째
-											// 입니다.");
 											landName.setText("" + land[player.location].landName);
 
 											System.out.println("지역이름 : " + land[player.location].landName + " | 땅 주인: "
@@ -947,65 +997,8 @@ public class BlueMarble {
 												islandButtonHorizontalLength = islandButtonHorizontalLength
 														+ islandButtonWidth + 10;
 												
-												/*
-												if (player.round == 0) {
-													System.out.println("플레이어2의 라운드 수 : " + player.round);
-													islandBulidingButton[0].setEnabled(true);
-													islandBulidingButton[1].setEnabled(false);
-													islandBulidingButton[2].setEnabled(false);
-													//islandBulidingButton[3].setEnabled(false);
-												} 
-												if (player.round == 1) {
-													System.out.println("플레이어2의 라운드 수 : " + player.round);
-													islandBulidingButton[0].setEnabled(true);
-													islandBulidingButton[1].setEnabled(true);
-													islandBulidingButton[2].setEnabled(false);
-													//islandBulidingButton[3].setEnabled(false);
-												}
-												if (player.round == 2) {
-													System.out.println("플레이어2의 라운드 수 : " + player.round);
-													islandBulidingButton[0].setEnabled(true);
-													islandBulidingButton[1].setEnabled(true);
-													islandBulidingButton[2].setEnabled(true);
-													//islandBulidingButton[3].setEnabled(false);
-												} 
-												if (player.round >= 3) {
-													System.out.println("플레이어2의 라운드 수 : " + player.round);
-													islandBulidingButton[0].setEnabled(true);
-													islandBulidingButton[1].setEnabled(true);
-													islandBulidingButton[2].setEnabled(true);
-													//islandBulidingButton[3].setEnabled(true);
-												}
-												*/
 											}	
 											
-											/*
-											if (player.round == 0) {
-												System.out.println("플레이어2의 라운드 수 : " + player.round);
-												islandBulidingButton[0].setEnabled(true);
-												islandBulidingButton[1].setEnabled(false);
-												islandBulidingButton[2].setEnabled(false);
-												islandBulidingButton[3].setEnabled(false);
-											} else if (player.round == 1) {
-												System.out.println("플레이어2의 라운드 수 : " + player.round);
-												islandBulidingButton[0].setEnabled(true);
-												islandBulidingButton[1].setEnabled(true);
-												islandBulidingButton[2].setEnabled(false);
-												islandBulidingButton[3].setEnabled(false);
-											} else if (player.round == 2) {
-												System.out.println("플레이어1의 라운드 수 : " + player.round);
-												islandBulidingButton[0].setEnabled(true);
-												islandBulidingButton[1].setEnabled(true);
-												islandBulidingButton[2].setEnabled(true);
-												islandBulidingButton[3].setEnabled(false);
-											} else {
-												System.out.println("플레이어2의 라운드 수 : " + player.round);
-												islandBulidingButton[0].setEnabled(true);
-												islandBulidingButton[1].setEnabled(true);
-												islandBulidingButton[2].setEnabled(true);
-												//islandBulidingButton[3].setEnabled(true);
-											}
-											*/
 
 											int constructionPriceHorizontalLength = 40;
 
@@ -1018,14 +1011,28 @@ public class BlueMarble {
 												constructionPriceHorizontalLength = constructionPriceHorizontalLength
 														+ constructionPriceWidth + 10;
 											}
-											// whosTurnText.setText("Player 1 순서");
-											// whosTurn = 1;
-											// System.out.println("isPlayer1hasuninhabitedCard" +
-											// isPlayer1hasuninhabitedCard);
-											// System.out.println("isPlayer2hasuninhabitedCard" +
-											// isPlayer2hasuninhabitedCard);
-										}
+										} else if (land[player.location].landowner == "player1") {
+											acquisitionPanel.setVisible(true);
+											diceThrowButton.setVisible(false);
 
+											if (land[player.location].amountVilla == 1) {
+												acquisitionPrice = acquisitionPrice + land[player.location].villaPrice;
+
+												if (land[player.location].amountBuilding == 1) {
+													acquisitionPrice = acquisitionPrice
+															+ land[player.location].buildingPrice;
+
+													if (land[player.location].amountHotel == 1) {
+														acquisitionPrice = acquisitionPrice
+																+ land[player.location].hotelPrice;
+													}
+												}
+											}
+											acquisitionPrice = acquisitionPrice * 2;
+											acquisitionPriceText.setText("인수가격 : " + acquisitionPrice);
+											acquisitionFieldNum = player.location;
+											whoAcquisition = "player2";
+										}
 									}
 								}
 							}
@@ -1035,6 +1042,85 @@ public class BlueMarble {
 			}
 		}
 
+		//특별칸에 도착 했을 때
+		if (player.location == 4 || player.location == 20) {
+
+			if (player == player1) {
+				isPlayer1hasCard = true;
+			} else if (player == player2) {
+				isPlayer2hasCard = true;
+
+			}
+
+			luckyCard(player);
+			playSituation.setText("행운카드에 도착했습니다");
+
+			// 플레이어가 공항에 도착했을 때
+		} else if (player.location == 9) {
+			if (player == player1) {
+				whoRideAirplane = "player1";
+			} else if (player == player2) {
+				whoRideAirplane = "player2";
+
+			}
+			diceThrowButton.setVisible(false);
+			rideAirplaneScene.setVisible(true);
+			chooseRideAirplane.setText("비행기를 타시겠습니까?");
+			playSituation.setText("공항에 도착했습니다");
+
+			// 플레이어가 무인도에 도착했을 때
+		} else if (player.location == 15) {
+			if (player == player1) {
+				player1leftdayOfisland.setVisible(true);
+				Player1forcedRest = 3;
+				player1leftdayOfisland.setText("무인도 탈출하기까지 남은 일수 : 3일");
+
+				if (isPlayer1hasuninhabitedCard == true) {
+					luckeyCardScene.setVisible(true);
+					cardNameText.setText("무인도 탈출 카드");
+					cardContentText.setText("사용하시겠습니까?");
+				}
+
+			} else if (player == player2) {
+				playSituation.setText("Player2이 무인도에 갇혔습니다");
+				player2leftdayOfisland.setVisible(true);
+				Player2forcedRest = 3;
+				player2leftdayOfisland.setText("무인도 탈출하기까지 남은 일수 : 3일");
+
+				if (isPlayer2hasuninhabitedCard == true) {
+					luckeyCardScene.setVisible(true);
+					cardNameText.setText("무인도 탈출 카드");
+					cardContentText.setText("사용하시겠습니까?");
+				}
+			}
+			playSituation.setText("무인도에 갇혔습니다");
+
+			// 플레이어가 사회복지기금(돈 얻음)에 도착했을 때
+		} else if (player.location == 24) {
+			player.money = player.money + collectedSocialWelfare;
+
+			if (player == player1) {
+				player1moneyText.setText("money : " + player.money);
+			} else if (player == player2) {
+				player2moneyText.setText("money : " + player.money);
+			}
+			playSituation.setText("사회복지기금에서 돈을 얻었습니다 +" + collectedSocialWelfare + "원");
+			collectedSocialWelfare = 0;
+
+			// 플레이어가 사회복지기금(돈 지불)에 도착했을 때
+		} else if (player.location == 27) {
+
+			player.money = player.money - socialWelfareCost;
+			collectedSocialWelfare = collectedSocialWelfare + socialWelfareCost;
+
+			if (player == player1) {
+				player1moneyText.setText("money : " + player.money);
+			} else if (player == player2) {
+				player2moneyText.setText("money : " + player.money);
+			}
+			playSituation.setText("사회복지기금에서 돈을 기부했습니다 -" + socialWelfareCost + "원");
+		}
+	
 		// 빌라 버튼 클릭했을 때
 		islandBulidingButton[0].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1155,18 +1241,6 @@ public class BlueMarble {
 				}
 				diceThrowButton.setVisible(true);
 
-				// if(whosTurn == 1) {
-				// whosTurnText.setText("Player 2 순서");
-				// whosTurn = 2;
-				// System.out.println("isPlayer1hasuninhabitedCard" +
-				// isPlayer1hasuninhabitedCard);
-				// System.out.println("isPlayer2hasuninhabitedCard" +
-				// isPlayer2hasuninhabitedCard);
-				// }else {
-				// whosTurnText.setText("Player 1 순서");
-				// whosTurn = 1;
-				// }
-
 				// 나중에 구입과 관련된 기능 구현시 수정해야함
 				if (land[player.location].amountVilla != 1) {
 					land[player.location].villaCheckCount -= land[player.location].villaCheckCount;
@@ -1263,12 +1337,6 @@ public class BlueMarble {
 							player1moneyText.setText("money : " + player1.money);
 							land[player.location].constructionCost = 0;
 
-							// whosTurnText.setText("Player 2 순서");
-							// whosTurn = 2;
-							// System.out.println("isPlayer1hasuninhabitedCard" +
-							// isPlayer1hasuninhabitedCard);
-							// System.out.println("isPlayer2hasuninhabitedCard" +
-							// isPlayer2hasuninhabitedCard);
 
 						} else {
 							land[player.location].landowner = "player2";
@@ -1323,7 +1391,7 @@ public class BlueMarble {
 		landLabel[player.location].add(buyButton);
 		buyButton.setVisible(true);
 	}
-
+/*
 	public void player(Player player, JLabel playerImage) {
 
 		if (player.location == 4 || player.location == 20) {
@@ -1332,8 +1400,6 @@ public class BlueMarble {
 				isPlayer1hasCard = true;
 			} else if (player == player2) {
 				isPlayer2hasCard = true;
-
-			} else if (player == player2) {
 
 			}
 
@@ -1358,6 +1424,7 @@ public class BlueMarble {
 			if (player == player1) {
 				player1leftdayOfisland.setVisible(true);
 				Player1forcedRest = 3;
+				player1leftdayOfisland.setText("무인도 탈출하기까지 남은 일수 : 3일");
 
 				if (isPlayer1hasuninhabitedCard == true) {
 					luckeyCardScene.setVisible(true);
@@ -1369,6 +1436,7 @@ public class BlueMarble {
 				playSituation.setText("Player2이 무인도에 갇혔습니다");
 				player2leftdayOfisland.setVisible(true);
 				Player2forcedRest = 3;
+				player2leftdayOfisland.setText("무인도 탈출하기까지 남은 일수 : 3일");
 
 				if (isPlayer2hasuninhabitedCard == true) {
 					luckeyCardScene.setVisible(true);
@@ -1404,7 +1472,7 @@ public class BlueMarble {
 			playSituation.setText("사회복지기금에서 돈을 기부했습니다 -" + socialWelfareCost + "원");
 		}
 	}
-
+*/
 	public void airport() {
 
 		playSituation.setText("가고 싶은 지역을 선택해주세요");
@@ -1419,6 +1487,8 @@ public class BlueMarble {
 								player1.location = i + 1;
 							}
 						}
+						playerMove(player1, player1Image);
+						
 					} else if (player2Flying.contains("비행기 타기")) {
 						for (int i = 0; i < bottomLine.length; i++) {
 							if (e.getSource() == bottomLine[i]) {
@@ -1426,6 +1496,7 @@ public class BlueMarble {
 								player2.location = i + 1;
 							}
 						}
+						playerMove(player2, player1Image);
 					}
 				}
 			});
@@ -1433,6 +1504,7 @@ public class BlueMarble {
 
 		for (int i = 0; i < leftLine.length; i++) {
 			leftLine[i].addMouseListener(new MouseAdapter() {
+
 				public void mouseClicked(MouseEvent e) {
 					if (player1Flying.contains("비행기 타기")) {
 						for (int i = 0; i < leftLine.length; i++) {
@@ -1441,6 +1513,8 @@ public class BlueMarble {
 								player1.location = i + 9;
 							}
 						}
+						playerMove(player1, player1Image);
+
 					} else if (player2Flying.contains("비행기 타기")) {
 						for (int i = 0; i < leftLine.length; i++) {
 							if (e.getSource() == leftLine[i]) {
@@ -1448,64 +1522,75 @@ public class BlueMarble {
 								player2.location = i + 9;
 							}
 						}
+						playerMove(player2, player1Image);
 					}
 				}
 			});
 		}
 
-		for (int i = 0; i < topLine.length; i++) {
-			topLine[i].addMouseListener(new MouseAdapter() {
-				public void mouseClicked(MouseEvent e) {
-					if (player1Flying.contains("비행기 타기")) {
-						for (int i = 0; i < topLine.length; i++) {
-							if (e.getSource() == topLine[i]) {
-								player1Image.setLocation(topLine[i].getX() + 10, topLine[i].getY() + 10);
-								player1.location = i + 16;
-							}
-						}
-					} else if (player2Flying.contains("비행기 타기")) {
-						for (int i = 0; i < topLine.length; i++) {
-							if (e.getSource() == topLine[i]) {
-								player2Image.setLocation(topLine[i].getX() + 10, topLine[i].getY() + 10);
-								player2.location = i + 16;
-							}
-						}
-					}
-				}
-			});
-		}
+	for(
 
-		for (int i = 0; i < rightLine.length; i++) {
-			rightLine[i].addMouseListener(new MouseAdapter() {
-				public void mouseClicked(MouseEvent e) {
-					if (player1Flying.contains("비행기 타기")) {
-						for (int i = 0; i < rightLine.length; i++) {
-							if (e.getSource() == rightLine[i]) {
-								player1Image.setLocation(rightLine[i].getX() + 10, rightLine[i].getY() + 10);
-								player1.location = i + 24;
-							}
-						}
-					} else if (player2Flying.contains("비행기 타기")) {
-						for (int i = 0; i < rightLine.length; i++) {
-							if (e.getSource() == rightLine[i]) {
-								player2Image.setLocation(rightLine[i].getX() + 10, rightLine[i].getY() + 10);
-								player2.location = i + 24;
-							}
+	int i = 0;i<topLine.length;i++)
+	{
+		topLine[i].addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if (player1Flying.contains("비행기 타기")) {
+					for (int i = 0; i < topLine.length; i++) {
+						if (e.getSource() == topLine[i]) {
+							player1Image.setLocation(topLine[i].getX() + 10, topLine[i].getY() + 10);
+							player1.location = i + 16;
 						}
 					}
+					playerMove(player1, player1Image);
+
+				} else if (player2Flying.contains("비행기 타기")) {
+					for (int i = 0; i < topLine.length; i++) {
+						if (e.getSource() == topLine[i]) {
+							player2Image.setLocation(topLine[i].getX() + 10, topLine[i].getY() + 10);
+							player2.location = i + 16;
+						}
+					}
+					playerMove(player2, player1Image);
 				}
-			});
-		}
+			}
+		});
+	}
+
+	for(
+	int i = 0;i<rightLine.length;i++)
+	{
+		rightLine[i].addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if (player1Flying.contains("비행기 타기")) {
+					for (int i = 0; i < rightLine.length; i++) {
+						if (e.getSource() == rightLine[i]) {
+							player1Image.setLocation(rightLine[i].getX() + 10, rightLine[i].getY() + 10);
+							player1.location = i + 24;
+						}
+					}
+					playerMove(player1, player1Image);
+
+				} else if (player2Flying.contains("비행기 타기")) {
+					for (int i = 0; i < rightLine.length; i++) {
+						if (e.getSource() == rightLine[i]) {
+							player2Image.setLocation(rightLine[i].getX() + 10, rightLine[i].getY() + 10);
+							player2.location = i + 24;
+						}
+					}
+					playerMove(player2, player1Image);
+				}
+			}
+		});
+	}
 	}
 
 	public void luckyCard(Player player) {
 
 		luckeyCardScene.setVisible(true);
 		diceThrowButton.setVisible(false);
-		// playSituation.setVisible(false);
 
 		luckeyCardNum = ramdom.nextInt(7);
-		// luckeyCardNum = 7;
+		 luckeyCardNum = 6;
 		if (luckeyCardNum == 0) {
 			cardNameText.setText("세계여행");
 			cardContentText.setText("선택한 지역으로 이동할 수 있다");
@@ -1540,7 +1625,7 @@ public class BlueMarble {
 		}
 	}
 
-	class PlayerMoves extends Thread {
+	class PlayerMoving extends Thread {
 
 		Player player = new Player();
 		JLabel playerImage = new JLabel();
@@ -1549,7 +1634,7 @@ public class BlueMarble {
 
 		boolean running = true;
 
-		public PlayerMoves(Player player, JLabel playerImage, JLabel playSituation, JLabel playermoneyText) {
+		public PlayerMoving(Player player, JLabel playerImage, JLabel playSituation, JLabel playermoneyText) {
 			this.player = player;
 			this.playerImage = playerImage;
 			this.playSituation = playSituation;
@@ -1616,8 +1701,24 @@ public class BlueMarble {
 						Thread.sleep(150);
 
 					} else {
+
 						playerMove(player, playerImage);
-						player(player, playerImage);
+
+						if (player == player1) {
+							if (player2Flying == "비행기 타기") {
+								playSituation.setText("원하는 도시를 클릭 후 주사위 버튼을 눌러주세요");
+							}
+							whosTurnText.setText("Player 2순서");
+							player1Flying = "";
+
+						} else if (player == player2) {
+							if (player1Flying == "비행기 타기") {
+								playSituation.setText("원하는 도시를 클릭 후 주사위 버튼을 눌러주세요");
+							}
+							whosTurnText.setText("Player 1 순서");
+							player2Flying = "";
+						}
+
 						this.wait();
 
 					}
