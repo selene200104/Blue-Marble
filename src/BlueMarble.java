@@ -183,13 +183,15 @@ public class BlueMarble {
 
 		luckeyCardScene.setBounds(280, 120, 250, 300);
 		luckeyCardScene.setBackground(Color.DARK_GRAY);
-		frame.getContentPane().add(luckeyCardScene);
+		//frame.getContentPane().add(luckeyCardScene);
+		blueMarbleScene.add(luckeyCardScene);
 		luckeyCardScene.setLayout(null);
 		luckeyCardScene.setVisible(false);
 
 		rideAirplaneScene.setBounds(180, 100, 400, 300);
 		rideAirplaneScene.setBackground(Color.DARK_GRAY);
-		frame.getContentPane().add(rideAirplaneScene);
+		//frame.getContentPane().add(rideAirplaneScene);
+		blueMarbleScene.add(rideAirplaneScene);
 		rideAirplaneScene.setLayout(null);
 		rideAirplaneScene.setVisible(false);
 
@@ -331,7 +333,7 @@ public class BlueMarble {
 		land[26] = new Land("광주", 70000, 210000, 350000, 350000, 0, 0, 0, 0, 0, "", 0, 0, 0, 0);
 		land[27] = new Land("세금내는곳?", 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 0);
 		land[28] = new Land("부산", 80000, 240000, 400000, 400000, 0, 0, 0, 0, 0, "", 0, 0, 0, 0);
-		land[29] = new Land("서울", 80000, 240000, 400000, 400000, 0, 0, 0, 0, 0, "", 0, 0, 0, 0);
+		land[29] = new Land("서울", 80000, 240000, 400000, 400000, 0, 0, 0, 0, 0, "", 0, 0, 0, 0); 
 		// land[30] = new Land("출발지", 0, 0, 0, 0, 0, 0, 0);
 
 		// 부루마블 판
@@ -427,12 +429,13 @@ public class BlueMarble {
 						playSituation.setText("원하는 도시를 클릭 후 주사위 버튼을 눌러주세요");
 					}
 
+					
 					// 플레이어을 움직인 후 차례를 바꾼다
 					whosTurnText.setText("Player 2 순서");
 					whosTurn = 2;
 					System.out.println("isPlayer1hasuninhabitedCard" + isPlayer1hasuninhabitedCard);
 					System.out.println("isPlayer2hasuninhabitedCard" + isPlayer2hasuninhabitedCard);
-
+					 
 					// player2의 차례일 때
 				} else if (whosTurn == 2) {
 
@@ -462,9 +465,11 @@ public class BlueMarble {
 					}
 					player2Flying = "";
 
+					
 					// 플레이어을 움직인 후 차례를 바꾼다
 					whosTurnText.setText("Player 1 순서");
 					whosTurn = 1;
+					
 				}
 			}
 		});
@@ -751,6 +756,7 @@ public class BlueMarble {
 		islandBulidingButton[2] = new JButton((new ImageIcon("./images/hotel.png")));
 		islandBulidingButton[3] = new JButton((new ImageIcon("./images/landmark.png")));
 
+		islandBulidingButton[3].setEnabled(false);
 		/*
 		 * if (player == player1) { if (player.round == 0) {
 		 * islandBulidingButton[0].setEnabled(true);
@@ -885,6 +891,10 @@ public class BlueMarble {
 												constructionPriceHorizontalLength = constructionPriceHorizontalLength
 														+ constructionPriceWidth + 10;
 											}
+											//whosTurnText.setText("Player 2 순서");
+											//whosTurn = 2;
+											//System.out.println("isPlayer1hasuninhabitedCard" + isPlayer1hasuninhabitedCard);
+											//System.out.println("isPlayer2hasuninhabitedCard" + isPlayer2hasuninhabitedCard);
 										}
 
 									} else {
@@ -960,6 +970,10 @@ public class BlueMarble {
 												constructionPriceHorizontalLength = constructionPriceHorizontalLength
 														+ constructionPriceWidth + 10;
 											}
+											//whosTurnText.setText("Player 1 순서");
+											//whosTurn = 1;
+											//System.out.println("isPlayer1hasuninhabitedCard" + isPlayer1hasuninhabitedCard);
+											//System.out.println("isPlayer2hasuninhabitedCard" + isPlayer2hasuninhabitedCard);
 										}
 
 									}
@@ -1082,6 +1096,17 @@ public class BlueMarble {
 					landLabel[i].setVisible(false);
 				}
 				diceThrowButton.setVisible(true);
+				
+				//if(whosTurn == 1) {
+				//	whosTurnText.setText("Player 2 순서");
+				//	whosTurn = 2;
+				//	System.out.println("isPlayer1hasuninhabitedCard" + isPlayer1hasuninhabitedCard);
+				//	System.out.println("isPlayer2hasuninhabitedCard" + isPlayer2hasuninhabitedCard);
+				//}else {
+				//	whosTurnText.setText("Player 1 순서");
+				//	whosTurn = 1;
+				//}
+
 
 				// 나중에 구입과 관련된 기능 구현시 수정해야함
 				if (land[player.location].amountVilla != 1) {
@@ -1178,6 +1203,11 @@ public class BlueMarble {
 							player1.money = player1.money - land[player.location].constructionCost;
 							player1moneyText.setText("money : " + player1.money);
 							land[player.location].constructionCost = 0;
+							
+							//whosTurnText.setText("Player 2 순서");
+							//whosTurn = 2;
+							//System.out.println("isPlayer1hasuninhabitedCard" + isPlayer1hasuninhabitedCard);
+							//System.out.println("isPlayer2hasuninhabitedCard" + isPlayer2hasuninhabitedCard);
 
 						} else {
 							land[player.location].landowner = "player2";
@@ -1209,6 +1239,17 @@ public class BlueMarble {
 							player2.money = player2.money - land[player.location].constructionCost;
 							player2moneyText.setText("money : " + player2.money);
 							land[player.location].constructionCost = 0;
+							
+							//whosTurnText.setText("Player 1 순서");
+							//whosTurn = 1;
+						}
+						
+						if(land[player.location].amountVilla == 1) {
+							if(land[player.location].amountBuilding == 1) {
+								if(land[player.location].amountHotel == 1) {
+									islandBulidingButton[3].setEnabled(true);
+								}
+							}
 						}
 					} else {
 						JOptionPane.showMessageDialog(frame, "돈이 부족하여 살 수 없어요.", "SYSTEM", JOptionPane.INFORMATION_MESSAGE);
