@@ -25,7 +25,7 @@ public class PlayerMove extends Thread{
 					
 					if(player.location >= 30) {
 						if(player.previousLocation >= 30) {
-							player.previousLocation = player.previousLocation - 30;
+							//player.previousLocation = player.previousLocation - 30;
 							player.location = player.location - 30;
 							//월급기능 
 							player.money = player.money + 10000;
