@@ -194,15 +194,15 @@ public class BlueMarble {
 
 		luckeyCardScene.setBounds(280, 120, 250, 300);
 		luckeyCardScene.setBackground(Color.DARK_GRAY);
-		frame.getContentPane().add(luckeyCardScene);
 		luckeyCardScene.setLayout(null);
 		luckeyCardScene.setVisible(false);
+		blueMarbleScene.add(luckeyCardScene);
 
 		rideAirplaneScene.setBounds(180, 100, 400, 300);
 		rideAirplaneScene.setBackground(Color.DARK_GRAY);
-		frame.getContentPane().add(rideAirplaneScene);
 		rideAirplaneScene.setLayout(null);
 		rideAirplaneScene.setVisible(false);
+		blueMarbleScene.add(rideAirplaneScene);
 
 		blueMarbleScene.setBounds(0, 0, 800, 600);
 		frame.getContentPane().add(blueMarbleScene);
@@ -453,7 +453,6 @@ public class BlueMarble {
 					} else if (Player1forcedRest > 0) {
 						Player1forcedRest--;
 						player1leftdayOfisland.setText("무인도 탈출하기까지 남은 일수 : " + (Player1forcedRest + 1) + " 일");
-
 					}
 					
 					if (player2Flying == "비행기 타기") {
@@ -790,10 +789,12 @@ public class BlueMarble {
 					if (isPlayer1hasCard == true) {
 						uninhabitedEmoticon[0].setVisible(true);
 						isPlayer1hasuninhabitedCard = true;
+						isPlayer1hasCard = false;
 
 					} else if (isPlayer2hasCard == true) {
 						uninhabitedEmoticon[1].setVisible(true);
 						isPlayer2hasuninhabitedCard = true;
+						isPlayer2hasCard = false;
 					}
 
 					// 우대권
@@ -813,6 +814,7 @@ public class BlueMarble {
 							player1leftdayOfisland.setVisible(false);
 							Player1forcedRest = 0;
 							isPlayer1hasuninhabitedCard = false;
+
 						}
 					} else if (player2.location == 15) {
 						if (isPlayer2hasuninhabitedCard == true) {
@@ -852,8 +854,6 @@ public class BlueMarble {
 
 	public void playerMove(Player player, JLabel playerImage) {
 
-		System.out.println("플레이어 움직임");
-
 		// 건물 선택 버튼 배열 초기화
 		JButton[] islandBulidingButton = new JButton[3];
 
@@ -887,7 +887,6 @@ public class BlueMarble {
 						landLabel[player.location].setVisible(true);
 						diceThrowButton.setVisible(false);
 
-						System.out.println("플레이어 1이 움직였습니다.");
 						landName.setText("" + land[player.location].landName);
 
 						System.out.println("지역이름 : " + land[player.location].landName + " | 도착 당시 | 빌라 선택횟수: "
@@ -1289,10 +1288,8 @@ public class BlueMarble {
 			} else if (player == player2) {
 				isPlayer2hasCard = true;
 
-			} else if (player == player2) {
-
 			}
-
+			
 			luckyCard(player);
 			playSituation.setText("행운카드에 도착했습니다");
 
@@ -1314,6 +1311,7 @@ public class BlueMarble {
 			if (player == player1) {
 				player1leftdayOfisland.setVisible(true);
 				Player1forcedRest = 3;
+				player1leftdayOfisland.setText("무인도 탈출하기까지 남은 일수 : 3일");
 
 				if (isPlayer1hasuninhabitedCard == true) {
 					luckeyCardScene.setVisible(true);
@@ -1325,6 +1323,7 @@ public class BlueMarble {
 				playSituation.setText("Player2이 무인도에 갇혔습니다");
 				player2leftdayOfisland.setVisible(true);
 				Player2forcedRest = 3;
+				player2leftdayOfisland.setText("무인도 탈출하기까지 남은 일수 : 3일");
 
 				if (isPlayer2hasuninhabitedCard == true) {
 					luckeyCardScene.setVisible(true);
@@ -1478,10 +1477,9 @@ public class BlueMarble {
 
 		luckeyCardScene.setVisible(true);
 		diceThrowButton.setVisible(false);
-		// playSituation.setVisible(false);
 
 		luckeyCardNum = ramdom.nextInt(7);
-		// luckeyCardNum = 7;
+		 luckeyCardNum = 6;
 		if (luckeyCardNum == 0) {
 			cardNameText.setText("세계여행");
 			cardContentText.setText("선택한 지역으로 이동할 수 있다");
