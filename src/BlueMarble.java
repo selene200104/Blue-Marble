@@ -897,7 +897,7 @@ public class BlueMarble {
 												+ land[player.location].landmarkCheckCount + " | 가격 : "
 												+ land[player.location].constructionCost);
 
-										//땅의 주인이 없다면
+										//땅의 주인이 없거나 자신의 땅일 때
 										if (land[player.location].landowner == ""
 												|| land[player.location].landowner == "player1") {
 											landLabel[player.location].setVisible(true);
@@ -939,25 +939,35 @@ public class BlueMarble {
 														+ constructionPriceWidth + 10;
 											}
 
-										}else if (land[player.location].landowner == "player2") {
-											acquisitionPanel.setVisible(true);
-											diceThrowButton.setVisible(false);
+										//땅의 주인이 상대방일때 벌금을 내고 인수를 할 수 있다.
+										} else if (land[player.location].landowner == "player2") {
 
-											if(land[player.location].amountVilla == 1) {
-												acquisitionPrice = acquisitionPrice + land[player.location].villaPrice;
+											//랜드마크일 경우 인수를 하지 못한다
+											if (land[player.location].amountLandmark == 1) {
+												System.out.println("인수하지 못함");
+											} else {
+												acquisitionPanel.setVisible(true);
+												diceThrowButton.setVisible(false);
 												
-												if(land[player.location].amountBuilding == 1) {
-													acquisitionPrice = acquisitionPrice + land[player.location].buildingPrice;
-													
-													if(land[player.location].amountHotel == 1) {
-														acquisitionPrice = acquisitionPrice + land[player.location].hotelPrice;
+												if (land[player.location].amountVilla == 1) {
+													acquisitionPrice = acquisitionPrice
+															+ land[player.location].villaPrice;
+
+													if (land[player.location].amountBuilding == 1) {
+														acquisitionPrice = acquisitionPrice
+																+ land[player.location].buildingPrice;
+
+														if (land[player.location].amountHotel == 1) {
+															acquisitionPrice = acquisitionPrice
+																	+ land[player.location].hotelPrice;
+														}
 													}
 												}
+												acquisitionPrice = acquisitionPrice * 2;
+												acquisitionPriceText.setText("인수가격 : " + acquisitionPrice);
+												acquisitionFieldNum = player.location;
+												whoAcquisition = "player1";
 											}
-											acquisitionPrice = acquisitionPrice * 2;
-											acquisitionPriceText.setText("인수가격 : " + acquisitionPrice);
-											acquisitionFieldNum = player.location;
-											whoAcquisition = "player1";
 										}
 
 									} else if(player == player2){
@@ -1011,27 +1021,36 @@ public class BlueMarble {
 												constructionPriceHorizontalLength = constructionPriceHorizontalLength
 														+ constructionPriceWidth + 10;
 											}
+											
+											// 땅의 주인이 상대방일때 벌금을 내고 인수를 할 수 있다.
 										} else if (land[player.location].landowner == "player1") {
-											acquisitionPanel.setVisible(true);
-											diceThrowButton.setVisible(false);
 
-											if (land[player.location].amountVilla == 1) {
-												acquisitionPrice = acquisitionPrice + land[player.location].villaPrice;
+											// 랜드마크일 경우 인수를 하지 못한다
+											if (land[player.location].amountLandmark == 1) {
+												System.out.println("인수하지 못함");
+											} else {
+												acquisitionPanel.setVisible(true);
+												diceThrowButton.setVisible(false);
 
-												if (land[player.location].amountBuilding == 1) {
+												if (land[player.location].amountVilla == 1) {
 													acquisitionPrice = acquisitionPrice
-															+ land[player.location].buildingPrice;
+															+ land[player.location].villaPrice;
 
-													if (land[player.location].amountHotel == 1) {
+													if (land[player.location].amountBuilding == 1) {
 														acquisitionPrice = acquisitionPrice
-																+ land[player.location].hotelPrice;
+																+ land[player.location].buildingPrice;
+
+														if (land[player.location].amountHotel == 1) {
+															acquisitionPrice = acquisitionPrice
+																	+ land[player.location].hotelPrice;
+														}
 													}
 												}
+												acquisitionPrice = acquisitionPrice * 2;
+												acquisitionPriceText.setText("인수가격 : " + acquisitionPrice);
+												acquisitionFieldNum = player.location;
+												whoAcquisition = "player2";
 											}
-											acquisitionPrice = acquisitionPrice * 2;
-											acquisitionPriceText.setText("인수가격 : " + acquisitionPrice);
-											acquisitionFieldNum = player.location;
-											whoAcquisition = "player2";
 										}
 									}
 								}
