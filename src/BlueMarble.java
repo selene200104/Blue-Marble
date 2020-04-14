@@ -38,9 +38,22 @@ public class BlueMarble {
 	JPanel blueMarbleScene = new JPanel();
 	JPanel luckeyCardScene = new JPanel();
 	JPanel rideAirplaneScene = new JPanel();
-	JPanel acquisitionPanel = new JPanel();
-	JPanel gameEndingScene=new JPanel(){public void paintComponent(Graphics g){Dimension d=getSize();ImageIcon image=new ImageIcon("./images/finalBackground.jpg");g.drawImage(image.getImage(),0,0,d.width,d.height,this);}};
-	JPanel landPanel=new JPanel(){public void paintComponent(Graphics g){Dimension d=getSize();ImageIcon image=new ImageIcon("./images/land.png");g.drawImage(image.getImage(),0,0,d.width,d.height,this);}};
+	JPanel acquisitionScene = new JPanel(); //인수 창
+	JPanel fineScene = new JPanel(); //벌금 창 (상대방의 땅에 걸렸을 때)
+	JPanel gameEndingScene = new JPanel() {
+		public void paintComponent(Graphics g) {
+			Dimension d = getSize();
+			ImageIcon image = new ImageIcon("./images/finalBackground.jpg");
+			g.drawImage(image.getImage(), 0, 0, d.width, d.height, this);
+		}
+	};
+	JPanel landPanel = new JPanel() {
+		public void paintComponent(Graphics g) {
+			Dimension d = getSize();
+			ImageIcon image = new ImageIcon("./images/land.png");
+			g.drawImage(image.getImage(), 0, 0, d.width, d.height, this);
+		}
+	};
 
 	JLabel landName = new JLabel();
 	JLabel[] constructionPrice = new JLabel[4];
@@ -111,14 +124,20 @@ public class BlueMarble {
 	int lineWidth = 77;
 	int lineHeight = 79;
 
+	// 벌금내기
+	JLabel fineText = new JLabel();
+	JLabel amountFineText = new JLabel();
+	JButton payCostButton = new JButton();
+	int amountOfFine = 0;
+	String caughtPerson  = ""; // 누가 땅에 걸렸는지
+	int fieldNumGotCaught = 0;// 걸린 땅의 번호
+	
 	// 인수하기
 	JLabel acquisitionText = new JLabel();
 	JLabel acquisitionPriceText = new JLabel();
 	JButton acquisitionYesButton = new JButton();
 	JButton acquisitionNoButton = new JButton();
 	int acquisitionPrice = 0; // 인수가격
-	int acquisitionFieldNum = 0;// 인수할 땅의 번호
-	String whoAcquisition = ""; // 누가 인수하는 지
 
 	// 주사위
 	JButton diceThrowButton = new JButton();
@@ -196,13 +215,19 @@ public class BlueMarble {
 		frame.getContentPane().add(blueMarbleScene);
 		blueMarbleScene.setLayout(null);
 
+		//상대방 지역에 걸렸을 때 벌금 내기
+		fineScene.setLayout(null);
+		fineScene.setBackground(Color.DARK_GRAY);
+		fineScene.setBounds(200, 100, 340, 300);
+		blueMarbleScene.add(fineScene);
+		fineScene.setVisible(false);
+		
 		//인수하기
-		acquisitionPanel.setLayout(null);
-		acquisitionPanel.setBackground(Color.DARK_GRAY);
-		acquisitionPanel.setBounds(200, 100, 340, 300);
-		blueMarbleScene.add(acquisitionPanel);
-		acquisitionPanel.setVisible(false);
-
+		acquisitionScene.setLayout(null);
+		acquisitionScene.setBackground(Color.DARK_GRAY);
+		acquisitionScene.setBounds(200, 100, 340, 300);
+		blueMarbleScene.add(acquisitionScene);
+		acquisitionScene.setVisible(false);
 		
 		landPanel.setLayout(null);
 		landPanel.setBounds(200, 100, 500, 300);
@@ -549,66 +574,136 @@ public class BlueMarble {
 		});
 		rideAirplaneScene.add(noButton);
 
+		// 벌금 내기
+		fineText.setText("상대방의 땅에 걸려 벌금을 내야합니다");
+		fineText.setForeground(Color.white);
+		fineText.setFont(new Font("굴림", Font.BOLD, 17));
+		fineText.setBounds(20, 10, 300, 60);
+		fineScene.add(fineText);
+		
+		
+		amountFineText.setText("벌금가격 : " + amountOfFine);
+		amountFineText.setForeground(Color.white);
+		amountFineText.setFont(new Font("굴림", Font.BOLD, 15));
+		amountFineText.setBounds(0, 100, 340, 60);
+		amountFineText.setHorizontalAlignment(SwingConstants.CENTER);
+		fineScene.add(amountFineText);
+		
+		payCostButton.setText("지불하기");
+		payCostButton.setBounds(125, 220, 100, 50);
+		payCostButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			
+				if (caughtPerson == "player1") {
+					if (player1.money > amountOfFine) {
+						player1.money = player1.money - amountOfFine;
+						player2.money = player2.money + amountOfFine;
+						player1moneyText.setText("money : " + player1.money);
+						player2moneyText.setText("money : " + player2.money);
+					}else {
+						JOptionPane.showMessageDialog(frame, "돈이 부족하여 지불할 수  없어요", "SYSTEM", JOptionPane.INFORMATION_MESSAGE);
+					}
+					
+				}else if(caughtPerson == "player2") {
+					if (player2.money > amountOfFine) {
+						player2.money = player2.money - amountOfFine;
+						player1.money = player1.money + amountOfFine;
+						player1moneyText.setText("money : " + player1.money);
+						player2moneyText.setText("money : " + player2.money);
+					}else {
+						JOptionPane.showMessageDialog(frame, "돈이 부족하여 지불할 수  없어요", "SYSTEM", JOptionPane.INFORMATION_MESSAGE);
+					}
+					
+				}
+				fineScene.setVisible(false);
+				amountOfFine = 0;
+				
+				// 걸린 땅이 랜드마크가 아니라면 인수를 할 수 있는 창을 띄운다
+				if (caughtPerson == "player1") {
+					if (land[player1.location].amountLandmark != 1) {
+						acquisitionScene.setVisible(true);
+					} else {
+						diceThrowButton.setVisible(true);
+						acquisitionPrice = 0;
+					}
+				} else if (caughtPerson == "player2") {
+					if (land[player2.location].amountLandmark != 1) {
+						acquisitionScene.setVisible(true);
+					} else {
+						diceThrowButton.setVisible(true);
+						acquisitionPrice = 0;
+					}
+				}
+			}
+		});
+		fineScene.add(payCostButton);
+		
 		//인수하기 
 		acquisitionText.setText("인수하시겠습니까??");
 		acquisitionText.setForeground(Color.white);
 		acquisitionText.setFont(new Font("굴림", Font.BOLD, 17));
 		acquisitionText.setBounds(100, 10, 200, 60);
-		acquisitionPanel.add(acquisitionText);
+		acquisitionScene.add(acquisitionText);
 		
 		acquisitionPriceText.setText("인수가격 : " + acquisitionPrice);
 		acquisitionPriceText.setForeground(Color.white);
 		acquisitionPriceText.setFont(new Font("굴림", Font.BOLD, 15));
 		acquisitionPriceText.setBounds(0, 100, 340, 60);
 		acquisitionPriceText.setHorizontalAlignment(SwingConstants.CENTER);
-		acquisitionPanel.add(acquisitionPriceText);
+		acquisitionScene.add(acquisitionPriceText);
 		
 		acquisitionYesButton.setText("네");
 		acquisitionYesButton.setBounds(30, 220, 100, 50);
 		acquisitionYesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				diceThrowButton.setVisible(true);
-				acquisitionPanel.setVisible(false);
+				acquisitionScene.setVisible(false);
 				
-				if (whoAcquisition == "player1") {
+				if (caughtPerson  == "player1") {
 					if(player1.money > acquisitionPrice) {
+						player2.money = player2.money + acquisitionPrice;
 						player1.money = player1.money - acquisitionPrice;
-						player1moneyText.setText("money : " + player1.money);
-						land[acquisitionFieldNum].landowner = "player1";
 						
-						if (acquisitionFieldNum > 0 && acquisitionFieldNum <= 8) {
-							bottomLine[acquisitionFieldNum - 1].setIcon(new ImageIcon("./images/BlueLine.png"));
+						player1moneyText.setText("money : " + player1.money);
+						player2moneyText.setText("money : " + player2.money);
+						land[fieldNumGotCaught].landowner = "player1";
+						
+						if (fieldNumGotCaught > 0 && fieldNumGotCaught <= 8) {
+							bottomLine[fieldNumGotCaught - 1].setIcon(new ImageIcon("./images/BlueLine.png"));
 							
-						} else if (acquisitionFieldNum >= 9 && acquisitionFieldNum <= 15) {
-							leftLine[acquisitionFieldNum - 9].setIcon(new ImageIcon("./images/BlueLine.png"));
+						} else if (fieldNumGotCaught >= 9 && fieldNumGotCaught <= 15) {
+							leftLine[fieldNumGotCaught - 9].setIcon(new ImageIcon("./images/BlueLine.png"));
 							
-						} else if (acquisitionFieldNum > 16 && acquisitionFieldNum <= 23) {
-							topLine[acquisitionFieldNum - 16].setIcon(new ImageIcon("./images/BlueLine.png"));
+						} else if (fieldNumGotCaught > 16 && fieldNumGotCaught <= 23) {
+							topLine[fieldNumGotCaught - 16].setIcon(new ImageIcon("./images/BlueLine.png"));
 							
-						} else if (acquisitionFieldNum > 24 && acquisitionFieldNum <= 29) {
-							rightLine[acquisitionFieldNum - 24].setIcon(new ImageIcon("./images/BlueLine.png"));
+						} else if (fieldNumGotCaught > 24 && fieldNumGotCaught <= 29) {
+							rightLine[fieldNumGotCaught - 24].setIcon(new ImageIcon("./images/BlueLine.png"));
 						}
 					}else {
 						JOptionPane.showMessageDialog(frame, "돈이 부족하여 살 수 없어요", "SYSTEM", JOptionPane.INFORMATION_MESSAGE);
 					}
 
-				} else if (whoAcquisition == "player2") {
+				} else if (caughtPerson  == "player2") {
 					if(player2.money > acquisitionPrice) {
 						player2.money = player2.money - acquisitionPrice;
-						player2moneyText.setText("money : " + player2.money);
-						land[acquisitionFieldNum].landowner = "player2";
+						player1.money = player1.money + acquisitionPrice;
 						
-						if (acquisitionFieldNum > 0 && acquisitionFieldNum <= 8) {
-							bottomLine[acquisitionFieldNum - 1].setIcon(new ImageIcon("./images/RedLine.png"));
+						player1moneyText.setText("money : " + player1.money);
+						player2moneyText.setText("money : " + player2.money);
+						land[fieldNumGotCaught].landowner = "player2";
+						
+						if (fieldNumGotCaught > 0 && fieldNumGotCaught <= 8) {
+							bottomLine[fieldNumGotCaught - 1].setIcon(new ImageIcon("./images/RedLine.png"));
 							
-						} else if (acquisitionFieldNum >= 9 && acquisitionFieldNum <= 15) {
-							leftLine[acquisitionFieldNum - 9].setIcon(new ImageIcon("./images/RedLine.png"));
+						} else if (fieldNumGotCaught >= 9 && fieldNumGotCaught <= 15) {
+							leftLine[fieldNumGotCaught - 9].setIcon(new ImageIcon("./images/RedLine.png"));
 							
-						} else if (acquisitionFieldNum > 16 && acquisitionFieldNum <= 23) {
-							topLine[acquisitionFieldNum - 16].setIcon(new ImageIcon("./images/RedLine.png"));
+						} else if (fieldNumGotCaught > 16 && fieldNumGotCaught <= 23) {
+							topLine[fieldNumGotCaught - 16].setIcon(new ImageIcon("./images/RedLine.png"));
 							
-						} else if (acquisitionFieldNum > 24 && acquisitionFieldNum <= 29) {
-							rightLine[acquisitionFieldNum - 24].setIcon(new ImageIcon("./images/RedLine.png"));
+						} else if (fieldNumGotCaught > 24 && fieldNumGotCaught <= 29) {
+							rightLine[fieldNumGotCaught - 24].setIcon(new ImageIcon("./images/RedLine.png"));
 						}
 					}else {
 						JOptionPane.showMessageDialog(frame, "돈이 부족하여 살 수 없어요", "SYSTEM", JOptionPane.INFORMATION_MESSAGE);
@@ -617,17 +712,18 @@ public class BlueMarble {
 				acquisitionPrice = 0;
 			}
 		});
-		acquisitionPanel.add(acquisitionYesButton);
+		acquisitionScene.add(acquisitionYesButton);
 		
 		acquisitionNoButton.setText("아니요");
 		acquisitionNoButton.setBounds(205, 220, 100, 50);
 		acquisitionNoButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				diceThrowButton.setVisible(true);
-				acquisitionPanel.setVisible(false);
+				acquisitionScene.setVisible(false);
+				acquisitionPrice = 0;
 			}
 		});
-		acquisitionPanel.add(acquisitionNoButton);
+		acquisitionScene.add(acquisitionNoButton);
 		
 		// 행운카드
 		cardNameText.setText("");
@@ -941,14 +1037,40 @@ public class BlueMarble {
 
 										//땅의 주인이 상대방일때 벌금을 내고 인수를 할 수 있다.
 										} else if (land[player.location].landowner == "player2") {
+											
+											//벌금 창을 띄운다
+											fineScene.setVisible(true);
+											diceThrowButton.setVisible(false);
 
-											//랜드마크일 경우 인수를 하지 못한다
-											if (land[player.location].amountLandmark == 1) {
-												System.out.println("인수하지 못함");
-											} else {
-												acquisitionPanel.setVisible(true);
-												diceThrowButton.setVisible(false);
-												
+											//벌금 가격 측정
+											if (land[player.location].amountVilla == 1) {
+												amountOfFine = amountOfFine + land[player.location].villaPrice;
+
+												if (land[player.location].amountBuilding == 1) {
+													amountOfFine = amountOfFine + land[player.location].buildingPrice;
+
+													if (land[player.location].amountHotel == 1) {
+														amountOfFine = amountOfFine + land[player.location].hotelPrice;
+
+														if (land[player.location].amountLandmark == 1) {
+															amountOfFine = amountOfFine + land[player.location].landmarkPrice;
+														}
+													}
+												}
+											}
+											
+											//랜드마크가 없으면 건물 금액의 1/2가 벌금 가격이 된다.
+											if(land[player.location].amountLandmark != 1) {
+												amountOfFine = amountOfFine/2;
+												//System.out.println(amountOfFine);
+											}else {
+												//랜드마크이면 건물 금액이 전부 벌금 가격이 된다.
+												//System.out.println(amountOfFine);
+											}
+											
+											amountFineText.setText("벌금가격 : " + amountOfFine);
+											
+											//인수 가격
 												if (land[player.location].amountVilla == 1) {
 													acquisitionPrice = acquisitionPrice
 															+ land[player.location].villaPrice;
@@ -965,9 +1087,9 @@ public class BlueMarble {
 												}
 												acquisitionPrice = acquisitionPrice * 2;
 												acquisitionPriceText.setText("인수가격 : " + acquisitionPrice);
-												acquisitionFieldNum = player.location;
-												whoAcquisition = "player1";
-											}
+												fieldNumGotCaught = player.location;
+												caughtPerson  = "player1";
+											
 										}
 
 									} else if(player == player2){
@@ -1024,14 +1146,40 @@ public class BlueMarble {
 											
 											// 땅의 주인이 상대방일때 벌금을 내고 인수를 할 수 있다.
 										} else if (land[player.location].landowner == "player1") {
+											
+											//벌금 창을 띄운다
+											fineScene.setVisible(true);
+											diceThrowButton.setVisible(false);
 
-											// 랜드마크일 경우 인수를 하지 못한다
-											if (land[player.location].amountLandmark == 1) {
-												System.out.println("인수하지 못함");
-											} else {
-												acquisitionPanel.setVisible(true);
-												diceThrowButton.setVisible(false);
+											//벌금 가격 측정
+											if (land[player.location].amountVilla == 1) {
+												amountOfFine = amountOfFine + land[player.location].villaPrice;
 
+												if (land[player.location].amountBuilding == 1) {
+													amountOfFine = amountOfFine + land[player.location].buildingPrice;
+
+													if (land[player.location].amountHotel == 1) {
+														amountOfFine = amountOfFine + land[player.location].hotelPrice;
+
+														if (land[player.location].amountLandmark == 1) {
+															amountOfFine = amountOfFine + land[player.location].landmarkPrice;
+														}
+													}
+												}
+											}
+											
+											//랜드마크가 없으면 건물 금액의 1/2가 벌금 가격이 된다.
+											if(land[player.location].amountLandmark != 1) {
+												amountOfFine = amountOfFine/2;
+												//System.out.println(amountOfFine);
+											}else {
+												//랜드마크이면 건물 금액이 전부 벌금 가격이 된다.
+												//System.out.println(amountOfFine);
+											}
+											
+											amountFineText.setText("벌금가격 : " + amountOfFine);
+											
+											//인수 가격
 												if (land[player.location].amountVilla == 1) {
 													acquisitionPrice = acquisitionPrice
 															+ land[player.location].villaPrice;
@@ -1048,9 +1196,8 @@ public class BlueMarble {
 												}
 												acquisitionPrice = acquisitionPrice * 2;
 												acquisitionPriceText.setText("인수가격 : " + acquisitionPrice);
-												acquisitionFieldNum = player.location;
-												whoAcquisition = "player2";
-											}
+												fieldNumGotCaught = player.location;
+												caughtPerson  = "player2";
 										}
 									}
 								}
