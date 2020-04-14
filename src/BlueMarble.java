@@ -128,6 +128,7 @@ public class BlueMarble {
 	JLabel fineText = new JLabel();
 	JLabel amountFineText = new JLabel();
 	JButton payCostButton = new JButton();
+	JButton usePreferentialrightButton = new JButton(); //우대권 사용 버튼
 	int amountOfFine = 0;
 	String caughtPerson  = ""; // 누가 땅에 걸렸는지
 	int fieldNumGotCaught = 0;// 걸린 땅의 번호
@@ -165,7 +166,8 @@ public class BlueMarble {
 	boolean isPlayer2hasCard = false;
 	boolean isPlayer1hasuninhabitedCard = false;
 	boolean isPlayer2hasuninhabitedCard = false;
-
+	boolean isPlayer1haspreferentialright = false;
+	boolean isPlayer2haspreferentialright = false;
 	// 엔딩
 	JLabel gameEndingText = new JLabel();
 	JLabel winnerText = new JLabel();
@@ -173,7 +175,10 @@ public class BlueMarble {
 	// 그 외
 	JLabel playSituation = new JLabel();// 플레이 상황을 보여주는 text
 	JLabel[] uninhabitedEmoticon = new JLabel[2]; // 무인도 탈출 카드 이미지
-	JLabel[] uninhabitedEmoticonExplanation = new JLabel[2]; // 무인도 카드 이미지
+	JLabel[] uninhabitedEmoticonExplanation = new JLabel[2]; // 무인도 탈출 카드 설명
+	JLabel[] preferentialrightEmoticon = new JLabel[2]; // 우대권 카드 이미지
+	JLabel[] preferentialrightExplanation = new JLabel[2]; // 우대권 카드 설명
+	
 
 	int socialWelfareCost = 10000; // 사회복지기금 비용
 	int collectedSocialWelfare = 0; // 사회복지기금에 모인 돈
@@ -272,12 +277,13 @@ public class BlueMarble {
 		blueMarbleScene.add(player2leftdayOfisland);
 		player2leftdayOfisland.setVisible(false);
 
+		//무인도 탈출 카드
 		for (int i = 0; i < uninhabitedEmoticon.length; i++) {
 			blueMarbleScene.add(uninhabitedEmoticon[i] = new JLabel());
 			blueMarbleScene.add(uninhabitedEmoticonExplanation[i] = new JLabel());
 
 			uninhabitedEmoticon[i].setIcon(new ImageIcon("./images/uninhabitedCardEmoticon.png"));
-			uninhabitedEmoticonExplanation[i].setText("무인도 탈출 카드 소유중");
+			uninhabitedEmoticonExplanation[i].setText("무인도를 탈출 할 수 있는 카드");
 
 			uninhabitedEmoticon[i].setVisible(false);
 			uninhabitedEmoticonExplanation[i].setVisible(false);
@@ -305,6 +311,41 @@ public class BlueMarble {
 		uninhabitedEmoticonExplanation[0].setBounds(310, 200, 250, 50);
 		uninhabitedEmoticonExplanation[1].setBounds(310, 400, 250, 50);
 
+		//우대권
+		for (int i = 0; i < preferentialrightEmoticon.length; i++) {
+			blueMarbleScene.add(preferentialrightEmoticon[i] = new JLabel());
+			blueMarbleScene.add(preferentialrightExplanation[i] = new JLabel());
+
+			preferentialrightEmoticon[i].setIcon(new ImageIcon("./images/preferentialrightEmoticon.png"));
+			preferentialrightExplanation[i].setText("상대방 땅 걸렸을 때 벌금 제거");
+
+			preferentialrightEmoticon[i].setVisible(false);
+			preferentialrightExplanation[i].setVisible(false);
+
+			preferentialrightEmoticon[i].addMouseListener(new MouseAdapter() {
+				public void mouseEntered(MouseEvent e) {
+					for (int i = 0; i < preferentialrightEmoticon.length; i++) {
+						if (e.getSource() == preferentialrightEmoticon[i]) {
+							preferentialrightExplanation[i].setVisible(true);
+						}
+					}
+				}
+
+				public void mouseExited(MouseEvent e) {
+					for (int i = 0; i < preferentialrightEmoticon.length; i++) {
+						if (e.getSource() == preferentialrightEmoticon[i]) {
+							preferentialrightExplanation[i].setVisible(false);
+						}
+					}
+				}
+			});
+		}
+		preferentialrightEmoticon[0].setBounds(260, 150, 50, 50);
+		preferentialrightEmoticon[1].setBounds(260, 350, 50, 50);
+		preferentialrightExplanation[0].setBounds(310, 150, 250, 50);
+		preferentialrightExplanation[1].setBounds(310, 350, 250, 50);
+		
+		
 		player1infomationBoard.setIcon(new ImageIcon("./images/Player1Board.png"));
 		player1infomationBoard.setBounds(83, 87, 250, 190);
 		blueMarbleScene.add(player1infomationBoard);
@@ -478,8 +519,6 @@ public class BlueMarble {
 
 					// 플레이어을 움직인 후 차례를 바꾼다
 					whosTurn = 2;
-					System.out.println("isPlayer1hasuninhabitedCard" + isPlayer1hasuninhabitedCard);
-					System.out.println("isPlayer2hasuninhabitedCard" + isPlayer2hasuninhabitedCard);
 
 					// player2의 차례일 때
 				} else if (whosTurn == 2) {
@@ -590,7 +629,7 @@ public class BlueMarble {
 		fineScene.add(amountFineText);
 		
 		payCostButton.setText("지불하기");
-		payCostButton.setBounds(125, 220, 100, 50);
+		payCostButton.setBounds(25, 220, 100, 50);
 		payCostButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			
@@ -616,6 +655,7 @@ public class BlueMarble {
 					
 				}
 				fineScene.setVisible(false);
+				usePreferentialrightButton.setEnabled(false);
 				amountOfFine = 0;
 				
 				// 걸린 땅이 랜드마크가 아니라면 인수를 할 수 있는 창을 띄운다
@@ -637,6 +677,47 @@ public class BlueMarble {
 			}
 		});
 		fineScene.add(payCostButton);
+		
+		usePreferentialrightButton.setText("우대권 사용");
+		usePreferentialrightButton.setBounds(225, 220, 100, 50);
+		usePreferentialrightButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			
+				if (caughtPerson == "player1") {
+					if(isPlayer1haspreferentialright == true) {
+						preferentialrightEmoticon[0].setVisible(false);
+						isPlayer1haspreferentialright = false;
+					}
+
+				}else if(caughtPerson == "player2") {
+					if(isPlayer2haspreferentialright == true) {
+						preferentialrightEmoticon[1].setVisible(false);
+						isPlayer2haspreferentialright = false;
+					}
+				}
+				fineScene.setVisible(false);
+				amountOfFine = 0;
+				
+				// 걸린 땅이 랜드마크가 아니라면 인수를 할 수 있는 창을 띄운다
+				if (caughtPerson == "player1") {
+					if (land[player1.location].amountLandmark != 1) {
+						acquisitionScene.setVisible(true);
+					} else {
+						diceThrowButton.setVisible(true);
+						acquisitionPrice = 0;
+					}
+				} else if (caughtPerson == "player2") {
+					if (land[player2.location].amountLandmark != 1) {
+						acquisitionScene.setVisible(true);
+					} else {
+						diceThrowButton.setVisible(true);
+						acquisitionPrice = 0;
+					}
+				}
+			}
+		});
+		fineScene.add(usePreferentialrightButton);
+		usePreferentialrightButton.setEnabled(false);
 		
 		//인수하기 
 		acquisitionText.setText("인수하시겠습니까??");
@@ -888,8 +969,14 @@ public class BlueMarble {
 				} else if (luckeyCardNum == 7) {
 
 					if (isPlayer1hasCard == true) {
-
+						preferentialrightEmoticon[0].setVisible(true);
+						isPlayer1haspreferentialright = true;
+						isPlayer1hasCard = false;
+						
 					} else if (isPlayer2hasCard == true) {
+						preferentialrightEmoticon[1].setVisible(true);
+						isPlayer2haspreferentialright = true;
+						isPlayer2hasCard = false;
 
 					}
 
@@ -1041,7 +1128,14 @@ public class BlueMarble {
 											//벌금 창을 띄운다
 											fineScene.setVisible(true);
 											diceThrowButton.setVisible(false);
-
+											
+											//우대권을 가지고 있을 경우 우대권사용버튼을 활성화 시킨다.
+											if (isPlayer1haspreferentialright == true) {
+												usePreferentialrightButton.setEnabled(true);
+											}else {
+												usePreferentialrightButton.setEnabled(false);
+											}
+											
 											//벌금 가격 측정
 											if (land[player.location].amountVilla == 1) {
 												amountOfFine = amountOfFine + land[player.location].villaPrice;
@@ -1150,7 +1244,14 @@ public class BlueMarble {
 											//벌금 창을 띄운다
 											fineScene.setVisible(true);
 											diceThrowButton.setVisible(false);
-
+											
+											//우대권을 가지고 있을 경우 우대권사용버튼을 활성화 시킨다.
+											if (isPlayer2haspreferentialright == true) {
+												usePreferentialrightButton.setEnabled(true);
+											}else {
+												usePreferentialrightButton.setEnabled(false);
+											}
+											
 											//벌금 가격 측정
 											if (land[player.location].amountVilla == 1) {
 												amountOfFine = amountOfFine + land[player.location].villaPrice;
@@ -1535,8 +1636,6 @@ public class BlueMarble {
 							player2moneyText.setText("money : " + player2.money);
 							land[player.location].constructionCost = 0;
 
-							// whosTurnText.setText("Player 1 순서");
-							// whosTurn = 1;
 						}
 
 						if (land[player.location].amountVilla == 1) {
@@ -1756,7 +1855,7 @@ public class BlueMarble {
 		diceThrowButton.setVisible(false);
 
 		luckeyCardNum = ramdom.nextInt(7);
-		 luckeyCardNum = 6;
+
 		if (luckeyCardNum == 0) {
 			cardNameText.setText("세계여행");
 			cardContentText.setText("선택한 지역으로 이동할 수 있다");
