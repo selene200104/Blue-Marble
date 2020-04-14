@@ -38,13 +38,13 @@ public class GameEnding extends Thread{
 					gameEndingScene.setVisible(true);
 					blueMarbleScene.setVisible(false);
 					
-				}else if(player1.money >= 991000000) {
+				}else if(player1.money >= 91000000) {
 					gameEndingText.setText("player1 돈 백만원을 모아 게임이 끝났습니다");
 					winnerText.setText("우승자 : player1");
 					gameEndingScene.setVisible(true);
 					blueMarbleScene.setVisible(false);
 					
-				}else if(player2.money >= 991000000) {
+				}else if(player2.money >= 91000000) {
 					gameEndingText.setText("player2가  백만원을 모아 게임이 끝났습니다");
 					winnerText.setText("우승자 : player2");
 					gameEndingScene.setVisible(true);

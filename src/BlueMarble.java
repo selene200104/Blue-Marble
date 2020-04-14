@@ -40,6 +40,8 @@ public class BlueMarble {
 	JPanel rideAirplaneScene = new JPanel();
 	JPanel acquisitionScene = new JPanel(); //인수 창
 	JPanel fineScene = new JPanel(); //벌금 창 (상대방의 땅에 걸렸을 때)
+	//JPanel sellLandPanel = new JPanel();
+
 	JPanel gameEndingScene = new JPanel() {
 		public void paintComponent(Graphics g) {
 			Dimension d = getSize();
@@ -104,9 +106,14 @@ public class BlueMarble {
 	static JLabel[] leftLine = new JLabel[7];
 	static JLabel[] rightLine = new JLabel[7];
 	JLabel[] cityNameText = new JLabel[30];
-	JLabel[] villaImage = new JLabel[30];
-	JLabel[] buildingImage = new JLabel[30];
-	JLabel[] hotelImage = new JLabel[30];
+	//JLabel[] villaImage = new JLabel[30];
+	//JLabel[] buildingImage = new JLabel[30];
+	//JLabel[] hotelImage = new JLabel[30];
+	//JLabel[] landmarkImage = new JLabel[30];
+	JLabel villaImage = new JLabel();
+	JLabel buildingImage = new JLabel();
+	JLabel hotelImage = new JLabel();
+	JLabel landmarkImage = new JLabel();
 
 	Land[] land = new Land[30];
 	JLabel[] landLabel = new JLabel[30];
@@ -124,6 +131,7 @@ public class BlueMarble {
 	int lineWidth = 77;
 	int lineHeight = 79;
 
+
 	// 벌금내기
 	JLabel fineText = new JLabel();
 	JLabel amountFineText = new JLabel();
@@ -133,12 +141,24 @@ public class BlueMarble {
 	String caughtPerson  = ""; // 누가 땅에 걸렸는지
 	int fieldNumGotCaught = 0;// 걸린 땅의 번호
 	
+
+	int buildingImageHorizontalLength = 0;
+	int buildingImageVerticalLength = 50;
+	int buildingImageWidth = 26;
+	int buildingImageHeight = 30;
+
 	// 인수하기
 	JLabel acquisitionText = new JLabel();
 	JLabel acquisitionPriceText = new JLabel();
 	JButton acquisitionYesButton = new JButton();
 	JButton acquisitionNoButton = new JButton();
 	int acquisitionPrice = 0; // 인수가격
+	
+	/*
+	// 파산시 건물 팔기
+	JLabel haveLandName = new JLabel();
+	JLabel haveLandPrice = new JLabel();
+	*/
 
 	// 주사위
 	JButton diceThrowButton = new JButton();
@@ -234,6 +254,7 @@ public class BlueMarble {
 		blueMarbleScene.add(acquisitionScene);
 		acquisitionScene.setVisible(false);
 		
+		// 땅
 		landPanel.setLayout(null);
 		landPanel.setBounds(200, 100, 500, 300);
 		blueMarbleScene.add(landPanel);
@@ -245,7 +266,29 @@ public class BlueMarble {
 			landLabel[i].setIcon(new ImageIcon("./images/land.png"));
 			landLabel[i].setVisible(false);
 		}
-
+		
+		
+		/*
+		// 땅팔기
+		sellLandPanel.setLayout(null);
+		sellLandPanel.setBackground(Color.WHITE);
+		sellLandPanel.setBounds(200, 100, 350, 350);
+		blueMarbleScene.add(sellLandPanel);
+		sellLandPanel.setVisible(false);
+		
+		haveLandName.setLayout(null);
+		haveLandName.setBackground(Color.WHITE);
+		haveLandName.setBounds(10, 10, 100, 10);
+		sellLandPanel.add(haveLandName);
+		haveLandName.setVisible(true);
+		
+		haveLandPrice.setLayout(null);
+		haveLandPrice.setBackground(Color.WHITE);
+		haveLandPrice.setBounds(120, 10, 100, 10);
+		sellLandPanel.add(haveLandPrice);
+		haveLandPrice.setVisible(true);
+		 */
+		
 		// 플레이어
 		player1Image.setIcon(new ImageIcon("./images/Player1.png"));
 		player1Image.setBounds(715, 495, 60, 60);
@@ -408,9 +451,9 @@ public class BlueMarble {
 		// land[30] = new Land("출발지", 0, 0, 0, 0, 0, 0, 0);
 
 		// 부루마블 판
-		
+
 		// 아래쪽 줄
-		for (int i = 0; i < topLine.length; i++) {
+		for (int i = 0; i < bottomLine.length; i++) {
 
 			blueMarbleScene.add(cityNameText[i] = new JLabel());
 			blueMarbleScene.add(bottomLine[i] = new JLabel());
@@ -423,7 +466,7 @@ public class BlueMarble {
 			bottomLine[i].setIcon(new ImageIcon("./images/Line.png"));
 			cityNameText[i].setHorizontalAlignment(SwingConstants.CENTER);
 		}
-		
+
 		// 왼쪽 줄
 		for (int i = 0; i < leftLine.length; i++) {
 
@@ -437,21 +480,23 @@ public class BlueMarble {
 
 			leftLine[i].setIcon(new ImageIcon("./images/Line.png"));
 			cityNameText[i + 8].setHorizontalAlignment(SwingConstants.CENTER);
+			
 		}
-		
+
 		// 위쪽 줄
 		for (int i = 0; i < topLine.length; i++) {
 
 			blueMarbleScene.add(cityNameText[i + 15] = new JLabel());
 			blueMarbleScene.add(topLine[i] = new JLabel());
-			
+
 			cityNameText[i + 15].setBounds(topLineHorizontalLength, topLineVerticalLength, lineWidth, lineHeight);
 			topLine[i].setBounds(topLineHorizontalLength, topLineVerticalLength, lineWidth, lineHeight);
-			
+
 			topLineHorizontalLength = topLineHorizontalLength + HorizontalLineInterval;
 
 			topLine[i].setIcon(new ImageIcon("./images/Line.png"));
 			cityNameText[i + 15].setHorizontalAlignment(SwingConstants.CENTER);
+
 		}
 
 		// 오른쪽 줄
@@ -467,24 +512,25 @@ public class BlueMarble {
 
 			rightLine[i].setIcon(new ImageIcon("./images/Line.png"));
 			cityNameText[i + 23].setHorizontalAlignment(SwingConstants.CENTER);
+
 		}
 
-		//칸에 도시 이름을 넣어줌
-		for(int i = 0; i < cityNameText.length - 1; i++) {
+		// 칸에 도시 이름을 넣어줌
+		for (int i = 0; i < cityNameText.length - 1; i++) {
 			cityNameText[i].setText(land[i + 1].landName.toString());
 		}
 		cityNameText[29].setText(land[0].landName.toString());
-		
+
 		// 주사위 던지기
 		diceThrowButton.setText("주사위 돌리기");
 		diceThrowButton.setBounds(500, 300, 110, 60);
 		diceThrowButton.addActionListener(new ActionListener() {
 
-	public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
 
 				// 랜덤으로 나온 수가 주사위의 수가 된다.
 				diceNum = ramdom.nextInt(6) + 1;
-				
+
 				diceNumberText.setText("주사위 수 : " + diceNum);
 
 				playSituation.setText("");
@@ -501,7 +547,7 @@ public class BlueMarble {
 
 						player1.previousLocation = player1.location;
 						player1.location = player1.location + diceNum;
-						
+
 						System.out.println("player1" + diceNum);
 						synchronized (Player1Moving) {
 							Player1Moving.notify();
@@ -511,7 +557,7 @@ public class BlueMarble {
 						Player1forcedRest--;
 						player1leftdayOfisland.setText("무인도 탈출하기까지 남은 일수 : " + (Player1forcedRest + 1) + " 일");
 					}
-					
+
 					if (player2Flying == "비행기 타기") {
 						airport();
 					}
@@ -531,7 +577,7 @@ public class BlueMarble {
 
 						player2.previousLocation = player2.location;
 						player2.location = player2.location + diceNum;
-						System.out.println("player1" + diceNum);
+						System.out.println("player2" + diceNum);
 						synchronized (Player2Moving) {
 							Player2Moving.notify();
 
@@ -595,7 +641,8 @@ public class BlueMarble {
 						player2Flying = "비행기 타기";
 
 					} else {
-						JOptionPane.showMessageDialog(frame, "돈이 부족하여 살 수 없어요", "SYSTEM", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(frame, "돈이 부족하여 살 수 없어요", "SYSTEM",
+								JOptionPane.INFORMATION_MESSAGE);
 					}
 				}
 
@@ -719,13 +766,15 @@ public class BlueMarble {
 		fineScene.add(usePreferentialrightButton);
 		usePreferentialrightButton.setEnabled(false);
 		
-		//인수하기 
+
+		// 인수하기
+
 		acquisitionText.setText("인수하시겠습니까??");
 		acquisitionText.setForeground(Color.white);
 		acquisitionText.setFont(new Font("굴림", Font.BOLD, 17));
 		acquisitionText.setBounds(100, 10, 200, 60);
 		acquisitionScene.add(acquisitionText);
-		
+
 		acquisitionPriceText.setText("인수가격 : " + acquisitionPrice);
 		acquisitionPriceText.setForeground(Color.white);
 		acquisitionPriceText.setFont(new Font("굴림", Font.BOLD, 15));
@@ -755,10 +804,10 @@ public class BlueMarble {
 						} else if (fieldNumGotCaught >= 9 && fieldNumGotCaught <= 15) {
 							leftLine[fieldNumGotCaught - 9].setIcon(new ImageIcon("./images/BlueLine.png"));
 							
-						} else if (fieldNumGotCaught > 16 && fieldNumGotCaught <= 23) {
+						} else if (fieldNumGotCaught >= 16 && fieldNumGotCaught <= 23) {
 							topLine[fieldNumGotCaught - 16].setIcon(new ImageIcon("./images/BlueLine.png"));
 							
-						} else if (fieldNumGotCaught > 24 && fieldNumGotCaught <= 29) {
+						} else if (fieldNumGotCaught >= 24 && fieldNumGotCaught <= 29) {
 							rightLine[fieldNumGotCaught - 24].setIcon(new ImageIcon("./images/BlueLine.png"));
 						}
 					}else {
@@ -780,10 +829,10 @@ public class BlueMarble {
 						} else if (fieldNumGotCaught >= 9 && fieldNumGotCaught <= 15) {
 							leftLine[fieldNumGotCaught - 9].setIcon(new ImageIcon("./images/RedLine.png"));
 							
-						} else if (fieldNumGotCaught > 16 && fieldNumGotCaught <= 23) {
+						} else if (fieldNumGotCaught >= 16 && fieldNumGotCaught <= 23) {
 							topLine[fieldNumGotCaught - 16].setIcon(new ImageIcon("./images/RedLine.png"));
 							
-						} else if (fieldNumGotCaught > 24 && fieldNumGotCaught <= 29) {
+						} else if (fieldNumGotCaught >= 24 && fieldNumGotCaught <= 29) {
 							rightLine[fieldNumGotCaught - 24].setIcon(new ImageIcon("./images/RedLine.png"));
 						}
 					}else {
@@ -900,7 +949,7 @@ public class BlueMarble {
 						if (isPlayer1hasuninhabitedCard == true) {
 							luckeyCardScene.setVisible(true);
 							diceThrowButton.setVisible(false);
-							
+
 							cardNameText.setText("무인도 탈출 카드");
 							cardContentText.setText("사용하시겠습니까?");
 						}
@@ -1035,11 +1084,10 @@ public class BlueMarble {
 		islandBulidingButton[1] = new JButton((new ImageIcon("./images/building.png")));
 		islandBulidingButton[2] = new JButton((new ImageIcon("./images/hotel.png")));
 		islandBulidingButton[3] = new JButton((new ImageIcon("./images/landmark.png")));
-		
 
-		islandBulidingButton[0].setEnabled(true);
-		islandBulidingButton[1].setEnabled(true);
-		islandBulidingButton[2].setEnabled(true);
+		//islandBulidingButton[0].setEnabled(true);
+		//islandBulidingButton[1].setEnabled(true);
+		//islandBulidingButton[2].setEnabled(true);
 		islandBulidingButton[3].setEnabled(false);
 
 		// 각각의 건물 가격 배열 초기화
@@ -1054,9 +1102,8 @@ public class BlueMarble {
 		constructionCostText.setBounds(10, 200, nameLineWidth, nameLineHeight);
 		landLabel[player.location].add(constructionCostText);
 
-		landLabel[player.location].add(landName);
+		landLabel[player.location].add(landName); 
 
-					
 		if (player.location >= 30) {
 			player.location = player.location - 30;
 		}
@@ -1072,6 +1119,7 @@ public class BlueMarble {
 								if (player.location != 27) {
 									if (player == player1) {
 										System.out.println("플레이어 1이 움직였습니다. 현재 플레이어는 " + player.round + "바퀴째 입니다.");
+
 										System.out.println("지역이름 : " + land[player.location].landName + " | 땅 주인: "
 												+ land[player.location].landowner + " | 도착 당시 | 빌라 선택횟수: "
 												+ land[player.location].villaCheckCount + " | 빌딩 선택 횟수: "
@@ -1101,13 +1149,13 @@ public class BlueMarble {
 											// 버튼 위치 구성
 											for (int k = 0; k < islandBulidingButton.length; k++) {
 												landLabel[player.location].add(islandBulidingButton[k]);
-												//islandBulidingButton[player.round].setEnabled(true);
+												// islandBulidingButton[player.round].setEnabled(true);
 												islandBulidingButton[k].setBounds(islandButtonHorizontalLength,
 														islandButtonVerticalLength, islandButtonWidth,
 														islandButtonHeight);
 												islandButtonHorizontalLength = islandButtonHorizontalLength
 														+ islandButtonWidth + 10;
-												
+
 											}
 
 											int constructionPriceHorizontalLength = 40;
@@ -1139,7 +1187,6 @@ public class BlueMarble {
 											//벌금 가격 측정
 											if (land[player.location].amountVilla == 1) {
 												amountOfFine = amountOfFine + land[player.location].villaPrice;
-
 												if (land[player.location].amountBuilding == 1) {
 													amountOfFine = amountOfFine + land[player.location].buildingPrice;
 
@@ -1184,17 +1231,14 @@ public class BlueMarble {
 												fieldNumGotCaught = player.location;
 												caughtPerson  = "player1";
 											
+											//player1.haveLand++;
+											//player2.haveLand--;
+											//System.out.println("플레이어1의 총 땅 갯수 : "+player1.haveLand);
+											//System.out.println("플레이어2의 총 땅 갯수 : "+player2.haveLand);
 										}
 
-									} else if(player == player2){
+									} else if (player == player2) {
 										System.out.println("플레이어 2이 움직였습니다. 현재 플레이어는 " + player.round + "바퀴째 입니다.");
-										System.out.println("지역이름 : " + land[player.location].landName + " | 땅 주인: "
-												+ land[player.location].landowner + " | 도착 당시 | 빌라 선택횟수: "
-												+ land[player.location].villaCheckCount + " | 빌딩 선택 횟수: "
-												+ land[player.location].buildingCheckCount + " | 호텔 선택 횟수: "
-												+ land[player.location].hotelCheckCount + " | 랜드마크 선택 횟수: "
-												+ land[player.location].landmarkCheckCount + " | 가격 : "
-												+ land[player.location].constructionCost);
 
 										if (land[player.location].landowner == ""
 												|| land[player.location].landowner == "player2") {
@@ -1214,17 +1258,16 @@ public class BlueMarble {
 											int islandButtonHorizontalLength = 7;
 
 											// 버튼 위치 구성
-											for (int k = 0; k < islandBulidingButton.length; k++) {	
+											for (int k = 0; k < islandBulidingButton.length; k++) {
 												landLabel[player.location].add(islandBulidingButton[k]);
-												//islandBulidingButton[player.round].setEnabled(true);
+												// islandBulidingButton[player.round].setEnabled(true);
 												islandBulidingButton[k].setBounds(islandButtonHorizontalLength,
 														islandButtonVerticalLength, islandButtonWidth,
 														islandButtonHeight);
 												islandButtonHorizontalLength = islandButtonHorizontalLength
 														+ islandButtonWidth + 10;
-												
-											}	
-											
+
+											}
 
 											int constructionPriceHorizontalLength = 40;
 
@@ -1299,6 +1342,11 @@ public class BlueMarble {
 												acquisitionPriceText.setText("인수가격 : " + acquisitionPrice);
 												fieldNumGotCaught = player.location;
 												caughtPerson  = "player2";
+											
+											//player1.haveLand--;
+											//player2.haveLand++;
+											//System.out.println("플레이어1의 총 땅 갯수 : "+player1.haveLand);
+											//System.out.println("플레이어2의 총 땅 갯수 : "+player2.haveLand);
 										}
 									}
 								}
@@ -1309,7 +1357,7 @@ public class BlueMarble {
 			}
 		}
 
-		//특별칸에 도착 했을 때
+		// 특별칸에 도착 했을 때
 		if (player.location == 4 || player.location == 20) {
 
 			if (player == player1) {
@@ -1387,7 +1435,7 @@ public class BlueMarble {
 			}
 			playSituation.setText("사회복지기금에서 돈을 기부했습니다 -" + socialWelfareCost + "원");
 		}
-	
+
 		// 빌라 버튼 클릭했을 때
 		islandBulidingButton[0].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1508,7 +1556,6 @@ public class BlueMarble {
 				}
 				diceThrowButton.setVisible(true);
 
-				// 나중에 구입과 관련된 기능 구현시 수정해야함
 				if (land[player.location].amountVilla != 1) {
 					land[player.location].villaCheckCount -= land[player.location].villaCheckCount;
 				}
@@ -1552,7 +1599,12 @@ public class BlueMarble {
 				System.out.println("빌라 체크: " + land[player.location].villaCheckCount + "빌딩 체크: "
 						+ land[player.location].buildingCheckCount + "호텔 체크: " + land[player.location].hotelCheckCount
 						+ "랜드마크 체크: " + land[player.location].landmarkCheckCount);
-				// 나중에 구입과 관련된 기능 구현시 수정해야함
+				
+				/*if (whosTurn == 1) {
+					whosTurn = 2;
+				}else {
+					whosTurn = 1;
+				}*/
 			}
 		});
 		CloseButton.setBounds(400, 0, 50, 50);
@@ -1573,71 +1625,768 @@ public class BlueMarble {
 						diceThrowButton.setVisible(true);
 
 						if (player == player1) {
-							land[player.location].landowner = "player1";
-							if (land[player.location].villaCheckCount == 1) {
-								land[player.location].amountVilla = 1;
+							land[player1.location].landowner = "player1";
+							if (land[player1.location].villaCheckCount == 1) {
+								land[player1.location].amountVilla = 1;
 							}
-							if (land[player.location].buildingCheckCount == 1) {
-								land[player.location].amountBuilding = 1;
+							if (land[player1.location].buildingCheckCount == 1) {
+								land[player1.location].amountBuilding = 1;
 							}
-							if (land[player.location].hotelCheckCount == 1) {
-								land[player.location].amountHotel = 1;
+							if (land[player1.location].hotelCheckCount == 1) {
+								land[player1.location].amountHotel = 1;
 								// land[player.location].hotelCheckCount = 2;
 							}
-							if (land[player.location].landmarkCheckCount == 1) {
-								land[player.location].amountLandmark = 1;
+							if (land[player1.location].landmarkCheckCount == 1) {
+								land[player1.location].amountLandmark = 1;
 								// land[player.location].landmarkCheckCount = 2;
 							}
 
 							// 플레이어1이 구입한 땅에 플레이어1의 색으로 덮힌다.
-							if (player.location >= 1 && player.location <= 8) {
-								bottomLine[player.location - 1].setIcon(new ImageIcon("./images/BlueLine.png"));
-							} else if (player.location >= 9 && player.location <= 15) {
-								leftLine[player.location - 9].setIcon(new ImageIcon("./images/BlueLine.png"));
-							} else if (player.location >= 16 && player.location <= 23) {
-								topLine[player.location - 16].setIcon(new ImageIcon("./images/BlueLine.png"));
-							} else if (player.location >= 24 && player.location <= 29) {
-								rightLine[player.location - 24].setIcon(new ImageIcon("./images/BlueLine.png"));
+							if (player1.location >= 1 && player1.location <= 8) {
+								bottomLine[player1.location - 1].setIcon(new ImageIcon("./images/BlueLine.png"));
+								bottomLine[player1.location - 1].add(landmarkImage = new JLabel());
+								bottomLine[player1.location - 1].add(villaImage = new JLabel());
+								bottomLine[player1.location - 1].add(buildingImage = new JLabel());
+								bottomLine[player1.location - 1].add(hotelImage = new JLabel());
+								
+
+								villaImage.setBounds(0, 50, 26, 30);
+								buildingImage.setBounds(26, 50, 26, 30);
+								hotelImage.setBounds(52, 50, 26, 30);
+								landmarkImage.setBounds(0, 50, 79, 30);
+								
+								villaImage.setIcon(new ImageIcon("./images/villaImage.png"));
+								buildingImage.setIcon(new ImageIcon("./images/buildingImage.png"));
+								hotelImage.setIcon(new ImageIcon("./images/hotelImage.png"));
+								landmarkImage.setIcon(new ImageIcon("./images/landmarkImage.png"));
+
+								villaImage.setVisible(false);
+								buildingImage.setVisible(false);
+								hotelImage.setVisible(false);
+								landmarkImage.setVisible(false);
+								
+								if(land[player1.location].amountLandmark != 1) {
+									if (land[player1.location].amountVilla == 1) {
+										villaImage.setVisible(true);								
+									}if (land[player1.location].amountBuilding == 1) {
+										buildingImage.setVisible(true);
+									}if (land[player1.location].amountHotel == 1) {
+										hotelImage.setVisible(true);
+									}
+									System.out.println("랜드마크 없음");
+								}else {
+									villaImage.setVisible(false);
+									buildingImage.setVisible(false);
+									hotelImage.setVisible(false);
+									landmarkImage.setVisible(true);
+									System.out.println(villaImage.isVisible());
+									System.out.println("랜드마크 있음");
+								}
+								/*if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountVilla == 1) {
+										villaImage.setVisible(true);								
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountVilla == 1) {
+										villaImage.setVisible(false);								
+									}
+								}
+								
+								if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountBuilding == 1) {
+										buildingImage.setVisible(true);
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountBuilding == 1) {
+										buildingImage.setVisible(false);								
+									}
+								}
+
+								if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountHotel == 1) {
+										hotelImage.setVisible(true);
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountHotel == 1) {
+										hotelImage.setVisible(false);								
+									}
+								}
+
+								if(land[player.location].amountLandmark == 1) {
+									landmarkImage.setVisible(true);
+								}*/
+								/*if (land[player.location].amountVilla == 1) {
+									villaImage.setVisible(true);								
+								}
+								if (land[player.location].amountBuilding == 1) {
+									buildingImage.setVisible(true);
+								}
+								if (land[player.location].amountHotel == 1) {
+									hotelImage.setVisible(true);
+								}
+								if(land[player.location].amountLandmark == 1) {
+									villaImage.setVisible(false);
+									buildingImage.setVisible(false);
+									hotelImage.setVisible(false);
+									landmarkImage.setVisible(true);
+								} */
+								
+							} else if (player1.location >= 9 && player1.location <= 15) {
+								leftLine[player1.location - 9].setIcon(new ImageIcon("./images/BlueLine.png"));
+								leftLine[player1.location - 9].add(landmarkImage = new JLabel());
+								leftLine[player1.location - 9].add(villaImage = new JLabel());
+								leftLine[player1.location - 9].add(buildingImage = new JLabel());
+								leftLine[player1.location - 9].add(hotelImage = new JLabel());
+								
+
+								villaImage.setBounds(0, 50, 26, 30);
+								buildingImage.setBounds(26, 50, 26, 30);
+								hotelImage.setBounds(52, 50, 26, 30);
+								landmarkImage.setBounds(0, 50, 79, 30);
+								
+								villaImage.setIcon(new ImageIcon("./images/villaImage.png"));
+								buildingImage.setIcon(new ImageIcon("./images/buildingImage.png"));
+								hotelImage.setIcon(new ImageIcon("./images/hotelImage.png"));
+								landmarkImage.setIcon(new ImageIcon("./images/landmarkImage.png"));
+
+								villaImage.setVisible(false);
+								buildingImage.setVisible(false);
+								hotelImage.setVisible(false);
+								landmarkImage.setVisible(false);
+
+								/*if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountVilla == 1) {
+										villaImage.setVisible(true);								
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountVilla == 1) {
+										villaImage.setVisible(false);								
+									}
+								}
+								
+								if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountBuilding == 1) {
+										buildingImage.setVisible(true);
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountBuilding == 1) {
+										buildingImage.setVisible(false);								
+									}
+								}
+
+								if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountHotel == 1) {
+										hotelImage.setVisible(true);
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountHotel == 1) {
+										hotelImage.setVisible(false);								
+									}
+								}
+
+								if(land[player.location].amountLandmark == 1) {
+									landmarkImage.setVisible(true);
+								}*/
+								/*if (land[player.location].amountVilla == 1) {
+									villaImage.setVisible(true);								
+								}
+								if (land[player.location].amountBuilding == 1) {
+									buildingImage.setVisible(true);
+								}
+								if (land[player.location].amountHotel == 1) {
+									hotelImage.setVisible(true);
+								}
+								if(land[player.location].amountLandmark == 1) {
+									villaImage.setVisible(false);
+									buildingImage.setVisible(false);
+									hotelImage.setVisible(false);
+									landmarkImage.setVisible(true);
+								}*/
+								if(land[player1.location].amountLandmark != 1) {
+									if (land[player1.location].amountVilla == 1) {
+										villaImage.setVisible(true);								
+									}if (land[player1.location].amountBuilding == 1) {
+										buildingImage.setVisible(true);
+									}if (land[player1.location].amountHotel == 1) {
+										hotelImage.setVisible(true);
+									}
+									System.out.println("랜드마크 없음");
+								}else {
+									villaImage.setVisible(false);
+									buildingImage.setVisible(false);
+									hotelImage.setVisible(false);
+									landmarkImage.setVisible(true);
+									System.out.println(villaImage.isVisible());
+									System.out.println("랜드마크 있음");
+								}
+								
+							} else if (player1.location >= 16 && player1.location <= 23) {
+								topLine[player1.location - 16].setIcon(new ImageIcon("./images/BlueLine.png"));
+								topLine[player1.location - 16].add(landmarkImage = new JLabel());
+								topLine[player1.location - 16].add(villaImage = new JLabel());
+								topLine[player1.location - 16].add(buildingImage = new JLabel());
+								topLine[player1.location - 16].add(hotelImage = new JLabel());
+
+								
+								villaImage.setBounds(0, 50, 26, 30);
+								buildingImage.setBounds(26, 50, 26, 30);
+								hotelImage.setBounds(52, 50, 26, 30);
+								landmarkImage.setBounds(0, 50, 79, 30);
+								
+								villaImage.setIcon(new ImageIcon("./images/villaImage.png"));
+								buildingImage.setIcon(new ImageIcon("./images/buildingImage.png"));
+								hotelImage.setIcon(new ImageIcon("./images/hotelImage.png"));
+								landmarkImage.setIcon(new ImageIcon("./images/landmarkImage.png"));
+								
+								villaImage.setVisible(false);
+								buildingImage.setVisible(false);
+								hotelImage.setVisible(false);
+								landmarkImage.setVisible(false);
+								
+								if(land[player1.location].amountLandmark != 1) {
+									if (land[player1.location].amountVilla == 1) {
+										villaImage.setVisible(true);								
+									}if (land[player1.location].amountBuilding == 1) {
+										buildingImage.setVisible(true);
+									}if (land[player1.location].amountHotel == 1) {
+										hotelImage.setVisible(true);
+									}
+									System.out.println("랜드마크 없음");
+								}else {
+									villaImage.setVisible(false);
+									buildingImage.setVisible(false);
+									hotelImage.setVisible(false);
+									landmarkImage.setVisible(true);
+									System.out.println(villaImage.isVisible());
+									System.out.println("랜드마크 있음");
+								}
+								/*if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountVilla == 1) {
+										villaImage.setVisible(true);								
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountVilla == 1) {
+										villaImage.setVisible(false);								
+									}
+								}
+								
+								if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountBuilding == 1) {
+										buildingImage.setVisible(true);
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountBuilding == 1) {
+										buildingImage.setVisible(false);								
+									}
+								}
+
+								if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountHotel == 1) {
+										hotelImage.setVisible(true);
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountHotel == 1) {
+										hotelImage.setVisible(false);								
+									}
+								}
+
+								if(land[player.location].amountLandmark == 1) {
+									landmarkImage.setVisible(true);
+								}*/
+								/*if (land[player.location].amountVilla == 1) {
+									villaImage.setVisible(true);								
+								}
+								if (land[player.location].amountBuilding == 1) {
+									buildingImage.setVisible(true);
+								}
+								if (land[player.location].amountHotel == 1) {
+									hotelImage.setVisible(true);
+								}
+								if(land[player.location].amountLandmark == 1) {
+									villaImage.setVisible(false);
+									buildingImage.setVisible(false);
+									hotelImage.setVisible(false);
+									landmarkImage.setVisible(true);
+								}*/
+
+							} else if (player1.location >= 24 && player1.location <= 29) {
+								rightLine[player1.location - 24].setIcon(new ImageIcon("./images/BlueLine.png"));
+								rightLine[player1.location - 24].add(landmarkImage = new JLabel());
+								rightLine[player1.location - 24].add(villaImage = new JLabel());
+								rightLine[player1.location - 24].add(buildingImage = new JLabel());
+								rightLine[player1.location - 24].add(hotelImage = new JLabel());
+
+								villaImage.setBounds(0, 50, 26, 30);
+								buildingImage.setBounds(26, 50, 26, 30);
+								hotelImage.setBounds(52, 50, 26, 30);
+								landmarkImage.setBounds(0, 50, 79, 30);
+								
+								villaImage.setIcon(new ImageIcon("./images/villaImage.png"));
+								buildingImage.setIcon(new ImageIcon("./images/buildingImage.png"));
+								hotelImage.setIcon(new ImageIcon("./images/hotelImage.png"));
+								landmarkImage.setIcon(new ImageIcon("./images/landmarkImage.png"));
+								
+								villaImage.setVisible(false);
+								buildingImage.setVisible(false);
+								hotelImage.setVisible(false);
+								landmarkImage.setVisible(false);
+								
+								if(land[player1.location].amountLandmark != 1) {
+									if (land[player1.location].amountVilla == 1) {
+										villaImage.setVisible(true);								
+									}if (land[player1.location].amountBuilding == 1) {
+										buildingImage.setVisible(true);
+									}if (land[player1.location].amountHotel == 1) {
+										hotelImage.setVisible(true);
+									}
+									System.out.println("랜드마크 없음");
+								}else {
+									villaImage.setVisible(false);
+									buildingImage.setVisible(false);
+									hotelImage.setVisible(false);
+									landmarkImage.setVisible(true);
+									System.out.println(villaImage.isVisible());
+									System.out.println("랜드마크 있음");
+								}
+								/*if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountVilla == 1) {
+										villaImage.setVisible(true);								
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountVilla == 1) {
+										villaImage.setVisible(false);								
+									}
+								}
+								
+								if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountBuilding == 1) {
+										buildingImage.setVisible(true);
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountBuilding == 1) {
+										buildingImage.setVisible(false);								
+									}
+								}
+
+								if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountHotel == 1) {
+										hotelImage.setVisible(true);
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountHotel == 1) {
+										hotelImage.setVisible(false);								
+									}
+								}
+
+								if(land[player.location].amountLandmark == 1) {
+									landmarkImage.setVisible(true);
+								}*/
+								/*if (land[player.location].amountVilla == 1) {
+									villaImage.setVisible(true);								
+								}
+								if (land[player.location].amountBuilding == 1) {
+									buildingImage.setVisible(true);
+								}
+								if (land[player.location].amountHotel == 1) {
+									hotelImage.setVisible(true);
+								}
+								if(land[player.location].amountLandmark == 1) {
+									villaImage.setVisible(false);
+									buildingImage.setVisible(false);
+									hotelImage.setVisible(false);
+									landmarkImage.setVisible(true);
+								}*/
+
 							}
 
 							player1.money = player1.money - land[player.location].constructionCost;
 							player1moneyText.setText("money : " + player1.money);
-							land[player.location].constructionCost = 0;
-
-
+							land[player1.location].constructionCost = 0;
+							//player1.haveLand++;
+							//System.out.println("플레이어1이 가지고 있는 땅은 총 : " + player1.haveLand);
 						} else {
-							land[player.location].landowner = "player2";
-							if (land[player.location].villaCheckCount == 1) {
-								land[player.location].amountVilla = 1;
+							land[player2.location].landowner = "player2";
+							if (land[player2.location].villaCheckCount == 1) {
+								land[player2.location].amountVilla = 1;
 							}
-							if (land[player.location].buildingCheckCount == 1) {
-								land[player.location].amountBuilding = 1;
+							if (land[player2.location].buildingCheckCount == 1) {
+								land[player2.location].amountBuilding = 1;
 							}
-							if (land[player.location].hotelCheckCount == 1) {
-								land[player.location].amountHotel = 1;
+							if (land[player2.location].hotelCheckCount == 1) {
+								land[player2.location].amountHotel = 1;
 								// land[player.location].hotelCheckCount = 2;
 							}
-							if (land[player.location].landmarkCheckCount == 1) {
-								land[player.location].amountLandmark = 1;
+							if (land[player2.location].landmarkCheckCount == 1) {
+								land[player2.location].amountLandmark = 1;
 							}
 
 							// 플레이어2가 구입한 땅에 플레이어2의 색으로 덮힌다.
-							if (player.location >= 1 && player.location <= 8) {
-								bottomLine[player.location - 1].setIcon(new ImageIcon("./images/RedLine.png"));
-							} else if (player.location >= 9 && player.location <= 15) {
-								leftLine[player.location - 9].setIcon(new ImageIcon("./images/RedLine.png"));
-							} else if (player.location >= 16 && player.location <= 23) {
-								topLine[player.location - 16].setIcon(new ImageIcon("./images/RedLine.png"));
-							} else if (player.location >= 24 && player.location <= 29) {
-								rightLine[player.location - 24].setIcon(new ImageIcon("./images/RedLine.png"));
+							if (player2.location >= 1 && player2.location <= 8) {
+								bottomLine[player2.location - 1].setIcon(new ImageIcon("./images/RedLine.png"));
+								bottomLine[player2.location - 1].add(landmarkImage = new JLabel());
+								bottomLine[player2.location - 1].add(villaImage = new JLabel());
+								bottomLine[player2.location - 1].add(buildingImage = new JLabel());
+								bottomLine[player2.location - 1].add(hotelImage = new JLabel());
+							
+								villaImage.setBounds(0, 50, 26, 30);
+								buildingImage.setBounds(26, 50, 26, 30);
+								hotelImage.setBounds(52, 50, 26, 30);
+								landmarkImage.setBounds(0, 50, 79, 30);
+								
+								villaImage.setIcon(new ImageIcon("./images/villaImage.png"));
+								buildingImage.setIcon(new ImageIcon("./images/buildingImage.png"));
+								hotelImage.setIcon(new ImageIcon("./images/hotelImage.png"));
+								landmarkImage.setIcon(new ImageIcon("./images/landmarkImage.png"));
+								
+								villaImage.setVisible(false);
+								buildingImage.setVisible(false);
+								hotelImage.setVisible(false);
+								landmarkImage.setVisible(false);
+								
+								if(land[player2.location].amountLandmark != 1) {
+									if (land[player2.location].amountVilla == 1) {
+										villaImage.setVisible(true);								
+									}if (land[player2.location].amountBuilding == 1) {
+										buildingImage.setVisible(true);
+									}if (land[player2.location].amountHotel == 1) {
+										hotelImage.setVisible(true);
+									}
+									System.out.println("랜드마크 없음");
+								}else {
+									villaImage.setVisible(false);
+									buildingImage.setVisible(false);
+									hotelImage.setVisible(false);
+									landmarkImage.setVisible(true);
+									System.out.println(villaImage.isVisible());
+									System.out.println("랜드마크 있음");
+								}
+								/*if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountVilla == 1) {
+										villaImage.setVisible(true);								
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountVilla == 1) {
+										villaImage.setVisible(false);								
+									}
+								}
+								
+								if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountBuilding == 1) {
+										buildingImage.setVisible(true);
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountBuilding == 1) {
+										buildingImage.setVisible(false);								
+									}
+								}
+
+								if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountHotel == 1) {
+										hotelImage.setVisible(true);
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountHotel == 1) {
+										hotelImage.setVisible(false);								
+									}
+								}
+
+								if(land[player.location].amountLandmark == 1) {
+									landmarkImage.setVisible(true);
+								}*/
+								/*if (land[player.location].amountVilla == 1) {
+									villaImage.setVisible(true);								
+								}
+								if (land[player.location].amountBuilding == 1) {
+									buildingImage.setVisible(true);
+								}
+								if (land[player.location].amountHotel == 1) {
+									hotelImage.setVisible(true);
+								}
+								if(land[player.location].amountLandmark == 1) {
+									villaImage.setVisible(false);
+									buildingImage.setVisible(false);
+									hotelImage.setVisible(false);
+									landmarkImage.setVisible(true);
+								} */
+
+							} else if (player2.location >= 9 && player2.location <= 15) {
+								leftLine[player2.location - 9].setIcon(new ImageIcon("./images/RedLine.png"));
+								leftLine[player2.location - 9].add(landmarkImage = new JLabel());
+								leftLine[player2.location - 9].add(villaImage = new JLabel());
+								leftLine[player2.location - 9].add(buildingImage = new JLabel());
+								leftLine[player2.location - 9].add(hotelImage = new JLabel());
+
+								
+								villaImage.setBounds(0, 50, 26, 30);
+								buildingImage.setBounds(26, 50, 26, 30);
+								hotelImage.setBounds(52, 50, 26, 30);
+								landmarkImage.setBounds(0, 50, 79, 30);
+								
+								villaImage.setIcon(new ImageIcon("./images/villaImage.png"));
+								buildingImage.setIcon(new ImageIcon("./images/buildingImage.png"));
+								hotelImage.setIcon(new ImageIcon("./images/hotelImage.png"));
+								landmarkImage.setIcon(new ImageIcon("./images/landmarkImage.png"));
+
+								villaImage.setVisible(false);
+								buildingImage.setVisible(false);
+								hotelImage.setVisible(false);
+								landmarkImage.setVisible(false);
+								
+								if(land[player2.location].amountLandmark != 1) {
+									if (land[player2.location].amountVilla == 1) {
+										villaImage.setVisible(true);								
+									}if (land[player2.location].amountBuilding == 1) {
+										buildingImage.setVisible(true);
+									}if (land[player2.location].amountHotel == 1) {
+										hotelImage.setVisible(true);
+									}
+									System.out.println("랜드마크 없음");
+								}else {
+									villaImage.setVisible(false);
+									buildingImage.setVisible(false);
+									hotelImage.setVisible(false);
+									landmarkImage.setVisible(true);
+									System.out.println(villaImage.isVisible());
+									System.out.println("랜드마크 있음");
+								}
+								/*if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountVilla == 1) {
+										villaImage.setVisible(true);								
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountVilla == 1) {
+										villaImage.setVisible(false);								
+									}
+								}
+								
+								if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountBuilding == 1) {
+										buildingImage.setVisible(true);
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountBuilding == 1) {
+										buildingImage.setVisible(false);								
+									}
+								}
+
+								if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountHotel == 1) {
+										hotelImage.setVisible(true);
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountHotel == 1) {
+										hotelImage.setVisible(false);								
+									}
+								}
+
+								if(land[player.location].amountLandmark == 1) {
+									landmarkImage.setVisible(true);
+								}*/
+								/*
+								if (land[player.location].amountVilla == 1) {
+									villaImage.setVisible(true);								
+								}
+								if (land[player.location].amountBuilding == 1) {
+									buildingImage.setVisible(true);
+								}
+								if (land[player.location].amountHotel == 1) {
+									hotelImage.setVisible(true);
+								}
+								if(land[player.location].amountLandmark == 1) {
+									villaImage.setVisible(false);
+									buildingImage.setVisible(false);
+									hotelImage.setVisible(false);
+									landmarkImage.setVisible(true);
+								} */
+
+							} else if (player2.location >= 16 && player2.location <= 23) {
+								topLine[player2.location - 16].setIcon(new ImageIcon("./images/RedLine.png"));
+								topLine[player2.location - 16].add(landmarkImage = new JLabel());
+								topLine[player2.location - 16].add(villaImage = new JLabel());
+								topLine[player2.location - 16].add(buildingImage = new JLabel());
+								topLine[player2.location - 16].add(hotelImage = new JLabel());
+								
+								villaImage.setBounds(0, 50, 26, 30);
+								buildingImage.setBounds(26, 50, 26, 30);
+								hotelImage.setBounds(52, 50, 26, 30);
+								landmarkImage.setBounds(0, 50, 79, 30);
+								
+								villaImage.setIcon(new ImageIcon("./images/villaImage.png"));
+								buildingImage.setIcon(new ImageIcon("./images/buildingImage.png"));
+								hotelImage.setIcon(new ImageIcon("./images/hotelImage.png"));
+								landmarkImage.setIcon(new ImageIcon("./images/landmarkImage.png"));
+
+								villaImage.setVisible(false);
+								buildingImage.setVisible(false);
+								hotelImage.setVisible(false);
+								landmarkImage.setVisible(false);
+								
+								if(land[player2.location].amountLandmark != 1) {
+									if (land[player2.location].amountVilla == 1) {
+										villaImage.setVisible(true);								
+									}if (land[player2.location].amountBuilding == 1) {
+										buildingImage.setVisible(true);
+									}if (land[player2.location].amountHotel == 1) {
+										hotelImage.setVisible(true);
+									}
+									System.out.println("랜드마크 없음");
+								}else {
+									villaImage.setVisible(false);
+									buildingImage.setVisible(false);
+									hotelImage.setVisible(false);
+									landmarkImage.setVisible(true);
+									System.out.println(villaImage.isVisible());
+									System.out.println("랜드마크 있음");
+								}
+								/*if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountVilla == 1) {
+										villaImage.setVisible(true);								
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountVilla == 1) {
+										villaImage.setVisible(false);								
+									}
+								}
+								
+								if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountBuilding == 1) {
+										buildingImage.setVisible(true);
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountBuilding == 1) {
+										buildingImage.setVisible(false);								
+									}
+								}
+
+								if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountHotel == 1) {
+										hotelImage.setVisible(true);
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountHotel == 1) {
+										hotelImage.setVisible(false);								
+									}
+								}
+
+								if(land[player.location].amountLandmark == 1) {
+									landmarkImage.setVisible(true);
+								}*/
+								/*if (land[player.location].amountVilla == 1) {
+									villaImage.setVisible(true);								
+								}
+								if (land[player.location].amountBuilding == 1) {
+									buildingImage.setVisible(true);
+								}
+								if (land[player.location].amountHotel == 1) {
+									hotelImage.setVisible(true);
+								}
+								if(land[player.location].amountLandmark == 1) {
+									villaImage.setVisible(false);
+									buildingImage.setVisible(false);
+									hotelImage.setVisible(false);
+									landmarkImage.setVisible(true);
+								} */
+
+							} else if (player2.location >= 24 && player2.location <= 29) {
+								rightLine[player2.location - 24].setIcon(new ImageIcon("./images/RedLine.png"));
+								rightLine[player2.location - 24].add(landmarkImage = new JLabel());
+								rightLine[player2.location - 24].add(villaImage = new JLabel());
+								rightLine[player2.location - 24].add(buildingImage = new JLabel());
+								rightLine[player2.location - 24].add(hotelImage = new JLabel());
+
+								
+								villaImage.setBounds(0, 50, 26, 30);
+								buildingImage.setBounds(26, 50, 26, 30);
+								hotelImage.setBounds(52, 50, 26, 30);
+								landmarkImage.setBounds(0, 50, 79, 30);
+
+								villaImage.setIcon(new ImageIcon("./images/villaImage.png"));
+								buildingImage.setIcon(new ImageIcon("./images/buildingImage.png"));
+								hotelImage.setIcon(new ImageIcon("./images/hotelImage.png"));
+								landmarkImage.setIcon(new ImageIcon("./images/landmarkImage.png"));
+								
+								villaImage.setVisible(false);
+								buildingImage.setVisible(false);
+								hotelImage.setVisible(false);
+								landmarkImage.setVisible(false);
+								
+								if(land[player2.location].amountLandmark != 1) {
+									if (land[player2.location].amountVilla == 1) {
+										villaImage.setVisible(true);								
+									}if (land[player2.location].amountBuilding == 1) {
+										buildingImage.setVisible(true);
+									}if (land[player2.location].amountHotel == 1) {
+										hotelImage.setVisible(true);
+									}
+									System.out.println("랜드마크 없음");
+								}else {
+									villaImage.setVisible(false);
+									buildingImage.setVisible(false);
+									hotelImage.setVisible(false);
+									landmarkImage.setVisible(true);
+									System.out.println(villaImage.isVisible());
+									System.out.println("랜드마크 있음");
+								}
+								/*if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountVilla == 1) {
+										villaImage.setVisible(true);								
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountVilla == 1) {
+										villaImage.setVisible(false);								
+									}
+								}
+								
+								if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountBuilding == 1) {
+										buildingImage.setVisible(true);
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountBuilding == 1) {
+										buildingImage.setVisible(false);								
+									}
+								}
+
+								if(land[player.location].amountLandmark != 1) {
+									if (land[player.location].amountHotel == 1) {
+										hotelImage.setVisible(true);
+									}
+								}else if(land[player.location].amountLandmark == 1) {
+									if (land[player.location].amountHotel == 1) {
+										hotelImage.setVisible(false);								
+									}
+								}
+
+								if(land[player.location].amountLandmark == 1) {
+									landmarkImage.setVisible(true);
+								}*/
+								/*if (land[player.location].amountVilla == 1) {
+									villaImage.setVisible(true);								
+								}
+								if (land[player.location].amountBuilding == 1) {
+									buildingImage.setVisible(true);
+								}
+								if (land[player.location].amountHotel == 1) {
+									hotelImage.setVisible(true);
+								}
+								if(land[player.location].amountLandmark == 1) {
+									villaImage.setVisible(false);
+									buildingImage.setVisible(false);
+									hotelImage.setVisible(false);
+									landmarkImage.setVisible(true);
+								} */
 							}
 
 							player2.money = player2.money - land[player.location].constructionCost;
 							player2moneyText.setText("money : " + player2.money);
 							land[player.location].constructionCost = 0;
 
+							//player2.haveLand++;
+							//System.out.println("플레이어2이 가지고 있는 땅은 총 : " + player2.haveLand);
+							// whosTurnText.setText("Player 1 순서");
+							// whosTurn = 1;
 						}
-
+						
 						if (land[player.location].amountVilla == 1) {
 							if (land[player.location].amountBuilding == 1) {
 								if (land[player.location].amountHotel == 1) {
@@ -1650,94 +2399,71 @@ public class BlueMarble {
 								JOptionPane.INFORMATION_MESSAGE);
 					}
 				}
+				/*if (whosTurn == 1) {
+					whosTurn = 2;
+				}else {
+					whosTurn = 1;
+				}*/
 			}
 		});
 		buyButton.setBounds(160, 250, 150, 20);
 		landLabel[player.location].add(buyButton);
 		buyButton.setVisible(true);
 	}
-/*
-	public void player(Player player, JLabel playerImage) {
 
-		if (player.location == 4 || player.location == 20) {
-
-			if (player == player1) {
-				isPlayer1hasCard = true;
-			} else if (player == player2) {
-				isPlayer2hasCard = true;
-
-			}
-
-			luckyCard(player);
-			playSituation.setText("행운카드에 도착했습니다");
-
-			// 플레이어가 공항에 도착했을 때
-		} else if (player.location == 9) {
-			if (player == player1) {
-				whoRideAirplane = "player1";
-			} else if (player == player2) {
-				whoRideAirplane = "player2";
-
-			}
-			diceThrowButton.setVisible(false);
-			rideAirplaneScene.setVisible(true);
-			chooseRideAirplane.setText("비행기를 타시겠습니까?");
-			playSituation.setText("공항에 도착했습니다");
-
-			// 플레이어가 무인도에 도착했을 때
-		} else if (player.location == 15) {
-			if (player == player1) {
-				player1leftdayOfisland.setVisible(true);
-				Player1forcedRest = 3;
-				player1leftdayOfisland.setText("무인도 탈출하기까지 남은 일수 : 3일");
-
-				if (isPlayer1hasuninhabitedCard == true) {
-					luckeyCardScene.setVisible(true);
-					cardNameText.setText("무인도 탈출 카드");
-					cardContentText.setText("사용하시겠습니까?");
-				}
-
-			} else if (player == player2) {
-				playSituation.setText("Player2이 무인도에 갇혔습니다");
-				player2leftdayOfisland.setVisible(true);
-				Player2forcedRest = 3;
-				player2leftdayOfisland.setText("무인도 탈출하기까지 남은 일수 : 3일");
-
-				if (isPlayer2hasuninhabitedCard == true) {
-					luckeyCardScene.setVisible(true);
-					cardNameText.setText("무인도 탈출 카드");
-					cardContentText.setText("사용하시겠습니까?");
-				}
-			}
-			playSituation.setText("무인도에 갇혔습니다");
-
-			// 플레이어가 사회복지기금(돈 얻음)에 도착했을 때
-		} else if (player.location == 24) {
-			player.money = player.money + collectedSocialWelfare;
-
-			if (player == player1) {
-				player1moneyText.setText("money : " + player.money);
-			} else if (player == player2) {
-				player2moneyText.setText("money : " + player.money);
-			}
-			playSituation.setText("사회복지기금에서 돈을 얻었습니다 +" + collectedSocialWelfare + "원");
-			collectedSocialWelfare = 0;
-
-			// 플레이어가 사회복지기금(돈 지불)에 도착했을 때
-		} else if (player.location == 27) {
-
-			player.money = player.money - socialWelfareCost;
-			collectedSocialWelfare = collectedSocialWelfare + socialWelfareCost;
-
-			if (player == player1) {
-				player1moneyText.setText("money : " + player.money);
-			} else if (player == player2) {
-				player2moneyText.setText("money : " + player.money);
-			}
-			playSituation.setText("사회복지기금에서 돈을 기부했습니다 -" + socialWelfareCost + "원");
-		}
-	}
-*/
+	/*
+	 * public void player(Player player, JLabel playerImage) {
+	 * 
+	 * if (player.location == 4 || player.location == 20) {
+	 * 
+	 * if (player == player1) { isPlayer1hasCard = true; } else if (player ==
+	 * player2) { isPlayer2hasCard = true;
+	 * 
+	 * }
+	 * 
+	 * luckyCard(player); playSituation.setText("행운카드에 도착했습니다");
+	 * 
+	 * // 플레이어가 공항에 도착했을 때 } else if (player.location == 9) { if (player == player1)
+	 * { whoRideAirplane = "player1"; } else if (player == player2) {
+	 * whoRideAirplane = "player2";
+	 * 
+	 * } diceThrowButton.setVisible(false); rideAirplaneScene.setVisible(true);
+	 * chooseRideAirplane.setText("비행기를 타시겠습니까?");
+	 * playSituation.setText("공항에 도착했습니다");
+	 * 
+	 * // 플레이어가 무인도에 도착했을 때 } else if (player.location == 15) { if (player ==
+	 * player1) { player1leftdayOfisland.setVisible(true); Player1forcedRest = 3;
+	 * player1leftdayOfisland.setText("무인도 탈출하기까지 남은 일수 : 3일");
+	 * 
+	 * if (isPlayer1hasuninhabitedCard == true) { luckeyCardScene.setVisible(true);
+	 * cardNameText.setText("무인도 탈출 카드"); cardContentText.setText("사용하시겠습니까?"); }
+	 * 
+	 * } else if (player == player2) { playSituation.setText("Player2이 무인도에 갇혔습니다");
+	 * player2leftdayOfisland.setVisible(true); Player2forcedRest = 3;
+	 * player2leftdayOfisland.setText("무인도 탈출하기까지 남은 일수 : 3일");
+	 * 
+	 * if (isPlayer2hasuninhabitedCard == true) { luckeyCardScene.setVisible(true);
+	 * cardNameText.setText("무인도 탈출 카드"); cardContentText.setText("사용하시겠습니까?"); } }
+	 * playSituation.setText("무인도에 갇혔습니다");
+	 * 
+	 * // 플레이어가 사회복지기금(돈 얻음)에 도착했을 때 } else if (player.location == 24) {
+	 * player.money = player.money + collectedSocialWelfare;
+	 * 
+	 * if (player == player1) { player1moneyText.setText("money : " + player.money);
+	 * } else if (player == player2) { player2moneyText.setText("money : " +
+	 * player.money); } playSituation.setText("사회복지기금에서 돈을 얻었습니다 +" +
+	 * collectedSocialWelfare + "원"); collectedSocialWelfare = 0;
+	 * 
+	 * // 플레이어가 사회복지기금(돈 지불)에 도착했을 때 } else if (player.location == 27) {
+	 * 
+	 * player.money = player.money - socialWelfareCost; collectedSocialWelfare =
+	 * collectedSocialWelfare + socialWelfareCost;
+	 * 
+	 * if (player == player1) { player1moneyText.setText("money : " + player.money);
+	 * } else if (player == player2) { player2moneyText.setText("money : " +
+	 * player.money); } playSituation.setText("사회복지기금에서 돈을 기부했습니다 -" +
+	 * socialWelfareCost + "원"); } }
+	 */
 	public void airport() {
 
 		playSituation.setText("가고 싶은 지역을 선택해주세요");
@@ -1753,7 +2479,7 @@ public class BlueMarble {
 							}
 						}
 						playerMove(player1, player1Image);
-						
+
 					} else if (player2Flying.contains("비행기 타기")) {
 						for (int i = 0; i < bottomLine.length; i++) {
 							if (e.getSource() == bottomLine[i]) {
@@ -1793,60 +2519,57 @@ public class BlueMarble {
 			});
 		}
 
-	for(
+		for (
 
-	int i = 0;i<topLine.length;i++)
-	{
-		topLine[i].addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				if (player1Flying.contains("비행기 타기")) {
-					for (int i = 0; i < topLine.length; i++) {
-						if (e.getSource() == topLine[i]) {
-							player1Image.setLocation(topLine[i].getX() + 10, topLine[i].getY() + 10);
-							player1.location = i + 16;
+				int i = 0; i < topLine.length; i++) {
+			topLine[i].addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					if (player1Flying.contains("비행기 타기")) {
+						for (int i = 0; i < topLine.length; i++) {
+							if (e.getSource() == topLine[i]) {
+								player1Image.setLocation(topLine[i].getX() + 10, topLine[i].getY() + 10);
+								player1.location = i + 16;
+							}
 						}
-					}
-					playerMove(player1, player1Image);
+						playerMove(player1, player1Image);
 
-				} else if (player2Flying.contains("비행기 타기")) {
-					for (int i = 0; i < topLine.length; i++) {
-						if (e.getSource() == topLine[i]) {
-							player2Image.setLocation(topLine[i].getX() + 10, topLine[i].getY() + 10);
-							player2.location = i + 16;
+					} else if (player2Flying.contains("비행기 타기")) {
+						for (int i = 0; i < topLine.length; i++) {
+							if (e.getSource() == topLine[i]) {
+								player2Image.setLocation(topLine[i].getX() + 10, topLine[i].getY() + 10);
+								player2.location = i + 16;
+							}
 						}
+						playerMove(player2, player1Image);
 					}
-					playerMove(player2, player1Image);
 				}
-			}
-		});
-	}
+			});
+		}
 
-	for(
-	int i = 0;i<rightLine.length;i++)
-	{
-		rightLine[i].addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				if (player1Flying.contains("비행기 타기")) {
-					for (int i = 0; i < rightLine.length; i++) {
-						if (e.getSource() == rightLine[i]) {
-							player1Image.setLocation(rightLine[i].getX() + 10, rightLine[i].getY() + 10);
-							player1.location = i + 24;
+		for (int i = 0; i < rightLine.length; i++) {
+			rightLine[i].addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					if (player1Flying.contains("비행기 타기")) {
+						for (int i = 0; i < rightLine.length; i++) {
+							if (e.getSource() == rightLine[i]) {
+								player1Image.setLocation(rightLine[i].getX() + 10, rightLine[i].getY() + 10);
+								player1.location = i + 24;
+							}
 						}
-					}
-					playerMove(player1, player1Image);
+						playerMove(player1, player1Image);
 
-				} else if (player2Flying.contains("비행기 타기")) {
-					for (int i = 0; i < rightLine.length; i++) {
-						if (e.getSource() == rightLine[i]) {
-							player2Image.setLocation(rightLine[i].getX() + 10, rightLine[i].getY() + 10);
-							player2.location = i + 24;
+					} else if (player2Flying.contains("비행기 타기")) {
+						for (int i = 0; i < rightLine.length; i++) {
+							if (e.getSource() == rightLine[i]) {
+								player2Image.setLocation(rightLine[i].getX() + 10, rightLine[i].getY() + 10);
+								player2.location = i + 24;
+							}
 						}
+						playerMove(player2, player1Image);
 					}
-					playerMove(player2, player1Image);
 				}
-			}
-		});
-	}
+			});
+		}
 	}
 
 	public void luckyCard(Player player) {
@@ -1890,6 +2613,42 @@ public class BlueMarble {
 		}
 	}
 
+	/*
+	public void sellBuilding() {
+		//sellBuilding sellBuilding = new sellBuilding();
+		System.out.println("파산 전에 건물을 판매하세요.");
+		sellLandPanel.setVisible(true);
+		diceThrowButton.setVisible(false);
+		
+		//나중에 landowner 이거 값 수정해야함
+		if(whosTurn == 1) {
+			for(int i=0; i<land.length; i++) {
+				if(land[i].landowner == "player2") {
+					System.out.println("플레이어 2가 가지고 있는 땅 이름 "+land[i].landName+"빌라 가격: "+land[i].villaPrice);	
+				}
+			}
+			for(int i=0; i<player2.haveLand; i++) {
+				
+			}
+			System.out.println("플레이어 2가 가지고 있는 땅 갯수: "+(player2.haveLand));
+			//System.out.println("플레이어 1가 가지고 있는 땅 갯수: "+player1.haveLand);
+		}else {
+			for(int i=0; i<land.length; i++) {
+				if(land[i].landowner == "player1") {
+					System.out.println("플레이어 1가 가지고 있는 땅 이름 "+land[i].landName+"빌라 가격: "+land[i].villaPrice);
+				}
+			}
+			System.out.println("플레이어 1가 가지고 있는 땅 갯수: "+(player1.haveLand));
+			//System.out.println("플레이어 2가 가지고 있는 땅 갯수: "+player1.haveLand);
+		}
+		
+		if(land[player1.location].landowner == "player1") {
+			System.out.println(land[player1.location].landName);
+		}else {
+			System.out.println(land[player2.location].landName);
+		}
+	}*/
+	
 	class PlayerMoving extends Thread {
 
 		Player player = new Player();
