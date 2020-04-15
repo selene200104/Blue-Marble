@@ -1499,6 +1499,7 @@ public class BlueMarble {
 								// land[player.location].landmarkCheckCount = 2;
 							}
 							
+							//
 							if(land[player1.location].amountVilla == 1 && land[player1.location].amountBuilding == 1 
 									&& land[player1.location].amountHotel == 1) {
 								islandBulidingButton[3].setEnabled(true);
@@ -1656,7 +1657,7 @@ public class BlueMarble {
 								}
 
 							}
-/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 							if (land[player1.location].amountVilla == 1) {
 								if (land[player1.location].amountBuilding == 1) {
 									if (land[player1.location].amountHotel == 1) {
