@@ -786,7 +786,6 @@ public class BlueMarble {
 		acquisitionYesButton.setBounds(30, 220, 100, 50);
 		acquisitionYesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				diceThrowButton.setVisible(true);
 				acquisitionScene.setVisible(false);
 				
 				if (caughtPerson  == "player1") {
@@ -810,6 +809,8 @@ public class BlueMarble {
 						} else if (fieldNumGotCaught >= 24 && fieldNumGotCaught <= 29) {
 							rightLine[fieldNumGotCaught - 24].setIcon(new ImageIcon("./images/BlueLine.png"));
 						}
+						
+						playerMove(player1, player1Image);
 					}else {
 						JOptionPane.showMessageDialog(frame, "돈이 부족하여 살 수 없어요", "SYSTEM", JOptionPane.INFORMATION_MESSAGE);
 					}
@@ -835,6 +836,7 @@ public class BlueMarble {
 						} else if (fieldNumGotCaught >= 24 && fieldNumGotCaught <= 29) {
 							rightLine[fieldNumGotCaught - 24].setIcon(new ImageIcon("./images/RedLine.png"));
 						}
+						playerMove(player2, player2Image);
 					}else {
 						JOptionPane.showMessageDialog(frame, "돈이 부족하여 살 수 없어요", "SYSTEM", JOptionPane.INFORMATION_MESSAGE);
 					}
